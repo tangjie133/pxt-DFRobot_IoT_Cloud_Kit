@@ -9,6 +9,7 @@
         "main.blocks",
         "main.ts",
         "README.md",
+		"ws2812b.ts",
         "microiotkit.ts"
     ],
     "preferredEditor": "tsprj",
