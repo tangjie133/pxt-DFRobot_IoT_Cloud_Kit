@@ -1,5 +1,5 @@
 {
-    "name": "无标题",
+    "name": "micro_iot_kit",
     "dependencies": {
         "core": "*",
         "radio": "*"
@@ -9,7 +9,7 @@
         "main.blocks",
         "main.ts",
         "README.md",
-		"ws2812b.ts",
+        "ws2812b.ts",
         "microiotkit.ts"
     ],
     "preferredEditor": "tsprj",

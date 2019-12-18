@@ -1,96 +1,29 @@
 // 在此处添加您的代码
 /*！
- * @file pxt-microIoT/microIoT.ts
+ * @file pxt-microbit_iot_kit/microiotkit.ts
  * @brief DFRobot's obloq makecode library.
- * @n [Get the module here](http://www.dfrobot.com.cn/goods-1577.html)
+ * @n [Get the module here]()
  * @n Obloq is a serial port of WIFI connection module, Obloq can connect 
  *    to Microsoft Azure IoT and other standard MQTT protocol IoT.
  *
  * @copyright	[DFRobot](http://www.dfrobot.com), 2016
- * @copyright	GNU Lesser General Public License
+ * @copyright	MIT
  *
- * @author [email](xiao.wu@dfrobot.com)
- * @version  V0.0.2
- * @date  2019-05-31
+ * @author [email](jie.tang@dfrobot.com)
+ * @version  V0.0.1
+ * @date  2019-12-18
  */
 
 
-//debug
-//const OBLOQ_DEBUG = false
-//const OBLOQ_MQTT_DEFAULT_SERVER = true
-//DFRobot easy iot
+
 const OBLOQ_MQTT_EASY_IOT_SERVER_CHINA = "iot.dfrobot.com.cn"
 const OBLOQ_MQTT_EASY_IOT_SERVER_GLOBAL = "mqtt.beebotte.com"
 const OBLOQ_MQTT_EASY_IOT_SERVER_EN = "iot.dfrobot.com"
 const microIoT_WEBHOOKS_URL = "maker.ifttt.com"
 const OBLOQ_MQTT_EASY_IOT_SERVER_TK = "api.thingspeak.com"
-//const OBLOQ_MQTT_EASY_IOT_PORT = 1883
-//other iot
-//const OBLOQ_MQTT_USER_IOT_SERVER = "---.-----.---"
-//const OBLOQ_MQTT_USER_IOT_PORT = 0
-//topic max number
-//const OBLOQ_MQTT_TOPIC_NUM_MAX = 5
-//wrong type
-//const OBLOQ_ERROR_TYPE_IS_SUCCE = 0
-//const OBLOQ_ERROR_TYPE_IS_ERR = 1
-//const OBLOQ_ERROR_TYPE_IS_WIFI_CONNECT_TIMEOUT = -1
-//const OBLOQ_ERROR_TYPE_IS_WIFI_CONNECT_FAILURE = -2
-//const OBLOQ_ERROR_TYPE_IS_MQTT_SUBTOPIC_TIMEOUT = -3
-//const OBLOQ_ERROR_TYPE_IS_MQTT_CONNECT_TIMEOUT = -4
-//const OBLOQ_ERROR_TYPE_IS_MQTT_CONNECT_FAILURE = -5
-//const OBLOQ_ERROR_TYPE_IS_MQTT_SUBTOPIC_FAILURE = -6
-//data type
-//const OBLOQ_STR_TYPE_IS_NONE = ""
-//const OBLOQ_BOOL_TYPE_IS_TRUE = true
-//const OBLOQ_BOOL_TYPE_IS_FALSE = false
 
 
-//天气
-//天气
-/*
-enum LOCATION {
-    //%block="Sentosa"
-    Sentosa = 0,
-    //%block="Pulau Ubin"
-    Pulau_Ubin = 1,
-    //%block="Pulau Tekong"
-    Pulau_Tekong = 2,
-    //%block="Jurong Island"
-    Jurong_Island = 3,
-    //%block="Tuas"
-    Tuas = 4,
-    //%block="Changi"
-    Changi = 5,
-    //%block="City"
-    City = 6,
-    //%block="Woodlands"
-    Woodlands = 7,
-    //%block="Lim Chu Kang"
-    Lim_Chu_Kang = 8,
-    //%block="Central Water Catchment"
-    Central_Water_Catchment = 9,
-    //%block="Bukit Timah"
-    Bukit_Timah = 10,
-    //%block="Punggol"
-    Punggol = 11,
-    //%block="Tanglin"
-    Tanglin = 12,
-    //%block="Novena"
-    Novena = 13,
-    //%block="Marine Parade"
-    Marine_Parade = 14,
-    //%block="Tampines"
-    Tampines = 15,
-    //%block="Jurong East"
-    Jurong_East = 16,
-    //%block="Paya Lebar"
-    Paya_Lebar = 17,
-    //%block="Queenstown"
-    Queenstown = 18,
-    //%block="Kallang"
-    Kallang = 19
-}
-*/
+
 enum NeoPixelColors {
     //% block=red
     Red = 0xFF0000,
@@ -114,10 +47,31 @@ enum NeoPixelColors {
     Black = 0x000000
 }
 
+enum PIN {
+    P0 = 3,
+    P1 = 2,
+    P2 = 1,
+    P8 = 18,
+    P12 = 20,
+    P13 = 23,
+    P14 = 22,
+    P16 = 16,
+};
+
+/**
+ * 超声波单位
+ */
+enum Sonicunit {
+    //% block="cm"
+    Centimeters,
+    //% block="μm"
+    MicroSeconds
+}
+
 /**
  *Obloq implementation method.
  */
-//% weight=10 color=#008B00 icon="\uf1eb" block="microIoT"
+//% weight=10 color=#ff9da5 icon="\uf1eb" block="Micro:bit Iot Kit"
 namespace microIoT {
     let IIC_ADDRESS = 0x16
     let Topic0CallBack: Action = null;
@@ -323,19 +277,7 @@ namespace microIoT {
         pins.i2cWriteBuffer(IIC_ADDRESS, buf);
     }
 
-    /*
-    //% weight=47
-    //% blockId=microIoT_motorStopAll block="Motor Stop All"
-    export function microIoT_motorStopAll(): void {
-        let buf = pins.createBuffer(3);
-        buf[0] = 0x00;
-        buf[1] = 0;
-        buf[2] = 0;
-        pins.i2cWriteBuffer(IIC_ADDRESS, buf);
-        buf[0] = 0x02;
-        pins.i2cWriteBuffer(IIC_ADDRESS, buf);
-    }*/
-
+    
     function microIoT_setPara(cmd: number, para: string): void {
         let buf = pins.createBuffer(para.length + 4);
         buf[0] = 0x1E
@@ -430,9 +372,7 @@ namespace microIoT {
         IOT_ID: string, IOT_PWD: string,
         IOT_TOPIC: string, servers: SERVERS):
         void {
-        //microIoT_Mode = MQTT
-        //microIoT_setPara(SETWIFI_NAME, SSID)
-        //microIoT_setPara(SETWIFI_PASSWORLD, PASSWORD)
+       
         if (servers == SERVERS.China) {
             microIoT_setPara(SETMQTT_SERVER, OBLOQ_MQTT_EASY_IOT_SERVER_CHINA)
         } else if (servers == SERVERS.English) {
@@ -441,29 +381,19 @@ namespace microIoT {
         microIoT_setPara(SETMQTT_PORT, "1883")
         microIoT_setPara(SETMQTT_ID, IOT_ID)
         microIoT_setPara(SETMQTT_PASSWORLD, IOT_PWD)
-        //microIoT_runCommand(CONNECT_WIFI)
-        //microIoT_CheckStatus("WiFiConnected");
-        /*
-        while (microIoT_readStatus(READ_WIFISTATUS) != WIFI_CONNECTED) {
-            basic.pause(200)
-        }*/
+       
+       
         serial.writeString("wifi conneced ok\r\n");
-        //Wifi_Status = WIFI_CONNECTED
+       
         microIoT_runCommand(CONNECT_MQTT);
         microIoT_CheckStatus("MQTTConnected");
         serial.writeString("mqtt connected\r\n");
-        /*
-        while (microIoT_readStatus(READ_MQTTSTATUS) != MQTT_CONNECTED) {
-            basic.pause(200)
-        }*/
+      
         Topic_0 = IOT_TOPIC
         microIoT_ParaRunCommand(SUB_TOPIC0, IOT_TOPIC);
         microIoT_CheckStatus("SubTopicOK");
         serial.writeString("sub topic ok\r\n");
-        /*    
-        while (microIoT_readStatus(READ_SUBSTATUS) != SUB_TOPIC_OK) {
-            basic.pause(200)
-        }*/
+       
 
     }
 
@@ -474,10 +404,7 @@ namespace microIoT {
     //% advanced=true
     export function microIoT_add_topic(top: TOPIC, IOT_TOPIC: string): void {
         microIoT_ParaRunCommand((top + 0x06), IOT_TOPIC);
-        /*
-        while (microIoT_readStatus(READ_SUBSTATUS) != SUB_TOPIC_OK) {
-            basic.pause(200)
-        }*/
+       
         microIoT_CheckStatus("SubTopicOK");
 
     }
@@ -558,39 +485,13 @@ namespace microIoT {
     //% blockId=microIoT_http_IFTTT
     //% block="Webhooks config:|event: %EVENT|key: %KEY|"
     export function microIoT_http_IFTTT(EVENT: string, KEY: string): void {
-        //microIoT_Mode = HTTP
+       
         microIoT_WEBHOOKS_EVENT = EVENT
         microIoT_WEBHOOKS_KEY = KEY
-        //microIoT_setPara(SETHTTP_IP, microIoT_WEBHOOKS_URL)
-        //microIoT_setPara(SETHTTP_PORT, "80")
-        //microIoT_runCommand(CONNECT_WIFI)
-        //microIoT_CheckStatus("WiFiConnected");
-        //Wifi_Status = WIFI_CONNECTED
+      
     }
 
-    /**
-     * Two parallel stepper motors are executed simultaneously(DegreeDual).
-     * @param SSID to SSID ,eg: "yourSSID"
-     * @param PASSWORD to PASSWORD ,eg: "yourPASSWORD"
-     * @param IP to IP ,eg: "0.0.0.0"
-     * @param PORT to PORT ,eg: 80
-    */
-	/*
-    //% weight=80
-    //% blockId=microIoT_http_setup
-    //% block="Micro:IoT setup http | http config: | ip: %IP| port: %PORT| start connection"
-    export function microIoT_http_setup(SSID: string, PASSWORD: string,
-        IP: string, PORT: number):
-        void {
-        microIoT_Mode = HTTP
-        //microIoT_setPara(SETWIFI_NAME, SSID)
-        //microIoT_setPara(SETWIFI_PASSWORLD, PASSWORD)
-        microIoT_setPara(SETHTTP_IP, IP)
-        microIoT_setPara(SETHTTP_PORT, PORT.toString())
-        microIoT_runCommand(CONNECT_WIFI)
-        microIoT_CheckStatus("WiFiConnected");
-        Wifi_Status = WIFI_CONNECTED
-    }*/
+ 
 
     function microIoT_http_wait_request(time: number): string {
         if (time < 100) {
@@ -613,20 +514,7 @@ namespace microIoT {
             }
         }
     }
-    /**
-     * The HTTP get request.url(string):URL:time(ms): private long maxWait
-     * @param time set timeout, eg: 10000
-    */
-	/*
-    //% weight=79
-    //% blockId=MicroitIoT_http_get
-    //% block="http(get) | url %url| timeout(ms) %time"
-    //% advanced=false
-    export function microIoT_http_get(url: string, time: number): string {
-        microIoT_ParaRunCommand(GET_URL, url)
-        return microIoT_http_wait_request(time);
-    }
-*/
+   
     /**
     * @param KEY to KEY ,eg: "your write api key"
     */
@@ -657,22 +545,7 @@ namespace microIoT {
         //return microIoT_http_wait_request(time);
     }
 
-    /**
-     * The HTTP put request,Obloq.put() can only be used for http protocol!
-     * url(string): URL; content(string):content; time(ms): private long maxWait
-     * @param time set timeout, eg: 10000
-    */
-	/*
-    //% weight=77
-    //% blockId=microIoT_http_put
-    //% block="http(put) | url %url| content %content| timeout(ms) %time"
-    export function microIoT_http_put(url: string, content: string, time: number): string {
-        let tempStr = ""
-        tempStr = url + "," + content;
-        microIoT_ParaRunCommand(PUT_URL, tempStr)
-        return microIoT_http_wait_request(time);
-    }
-	*/
+    
 
     /**
      * Get IP address.
@@ -1093,118 +966,7 @@ namespace microIoT {
 
 
     let microIoT_Weather_URL = "api.dfrobot.top"
-    //天气
-    /*
-    //% weight=80
-    //% block="Setting up Singapore city|%location"
-    export function Set_location(location: LOCATION): void {
-        G_city = location;
-    }
-    function get_city(): string {
-        let city = "";
-        switch (G_city) {
-            case 0:
-                city = "Sentosa";
-                break;
-            case 1:
-                city = "Pulau_Ubin";
-                break;
-            case 2:
-                city = "Pulau_Tekong";
-                break;
-            case 3:
-                city = "Jurong_Island";
-                break;
-            case 4:
-                city = "Tuas";
-                break;
-            case 5:
-                city = "Changi";
-                break;
-            case 6:
-                city = "City";
-                break;
-            case 7:
-                city = "Woodlands";
-                break;
-            case 8:
-                city = "Lim_Chu_Kang";
-                break;
-            case 9:
-                city = "Central_Water_Catchment";
-                break;
-            case 10:
-                city = "Bukit_Timah";
-                break;
-            case 11:
-                city = "Punggol";
-                break;
-            case 12:
-                city = "Tanglin";
-                break;
-            case 13:
-                city = "Novena";
-                break;
-            case 14:
-                city = "Marine_Parade";
-                break;
-            case 15:
-                city = "Tampines";
-                break;
-            case 16:
-                city = "Jurong_East";
-                break;
-            case 17:
-                city = "Paya_Lebar";
-                break;
-            case 18:
-                city = "Queenstown";
-                break;
-            case 19:
-                city = "Kallang";
-                break;
-            default:
-                city = "Sentosa";
-                break;
-        }
-        return city;
-    }
-    function get_request(city: string, info: string): string {
-        microIoT_setPara(SETHTTP_IP, microIoT_Weather_URL);
-        let tempStr = ""
-        tempStr = "weather?city=Singapore&locations=" + city + "&info=" + info + "\r"
-        microIoT_ParaRunCommand(GET_URL, tempStr)
-        return microIoT_http_wait_request(10000);
-    }
-    //% weight=80
-    //% block="Get weather"
-    export function get_weather(): string {
-        let city = get_city();
-        let ret1 = get_request(city, "weather");
-        return ret1;
-    }
-    //% weight=80
-    //% block="Get temperature"
-    export function get_temperature(): string {
-        let city = get_city();
-        let ret2 = get_request(city, "temp_high/temp_low")
-        return ret2;
-    }
-    //% weight=80
-    //% block="Get humidity"
-    export function get_humidity(): string {
-        let city = get_city();
-        let ret3 = get_request(city, "humi_high/humi_low")
-        return ret3;
-    }
-    //% weight=80
-    //% block="Get wind speed"
-    export function get_windSpeed(): string {
-        let city = get_city();
-        let ret4 = get_request(city, "winds_max/winds_min");
-        return ret4;
-    }
-*/
+   
     let _brightness = 255
     let neopixel_buf = pins.createBuffer(16 * 3);
     for (let i = 0; i < 16 * 3; i++) {
@@ -1287,6 +1049,80 @@ namespace microIoT {
     //%  block="turn off all leds"
     export function ledBlank() {
         showColor(0)
+    }
+    //% weight=60
+    //%block="read ultrasonic sensor T|%T E|%E |%sonic"
+    export function ultraSonic(T: PIN, E: PIN, sonic: Sonicunit): number {
+        let maxCmDistance = 500;
+        let ultraSonic_T;
+        let ultraSonic_E;
+        switch (T) {
+            case PIN.P0: ultraSonic_T = DigitalPin.P0; break;
+            case PIN.P1: ultraSonic_T = DigitalPin.P1; break;
+            case PIN.P2: ultraSonic_T = DigitalPin.P2; break;
+            case PIN.P8: ultraSonic_T = DigitalPin.P8; break;
+            //case PIN.P9: _T = DigitalPin.P9; break;
+            case PIN.P12: ultraSonic_T = DigitalPin.P12; break;
+            case PIN.P13: ultraSonic_T = DigitalPin.P13; break;
+            case PIN.P14: ultraSonic_T = DigitalPin.P14; break;
+            case PIN.P16: ultraSonic_T = DigitalPin.P16; break;
+            default: ultraSonic_T = DigitalPin.P0; break;
+        }
+
+        switch (E) {
+            case PIN.P0: ultraSonic_E = DigitalPin.P0; break;
+            case PIN.P1: ultraSonic_E = DigitalPin.P1; break;
+            case PIN.P2: ultraSonic_E = DigitalPin.P2; break;
+            case PIN.P8: ultraSonic_E = DigitalPin.P8; break;
+            //case PIN.P9: _E = DigitalPin.P9; break;
+            case PIN.P12: ultraSonic_E = DigitalPin.P12; break;
+            case PIN.P13: ultraSonic_E = DigitalPin.P13; break;
+            case PIN.P14: ultraSonic_E = DigitalPin.P14; break;
+            case PIN.P16: ultraSonic_E = DigitalPin.P16; break;
+            default: ultraSonic_E = DigitalPin.P0; break;
+        }
+
+        let ultraSonic_d;
+        pins.digitalWritePin(ultraSonic_T, 0);
+        if (pins.digitalReadPin(ultraSonic_E) == 0) {
+            pins.digitalWritePin(ultraSonic_T, 1);
+            // basic.pause(10);
+            pins.digitalWritePin(ultraSonic_T, 0);
+            ultraSonic_d = pins.pulseIn(ultraSonic_E, PulseValue.High, maxCmDistance * 58);
+        } else {
+            pins.digitalWritePin(ultraSonic_T, 0);
+            // basic.pause(10);
+            pins.digitalWritePin(ultraSonic_T, 1);
+            ultraSonic_d = pins.pulseIn(ultraSonic_E, PulseValue.Low, maxCmDistance * 58);
+        }
+        let ultraSonic_x = ultraSonic_d / 39;
+        if (ultraSonic_x <= 0 || ultraSonic_x > 500) {
+            return 0;
+        }
+        switch (sonic) {
+            case Sonicunit.Centimeters: return Math.round(ultraSonic_x);
+            default: return Math.idiv(ultraSonic_d, 2.54);
+        }
+
+
+    }
+    //% weight=60
+    //%block="motor|%pin speed|%speed"
+    //% speed.min=0 speed.max=255
+    export function motor(speed:number,pin:PIN) {
+        let motor_T;
+        switch (pin) {
+            case PIN.P0: motor_T = DigitalPin.P0; break;
+            case PIN.P1: motor_T = DigitalPin.P1; break;
+            case PIN.P2: motor_T = DigitalPin.P2; break;
+            case PIN.P8: motor_T = DigitalPin.P8; break;
+            //case PIN.P9: _T = DigitalPin.P9; break;
+            case PIN.P12: motor_T = DigitalPin.P12; break;
+            case PIN.P13: motor_T = DigitalPin.P13; break;
+            case PIN.P14: motor_T = DigitalPin.P14; break;
+            case PIN.P16: motor_T = DigitalPin.P16; break;
+            default: motor_T = DigitalPin.P0; break;
+        }
     }
 
 }
