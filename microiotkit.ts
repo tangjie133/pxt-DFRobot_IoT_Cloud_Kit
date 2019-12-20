@@ -58,6 +58,17 @@ enum PIN {
     P16 = 16,
 };
 
+enum PIN_1 {
+    P0 = 3,
+    P1 = 2,
+    P2 = 1,
+};
+enum Switch {
+    //% block="ON"
+    ON = 1,
+    //% block="OFF"
+    OFF = 0
+}
 /**
  * 超声波单位
  */
@@ -67,6 +78,17 @@ enum Sonicunit {
     //% block="μm"
     MicroSeconds
 }
+//DT11
+enum DT11{
+    //% block="temperature(℃)"
+    temperature_C=1,
+    //% block="temperature(℉)"
+    temperature_F=2,
+    //% block="humidity"
+    humidity=3
+
+}
+
 
 /**
  *Obloq implementation method.
@@ -211,6 +233,7 @@ namespace microIoT {
     //% blockId=microIoT_ServoRun block="Servo|%index|angle|%angle"
     //% angle.min=0 angle.max=180
     //% index.fieldEditor="gridpicker" index.fieldOptions.columns=2
+     //% advanced=true
     export function microIoT_ServoRun(index: aServos, angle: number): void {
         let buf = pins.createBuffer(2);
         if (index == 0) {
@@ -228,6 +251,7 @@ namespace microIoT {
     //% speed.min=0 speed.max=255
     //% index.fieldEditor="gridpicker" index.fieldOptions.columns=2
     //% direction.fieldEditor="gridpicker" direction.fieldOptions.columns=2
+     //% advanced=true
     export function microIoT_MotorRun(index: aMotors, direction: Dir, speed: number): void {
         let buf = pins.createBuffer(3);
         if (index == 0) {
@@ -259,6 +283,7 @@ namespace microIoT {
     //% weight=48
     //% blockId=microIoT_motorStop block="Motor stop|%motors"
     //% motors.fieldEditor="gridpicker" motors.fieldOptions.columns=2 
+     //% advanced=true
     export function microIoT_motorStop(motors: aMotors): void {
         let buf = pins.createBuffer(3);
         if (motors == 0) {
@@ -401,7 +426,6 @@ namespace microIoT {
     //% blockId=microIoT_add_topic
     //% block="subscribe additional %top |: %IOT_TOPIC"
     //% top.fieldEditor="gridpicker" top.fieldOptions.columns=2
-    //% advanced=true
     export function microIoT_add_topic(top: TOPIC, IOT_TOPIC: string): void {
         microIoT_ParaRunCommand((top + 0x06), IOT_TOPIC);
        
@@ -550,40 +574,40 @@ namespace microIoT {
     /**
      * Get IP address.
     */
-    //% weight=51
-    //% blockId=microIoT_wifi_ipconfig
-    //% block="ipconfig"
-    //% advanced=true
-    export function microIoT_wifi_ipconfig(): string {
-        return microIoT_IP;
-        //microIoT_readValue(READ_IP)
-    }
+    // //% weight=51
+    // //% blockId=microIoT_wifi_ipconfig
+    // //% block="ipconfig"
+    // //% advanced=true
+    // export function microIoT_wifi_ipconfig(): string {
+    //     return microIoT_IP;
+    //     //microIoT_readValue(READ_IP)
+    // }
 
 
     /**
      * Send the ping.time(ms): private long maxWait
      * @param time to timeout, eg: 10000
     */
-    //% weight=49
-    //% blockId=Obloq_send_ping
-    //% block="sendPing"
-    //% advanced=true
-    export function microIoT_send_ping(): boolean {
-        let buf = pins.createBuffer(3);
-        buf[0] = 0x1E;
-        buf[1] = RUN_COMMAND;
-        buf[2] = SEND_PING;
-        pins.i2cWriteBuffer(IIC_ADDRESS, buf);
-        microIoT_CheckStatus("PingOK");
-        /*
-        while (true) {
-            if (microIoTStatus == "PingOK") {
-                break;
-            }
-            basic.pause(50);
-        }*/
-        return true;
-    }
+    // //% weight=49
+    // //% blockId=Obloq_send_ping
+    // //% block="sendPing"
+    // //% advanced=true
+    // export function microIoT_send_ping(): boolean {
+    //     let buf = pins.createBuffer(3);
+    //     buf[0] = 0x1E;
+    //     buf[1] = RUN_COMMAND;
+    //     buf[2] = SEND_PING;
+    //     pins.i2cWriteBuffer(IIC_ADDRESS, buf);
+    //     microIoT_CheckStatus("PingOK");
+    //     /*
+    //     while (true) {
+    //         if (microIoTStatus == "PingOK") {
+    //             break;
+    //         }
+    //         basic.pause(50);
+    //     }*/
+    //     return true;
+    // }
 
 
     /**
@@ -609,148 +633,149 @@ namespace microIoT {
      * Heartbeat request.time(ms): private long maxWait
      * @param time to timeout, eg: 10000
     */
-    //% weight=48
-    //% blockId=microIoT_get_heartbeat
-    //% block="get heartbeat"
-    //% advanced=true
-    export function microIoT_get_heartbeat(): boolean {
-        return true
-    }
+    // //% weight=48
+    // //% blockId=microIoT_get_heartbeat
+    // //% block="get heartbeat"
+    // //% advanced=true
+    // export function microIoT_get_heartbeat(): boolean {
+    //     return true
+    // }
 
     /**
      * Stop the heartbeat request.
     */
-    //% weight=47
-    //% blockId=microIoT_stop_heartbeat
-    //% block="stop heartbeat"
-    //% advanced=true
-    export function microIoT_stop_heartbeat(): boolean {
-        return true
-    }
+    // //% weight=47
+    // //% blockId=microIoT_stop_heartbeat
+    // //% block="stop heartbeat"
+    // //% advanced=true
+    // export function microIoT_stop_heartbeat(): boolean {
+    //     return true
+    // }
 
-    function microIoT_GetData(len: number): void {
-        RECDATA = ""
-        let tempbuf = pins.createBuffer(1)
-        tempbuf[0] = 0x22
-        pins.i2cWriteBuffer(IIC_ADDRESS, tempbuf);
-        let tempRecbuf = pins.createBuffer(len)
-        tempRecbuf = pins.i2cReadBuffer(IIC_ADDRESS, len, false)
-        for (let i = 0; i < len; i++) {
-            RECDATA += String.fromCharCode(tempRecbuf[i])
-        }
-    }
+    // function microIoT_GetData(len: number): void {
+    //     RECDATA = ""
+    //     let tempbuf = pins.createBuffer(1)
+    //     tempbuf[0] = 0x22
+    //     pins.i2cWriteBuffer(IIC_ADDRESS, tempbuf);
+    //     let tempRecbuf = pins.createBuffer(len)
+    //     tempRecbuf = pins.i2cReadBuffer(IIC_ADDRESS, len, false)
+    //     for (let i = 0; i < len; i++) {
+    //         RECDATA += String.fromCharCode(tempRecbuf[i])
+    //     }
+    // }
 
-    function microIoT_InquireStatus(): void {
-        let buf = pins.createBuffer(3)
-        let tempId = 0
-        let tempStatus = 0
-        buf[0] = 0x1E
-        buf[1] = READ_STATUS
-        buf[2] = 0x06
-        pins.i2cWriteBuffer(IIC_ADDRESS, buf);
-        let recbuf = pins.createBuffer(2)
-        recbuf = pins.i2cReadBuffer(IIC_ADDRESS, 2, false)
-        tempId = recbuf[0]
-        tempStatus = recbuf[1]
-        switch (tempId) {
-            case READ_PING:
-                if (tempStatus == PING_OK) {
-                    microIoTStatus = "PingOK"
-                } else {
-                    microIoTStatus = "PingERR"
-                }
-                break;
-            case READ_WIFISTATUS:
-                if (tempStatus == WIFI_CONNECTING) {
-                    microIoTStatus = "WiFiConnecting"
-                } else if (tempStatus == WIFI_CONNECTED) {
-                    microIoTStatus = "WiFiConnected"
-                } else if (tempStatus == WIFI_DISCONNECT) {
-                    microIoTStatus = "WiFiDisconnect"
-                } else {
-                }
-                break;
-            case READ_MQTTSTATUS:
-                if (tempStatus == MQTT_CONNECTED) {
-                    microIoTStatus = "MQTTConnected"
-                } else if (tempStatus == MQTT_CONNECTERR) {
-                    microIoTStatus = "MQTTConnectERR"
-                }
-                break;
-            case READ_SUBSTATUS:
-                if (tempStatus == SUB_TOPIC_OK) {
-                    microIoTStatus = "SubTopicOK"
-                } else if (tempStatus == SUB_TOPIC_Ceiling) {
-                    microIoTStatus = "SubTopicCeiling"
-                } else {
-                    microIoTStatus = "SubTopicERR"
-                }
-                break;
-            case READ_IP:
-                microIoTStatus = "READ_IP"
-                microIoT_GetData(tempStatus)
-                microIoT_IP = RECDATA
-                break;
-            case SUB_TOPIC0:
-                microIoTStatus = "READ_TOPICDATA"
-                microIoT_GetData(tempStatus)
-                if (Topic0CallBack != null) {
-                    Topic0CallBack();
-                }
-                break;
-            case SUB_TOPIC1:
-                microIoTStatus = "READ_TOPICDATA"
-                microIoT_GetData(tempStatus)
-                if (Topic1CallBack != null) {
-                    Topic1CallBack();
-                }
-                break;
-            case SUB_TOPIC2:
-                microIoTStatus = "READ_TOPICDATA"
-                microIoT_GetData(tempStatus)
-                if (Topic2CallBack != null) {
-                    Topic2CallBack();
-                }
-                break;
-            case SUB_TOPIC3:
-                microIoTStatus = "READ_TOPICDATA"
-                microIoT_GetData(tempStatus)
-                if (Topic3CallBack != null) {
-                    Topic3CallBack();
-                }
-                break;
-            case SUB_TOPIC4:
-                microIoTStatus = "READ_TOPICDATA"
-                microIoT_GetData(tempStatus)
-                if (Topic4CallBack != null) {
-                    Topic4CallBack();
-                }
-                break;
-            case HTTP_REQUEST:
-                microIoTStatus = "HTTP_REQUEST"
-                microIoT_GetData(tempStatus)
-                break;
-            case READ_VERSION:
-                microIoTStatus = "READ_VERSION"
-                microIoT_GetData(tempStatus)
-                break;
-            default:
-                break;
-        }
-        basic.pause(200);
-    }
-    basic.forever(function () {
-        microIoT_InquireStatus();
-    })
+    // function microIoT_InquireStatus(): void {
+    //     let buf = pins.createBuffer(3)
+    //     let tempId = 0
+    //     let tempStatus = 0
+    //     buf[0] = 0x1E
+    //     buf[1] = READ_STATUS
+    //     buf[2] = 0x06
+    //     pins.i2cWriteBuffer(IIC_ADDRESS, buf);
+    //     let recbuf = pins.createBuffer(2)
+    //     recbuf = pins.i2cReadBuffer(IIC_ADDRESS, 2, false)
+    //     tempId = recbuf[0]
+    //     tempStatus = recbuf[1]
+    //     switch (tempId) {
+    //         case READ_PING:
+    //             if (tempStatus == PING_OK) {
+    //                 microIoTStatus = "PingOK"
+    //             } else {
+    //                 microIoTStatus = "PingERR"
+    //             }
+    //             break;
+    //         case READ_WIFISTATUS:
+    //             if (tempStatus == WIFI_CONNECTING) {
+    //                 microIoTStatus = "WiFiConnecting"
+    //             } else if (tempStatus == WIFI_CONNECTED) {
+    //                 microIoTStatus = "WiFiConnected"
+    //             } else if (tempStatus == WIFI_DISCONNECT) {
+    //                 microIoTStatus = "WiFiDisconnect"
+    //             } else {
+    //             }
+    //             break;
+    //         case READ_MQTTSTATUS:
+    //             if (tempStatus == MQTT_CONNECTED) {
+    //                 microIoTStatus = "MQTTConnected"
+    //             } else if (tempStatus == MQTT_CONNECTERR) {
+    //                 microIoTStatus = "MQTTConnectERR"
+    //             }
+    //             break;
+    //         case READ_SUBSTATUS:
+    //             if (tempStatus == SUB_TOPIC_OK) {
+    //                 microIoTStatus = "SubTopicOK"
+    //             } else if (tempStatus == SUB_TOPIC_Ceiling) {
+    //                 microIoTStatus = "SubTopicCeiling"
+    //             } else {
+    //                 microIoTStatus = "SubTopicERR"
+    //             }
+    //             break;
+    //         case READ_IP:
+    //             microIoTStatus = "READ_IP"
+    //             microIoT_GetData(tempStatus)
+    //             microIoT_IP = RECDATA
+    //             break;
+    //         case SUB_TOPIC0:
+    //             microIoTStatus = "READ_TOPICDATA"
+    //             microIoT_GetData(tempStatus)
+    //             if (Topic0CallBack != null) {
+    //                 Topic0CallBack();
+    //             }
+    //             break;
+    //         case SUB_TOPIC1:
+    //             microIoTStatus = "READ_TOPICDATA"
+    //             microIoT_GetData(tempStatus)
+    //             if (Topic1CallBack != null) {
+    //                 Topic1CallBack();
+    //             }
+    //             break;
+    //         case SUB_TOPIC2:
+    //             microIoTStatus = "READ_TOPICDATA"
+    //             microIoT_GetData(tempStatus)
+    //             if (Topic2CallBack != null) {
+    //                 Topic2CallBack();
+    //             }
+    //             break;
+    //         case SUB_TOPIC3:
+    //             microIoTStatus = "READ_TOPICDATA"
+    //             microIoT_GetData(tempStatus)
+    //             if (Topic3CallBack != null) {
+    //                 Topic3CallBack();
+    //             }
+    //             break;
+    //         case SUB_TOPIC4:
+    //             microIoTStatus = "READ_TOPICDATA"
+    //             microIoT_GetData(tempStatus)
+    //             if (Topic4CallBack != null) {
+    //                 Topic4CallBack();
+    //             }
+    //             break;
+    //         case HTTP_REQUEST:
+    //             microIoTStatus = "HTTP_REQUEST"
+    //             microIoT_GetData(tempStatus)
+    //             break;
+    //         case READ_VERSION:
+    //             microIoTStatus = "READ_VERSION"
+    //             microIoT_GetData(tempStatus)
+    //             break;
+    //         default:
+    //             break;
+    //     }
+    //     basic.pause(200);
+    // }
+    // basic.forever(function () {
+    //     microIoT_InquireStatus();
+    // })
 
 
 
     /**
- * OLED
- */
+     * OLED
+    */
 
-    //% weight=200
+    //% weight=250
     //% block="initDisplay"
+    //% advanced=true
     export function initDisplay(): void {
         cmd(0xAE);  // Set display OFF
         cmd(0xD5);  // Set Display Clock Divide Ratio / OSC Frequency 0xD4
@@ -779,6 +804,7 @@ namespace microIoT {
     }
     //% weight=60
     //% block="clear"
+    //% advanced=true
     export function clear() {
         //cmd(DISPLAY_OFF);   //display off
         for (let j = 0; j < 8; j++) {
@@ -818,6 +844,7 @@ namespace microIoT {
     //% text.defl="DFRobot"
     //% line.min=0 line.max=7
     //% block="OLED show line %line|text %text"
+    //% advanced=true
     export function showUserText(line: number, text: string): void {
         setText(line, 0);
         for (let c of text) {
@@ -838,7 +865,7 @@ namespace microIoT {
     //% weight=60
     //% line.min=0 line.max=7
     //% block="OLED show line %line|number %n"
-
+    //% advanced=true
     export function showUserNumber(line: number, n: number): void {
         microIoT.showUserText(line, "" + n)
     }
@@ -979,6 +1006,7 @@ namespace microIoT {
     //% g.min=0 g.max=255
     //% b.min=0 b.max=255
     //%  block="R|%r G|%g B|%b"
+    //% advanced=true
     export function rgb(r: number, g: number, b: number): number {
         return (r << 16) + (g << 8) + (b);
     }
@@ -988,6 +1016,7 @@ namespace microIoT {
     //% to.min=0 to.max=3
     //% to.defl=3
     //%  block="led range from|%from to|%to"
+    //% advanced=true
     export function ledRange(from: number, to: number): number {
         return (from << 16) + (2 << 8) + (to);
     }
@@ -995,7 +1024,8 @@ namespace microIoT {
     //% weight=60
     //% index.min=0 index.max=3
     //% rgb.shadow="colorNumberPicker"
-    //%  block="set led index |%index color|%rgb"
+    //% block="set led index |%index color|%rgb"
+    //% advanced=true
     export function setIndexColor(index: number, rgb: number) {
         let f = index;
         let t = index;
@@ -1024,6 +1054,7 @@ namespace microIoT {
     //% weight=60
     //% rgb.shadow="colorNumberPicker"
     //%  block="show color |%rgb"
+    //% advanced=true
     export function showColor(rgb: number) {
         let r = (rgb >> 16) * (_brightness / 255);
         let g = ((rgb >> 8) & 0xFF) * (_brightness / 255);
@@ -1042,16 +1073,21 @@ namespace microIoT {
     //% weight=60
     //% brightness.min=0 brightness.max=255
     //% block="set brightness |%brightness"
+    //% advanced=true
     export function setBrightness(brightness: number) {
         _brightness = brightness;
     }
     //% weight=60
     //%  block="turn off all leds"
+    //% advanced=true
     export function ledBlank() {
         showColor(0)
     }
-    //% weight=60
-    //%block="read ultrasonic sensor T|%T E|%E |%sonic"
+
+    //超声波
+    //% weight=40
+    //% block="read ultrasonic sensor T|%T E|%E |%sonic"
+    //% advanced=true
     export function ultraSonic(T: PIN, E: PIN, sonic: Sonicunit): number {
         let maxCmDistance = 500;
         let ultraSonic_T;
@@ -1106,23 +1142,250 @@ namespace microIoT {
 
 
     }
-    //% weight=60
-    //%block="motor|%pin speed|%speed"
-    //% speed.min=0 speed.max=255
-    export function motor(speed:number,pin:PIN) {
-        let motor_T;
+    //光线
+    //% weight=40
+    //% block="set pin|%pin reading intensity "
+    //% advanced=true
+    export function intenskity(pin:PIN_1): number{
+        let intenskity_T;
         switch (pin) {
-            case PIN.P0: motor_T = DigitalPin.P0; break;
-            case PIN.P1: motor_T = DigitalPin.P1; break;
-            case PIN.P2: motor_T = DigitalPin.P2; break;
-            case PIN.P8: motor_T = DigitalPin.P8; break;
-            //case PIN.P9: _T = DigitalPin.P9; break;
-            case PIN.P12: motor_T = DigitalPin.P12; break;
-            case PIN.P13: motor_T = DigitalPin.P13; break;
-            case PIN.P14: motor_T = DigitalPin.P14; break;
-            case PIN.P16: motor_T = DigitalPin.P16; break;
-            default: motor_T = DigitalPin.P0; break;
+            case PIN_1.P0: intenskity_T = AnalogPin.P0; break;
+            case PIN_1.P1: intenskity_T = AnalogPin.P1; break;
+            case PIN_1.P2: intenskity_T = AnalogPin.P2; break;
+            default: intenskity_T = AnalogPin.P0; break;
         }
+        return pins.analogReadPin(intenskity_T);
     }
 
+    //运动
+    //% weight=40
+    //% block="set pin|%pin reading motion sensor "
+    //% advanced=true
+    export function motinSensor(pin: PIN_1): number {
+        let motinSensor_T;
+        switch (pin) {
+            case PIN_1.P0: motinSensor_T = AnalogPin.P0; break;
+            case PIN_1.P1: motinSensor_T = AnalogPin.P1; break;
+            case PIN_1.P2: motinSensor_T = AnalogPin.P2; break;
+            default: motinSensor_T = AnalogPin.P0; break;
+        }
+        let motinSensor_x = pins.analogReadPin(motinSensor_T);
+        if (motinSensor_x == 1){return 0}
+        else {return 1}
+    }
+
+    //声音
+    //% weight=40
+    //% block="set pin|%pin read sound intensity "
+    //% advanced=true
+    export function soundIntensity(pin:PIN_1):number{
+        let soundIntensity_T;
+        switch (pin) {
+            case PIN_1.P0: soundIntensity_T = AnalogPin.P0; break;
+            case PIN_1.P1: soundIntensity_T = AnalogPin.P1; break;
+            case PIN_1.P2: soundIntensity_T = AnalogPin.P2; break;
+            default: soundIntensity_T = AnalogPin.P0; break;
+        }
+        return pins.analogReadPin(soundIntensity_T);
+    }
+
+    //火焰
+    //% weight=40
+    //% block="set pin|%pin read flame sensor "
+    //% advanced=true
+    export function flame(pin:PIN_1):number{
+        let flame_T;
+        switch (pin) {
+            case PIN_1.P0: flame_T = AnalogPin.P0; break;
+            case PIN_1.P1: flame_T = AnalogPin.P1; break;
+            case PIN_1.P2: flame_T = AnalogPin.P2; break;
+            default: flame_T = AnalogPin.P0; break;
+        }
+        return pins.analogReadPin(flame_T);
+    }
+    //水份
+    //% weight=40
+    //% block="set pin|%pin read moisture sensor"
+    //% advanced=true
+    export function moisture(pin:PIN_1):number{
+        let moisture_T;
+        switch (pin) {
+            case PIN_1.P0: moisture_T = AnalogPin.P0; break;
+            case PIN_1.P1: moisture_T = AnalogPin.P1; break;
+            case PIN_1.P2: moisture_T = AnalogPin.P2; break;
+            default: moisture_T = AnalogPin.P0; break;
+        }
+        return Math.round(pins.analogReadPin(moisture_T));
+    }
+    //土壤湿度
+    //% weight=40
+    //% block="set pin|%pin read the soil moisture sensor"
+    //% advanced=true
+    export function soilMoisture(pin: PIN_1): number {
+        let soilMoisture_T;
+        switch (pin) {
+            case PIN_1.P0: soilMoisture_T = AnalogPin.P0; break;
+            case PIN_1.P1: soilMoisture_T = AnalogPin.P1; break;
+            case PIN_1.P2: soilMoisture_T = AnalogPin.P2; break;
+            default: soilMoisture_T = AnalogPin.P0; break;
+        }
+        return Math.round(pins.analogReadPin(soilMoisture_T));
+    }
+    //紫外线传感器
+    //% weight=40
+    //% block="set pin|%pin read uv intensity"
+    //% advanced=true
+    export function readeUV(pin: PIN_1): number {
+        let readeUV_T;
+        let readeUV_x;
+        let readeUV_y;
+        switch (pin) {
+            case PIN_1.P0: readeUV_T = AnalogPin.P0; break;
+            case PIN_1.P1: readeUV_T = AnalogPin.P1; break;
+            case PIN_1.P2: readeUV_T = AnalogPin.P2; break;
+            default: readeUV_T = AnalogPin.P0; 
+        }
+        readeUV_x = pins.analogReadPin(readeUV_T);
+        switch (readeUV_x){
+            case 0: readeUV_y = 5;break;
+            case 1: readeUV_y = 46; break;
+            case 2: readeUV_y = 65; break;
+            case 3: readeUV_y = 83; break;
+            case 4: readeUV_y = 103; break;
+            case 5: readeUV_y = 124; break;
+            case 6: readeUV_y = 142; break;
+            case 7: readeUV_y = 162; break;
+            case 8: readeUV_y = 180; break;
+            case 9: readeUV_y = 200; break;
+            case 10: readeUV_y = 221; break;
+            default: readeUV_y =240;
+        }
+        return readeUV_y; 
+    }
+    //温湿度传感器
+    //% weight=40
+    //% block="set pin|%pin read |%index"
+    //% advanced=true
+    export function index(pin: PIN, index: DT11):number{
+
+        let index_T;
+        switch (pin) {
+            case PIN.P0: index_T = DigitalPin.P0; break;
+            case PIN.P1: index_T = DigitalPin.P1; break;
+            case PIN.P2: index_T = DigitalPin.P2; break;
+            case PIN.P8: index_T = DigitalPin.P8; break;
+            //case PIN.P9: _T = DigitalPin.P9; break;
+            case PIN.P12: index_T = DigitalPin.P12; break;
+            case PIN.P13: index_T = DigitalPin.P13; break;
+            case PIN.P14: index_T = DigitalPin.P14; break;
+            case PIN.P16: index_T = DigitalPin.P16; break;
+            default: index_T = DigitalPin.P0; break;
+        }
+        pins.digitalWritePin(index_T, 0);
+        basic.pause(20);
+        //pins.digitalWritePin(index_T, 1);
+       let i = pins.digitalReadPin(index_T);
+        pins.setPull(index_T, PinPullMode.PullUp);
+
+        //while (pins.digitalReadPin(index_T) == 1);
+        while (pins.digitalReadPin(index_T) == 0);
+        while (pins.digitalReadPin(index_T) == 1);
+
+        let index_value = 0;
+        let index_counter = 0;
+
+        for (let i = 0; i <= 32 - 1; i++) {
+            while (pins.digitalReadPin(index_T) == 0){
+                index_counter = 0;
+            }
+            while (pins.digitalReadPin(index_T) == 1) {
+                index_counter += 1;
+            }
+            if (i > 15) {
+                if (index_counter > 2) {
+                    index_value = index_value + (1 << (31 - i));
+                }
+            }
+        }
+        basic.pause(1100);
+           switch(index){
+               case 1: return Math.round((index_value & 0x0000ff00)>>8);break
+               case 2: return Math.round((((index_value & 0x0000ff00) >> 8) * 9 / 5) + 32); break
+               default: return Math.round(index_value>> 24)
+           }
+           
+        
+    }
+   
+    //电扇
+    //% weight=40
+    //% block="set pin|%pin turn |%fan small fan"
+    //% advanced=true
+    export function fan(pin: PIN, fan:Switch):void{
+        let fan_T;
+        switch (pin) {
+            case PIN.P0: fan_T = DigitalPin.P0; break;
+            case PIN.P1: fan_T = DigitalPin.P1; break;
+            case PIN.P2: fan_T = DigitalPin.P2; break;
+            case PIN.P8: fan_T = DigitalPin.P8; break;
+            //case PIN.P9: _T = DigitalPin.P9; break;
+            case PIN.P12: fan_T = DigitalPin.P12; break;
+            case PIN.P13: fan_T = DigitalPin.P13; break;
+            case PIN.P14: fan_T = DigitalPin.P14; break;
+            case PIN.P16: fan_T = DigitalPin.P16; break;
+            default: fan_T = DigitalPin.P0; break;
+        }
+        pins.digitalWritePin(fan_T, fan)
+    }
+    //TDS
+     /**
+     * TDS meter reading
+     * @param t temperture; eg: 25, 20, 30
+     */
+     //% weight=40
+    //% block="set pin|%pin turn |%t small fan"
+    //% advanced=true
+    export function getTds(pin:PIN_1,t:number):number{
+        let getTds_T;
+        switch (pin) {
+            case PIN_1.P0: getTds_T = AnalogPin.P0; break;
+            case PIN_1.P1: getTds_T = AnalogPin.P1; break;
+            case PIN_1.P2: getTds_T = AnalogPin.P2; break;
+            default: getTds_T = AnalogPin.P0; break;
+        }
+
+        let coeff = 1 + 0.02 * (t - 25)
+        let analogValue: number[] = []
+        for (let k = 0; k < 30; k++) {
+            analogValue[k] = pins.analogReadPin(getTds_T)
+            basic.pause(40)
+        }
+        let voltage = getMedian(analogValue) * 5 / 1024
+        let compensationVolatge = voltage / coeff
+        let tdsValue = (133.42 * compensationVolatge * compensationVolatge * compensationVolatge - 255.86 * compensationVolatge * compensationVolatge + 857.39 * compensationVolatge) * 0.5
+        return tdsValue
+    }
+    
+    function getMedian(bArray: number[]): number {
+        let bTab: number[] = []
+        let iFilterLen = bArray.length
+        let bTemp = 0
+        for (let i = 0; i < iFilterLen; i++) {
+            bTab[i] = bArray[i]
+        }
+        for (let i = 0; i < iFilterLen - 1; i++) {
+            for (let j = 0; j < iFilterLen - i - 1; j++) {
+                if (bTab[j] > bTab[j + 1]) {
+                    bTemp = bTab[j]
+                    bTab[j] = bTab[j + 1]
+                    bTab[j + 1] = bTemp
+                }
+            }
+        }
+        if ((iFilterLen & 1) > 0)
+            bTemp = bTab[(iFilterLen - 1) / 2]
+        else
+            bTemp = (bTab[iFilterLen / 2] + bTab[iFilterLen / 2 - 1]) / 2
+        return bTemp
+    }
 }
