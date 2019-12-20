@@ -11,6 +11,7 @@
         "README.md",
         "ws2812b.ts",
         "microiotkit.ts"
+		"_locales/zh-cn/micro_iot_kit-strings.json",
     ],
     "preferredEditor": "tsprj",
     "testFiles": [
