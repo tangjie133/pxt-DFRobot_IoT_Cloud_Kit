@@ -614,7 +614,7 @@ namespace microIoT {
      * Get the software version.time(ms): private long maxWait
      * @param time to timeout, eg: 10000
     */
-    //% weight=50
+    //% weight=20
     //% blockId=microIoT_get_version
     //% block="get version"
     //% advanced=true
@@ -1086,7 +1086,7 @@ namespace microIoT {
 
     //超声波
     //% weight=40
-    //% block="read ultrasonic sensor T|%T E|%E cm"
+    //% block="read ultrasonic sensor T|%T E|%E (cm)"
     //% advanced=true
     export function ultraSonic(T: PIN, E: PIN,): number {
         let maxCmDistance = 500;
