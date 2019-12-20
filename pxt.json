@@ -1,5 +1,5 @@
 {
-    "name": "microbitiotkit",
+    "name": "microbit_iot_kit",
     "files": [
         ".vscode/settings.json",
         ".vscode/tasks.json",
