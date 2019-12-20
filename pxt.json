@@ -1,20 +1,20 @@
 {
-    "name": "micro_iot_kit",
-    "dependencies": {
-        "core": "*",
-        "radio": "*"
-    },
-    "description": "",
+    "name": "microbit_iot_kit",
     "files": [
+        ".vscode/settings.json",
+        ".vscode/tasks.json",
+        "README.md",
+        "_locales/zh-cn/microbit_iot_kit-strings.json",
+        "_locales/zh-tw/microIoT-strings.json",
         "main.blocks",
         "main.ts",
-        "README.md",
-        "ws2812b.ts",
-        "microiotkit.ts"
-		"_locales/zh-cn/micro_iot_kit-strings.json",
+        "microiotkit.ts",
+        "test.ts",
+        "tsconfig.json",
+        "ws2812b.ts"
     ],
-    "preferredEditor": "tsprj",
-    "testFiles": [
-        "test.ts"
-    ]
+    "dependencies": {
+        "core": "*"
+    },
+    "preferredEditor": "tsprj"
 }
