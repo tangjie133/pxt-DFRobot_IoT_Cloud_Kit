@@ -1086,9 +1086,9 @@ namespace microIoT {
 
     //超声波
     //% weight=40
-    //% block="read ultrasonic sensor T|%T E|%E |%sonic"
+    //% block="read ultrasonic sensor T|%T E|%E cm"
     //% advanced=true
-    export function ultraSonic(T: PIN, E: PIN, sonic: Sonicunit): number {
+    export function ultraSonic(T: PIN, E: PIN,): number {
         let maxCmDistance = 500;
         let ultraSonic_T;
         let ultraSonic_E;
@@ -1135,11 +1135,7 @@ namespace microIoT {
         if (ultraSonic_x <= 0 || ultraSonic_x > 500) {
             return 0;
         }
-        switch (sonic) {
-            case Sonicunit.Centimeters: return Math.round(ultraSonic_x);
-            default: return Math.idiv(ultraSonic_d, 2.54);
-        }
-
+        return Math.round(ultraSonic_x);
 
     }
     //光线
@@ -1343,7 +1339,7 @@ namespace microIoT {
      * @param t temperture; eg: 25, 20, 30
      */
      //% weight=40
-    //% block="set pin|%pin turn |%t small fan"
+    //% block="set pin|%pin reade(ppm) set temperture|%t"
     //% advanced=true
     export function getTds(pin:PIN_1,t:number):number{
         let getTds_T;
@@ -1363,7 +1359,7 @@ namespace microIoT {
         let voltage = getMedian(analogValue) * 5 / 1024
         let compensationVolatge = voltage / coeff
         let tdsValue = (133.42 * compensationVolatge * compensationVolatge * compensationVolatge - 255.86 * compensationVolatge * compensationVolatge + 857.39 * compensationVolatge) * 0.5
-        return tdsValue
+        return Math.round(tdsValue/2)
     }
     
     function getMedian(bArray: number[]): number {
