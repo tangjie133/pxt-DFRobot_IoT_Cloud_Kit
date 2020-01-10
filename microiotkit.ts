@@ -1,28 +1,24 @@
-// 在此处添加您的代码
 /*！
- * @file pxt-microbit_iot_kit/microiotkit.ts
+ * @file pxt-microIoT/microIoT.ts
  * @brief DFRobot's obloq makecode library.
- * @n [Get the module here]()
+ * @n [Get the module here](http://www.dfrobot.com.cn/goods-1577.html)
  * @n Obloq is a serial port of WIFI connection module, Obloq can connect 
  *    to Microsoft Azure IoT and other standard MQTT protocol IoT.
  *
  * @copyright	[DFRobot](http://www.dfrobot.com), 2016
- * @copyright	MIT
+ * @copyright	MIT Lesser General Public License
  *
  * @author [email](jie.tang@dfrobot.com)
- * @version  V0.0.1
- * @date  2019-12-18
+ * @version  V0.0.3
+ * @date  2019-12-31
  */
-
-
 
 const OBLOQ_MQTT_EASY_IOT_SERVER_CHINA = "iot.dfrobot.com.cn"
 const OBLOQ_MQTT_EASY_IOT_SERVER_GLOBAL = "mqtt.beebotte.com"
 const OBLOQ_MQTT_EASY_IOT_SERVER_EN = "iot.dfrobot.com"
 const microIoT_WEBHOOKS_URL = "maker.ifttt.com"
 const OBLOQ_MQTT_EASY_IOT_SERVER_TK = "api.thingspeak.com"
-
-
+const microIoT_Weather_URL = "api.dfrobot.top"
 
 enum NeoPixelColors {
     //% block=red
@@ -56,39 +52,29 @@ enum PIN {
     P13 = 23,
     P14 = 22,
     P16 = 16,
-};
+}
 
 enum PIN_1 {
     P0 = 3,
     P1 = 2,
     P2 = 1,
-};
+}
+//DT11
+enum DT11 {
+    //% block="temperature(℃)"
+    temperature_C = 1,
+    //% block="temperature(℉)"
+    temperature_F = 2,
+    //% block="humidity"
+    humidity = 3
+}
+
 enum Switch {
     //% block="ON"
     ON = 1,
     //% block="OFF"
     OFF = 0
 }
-/**
- * 超声波单位
- */
-enum Sonicunit {
-    //% block="cm"
-    Centimeters,
-    //% block="μm"
-    MicroSeconds
-}
-//DT11
-enum DT11{
-    //% block="temperature(℃)"
-    temperature_C=1,
-    //% block="temperature(℉)"
-    temperature_F=2,
-    //% block="humidity"
-    humidity=3
-
-}
-
 
 /**
  *Obloq implementation method.
@@ -105,8 +91,6 @@ namespace microIoT {
 
     let microIoT_WEBHOOKS_KEY = ""
     let microIoT_WEBHOOKS_EVENT = ""
-
-    //let microIoT_Mode = 0x00
 
     let READ_STATUS = 0x00
     let SET_PARA = 0x01
@@ -155,7 +139,6 @@ namespace microIoT {
     let READ_VERSION = 0x12
 
     /*para status */
-    //let PING_ERR = 0x00
     let PING_OK = 0x01
     let WIFI_DISCONNECT = 0x00
     let WIFI_CONNECTING = 0x02
@@ -164,10 +147,9 @@ namespace microIoT {
     let MQTT_CONNECTERR = 0x02
     let SUB_TOPIC_OK = 0x01
     let SUB_TOPIC_Ceiling = 0x02
-    //let SUB_TOPIC_ERR = 0x03
+
 
     let microIoTStatus = ""
-    //let microIoTData = ""
     let WIFI_NAME = ""
     let WIFI_PASSWORLD = ""
     let MQTT_SERVER = ""
@@ -184,7 +166,7 @@ namespace microIoT {
     let HTTP_PORT = ""
     let microIoT_IP = "0.0.0.0"
     let G_city = 0;
-
+    
     export enum aMotors {
         //% blockId="M1" block="M1"
         M1 = 0,
@@ -229,11 +211,14 @@ namespace microIoT {
         public message: string;
     }
 
+    /**
+     * Set the microIoT servos.
+     */
+
     //% weight=50
     //% blockId=microIoT_ServoRun block="Servo|%index|angle|%angle"
     //% angle.min=0 angle.max=180
     //% index.fieldEditor="gridpicker" index.fieldOptions.columns=2
-     //% advanced=true
     export function microIoT_ServoRun(index: aServos, angle: number): void {
         let buf = pins.createBuffer(2);
         if (index == 0) {
@@ -246,12 +231,15 @@ namespace microIoT {
         pins.i2cWriteBuffer(0x16, buf);
     }
 
+    /**
+     * Set the microIoT motor 
+     */
+
     //% weight=49
     //% blockId=microIoT_MotorRun block="Motor|%index|dir|%Dir|speed|%speed"
     //% speed.min=0 speed.max=255
     //% index.fieldEditor="gridpicker" index.fieldOptions.columns=2
     //% direction.fieldEditor="gridpicker" direction.fieldOptions.columns=2
-     //% advanced=true
     export function microIoT_MotorRun(index: aMotors, direction: Dir, speed: number): void {
         let buf = pins.createBuffer(3);
         if (index == 0) {
@@ -280,10 +268,14 @@ namespace microIoT {
         buf[2] = speed;
         pins.i2cWriteBuffer(IIC_ADDRESS, buf);
     }
+
+    /**
+     * Set the motor stop
+     */
+
     //% weight=48
     //% blockId=microIoT_motorStop block="Motor stop|%motors"
     //% motors.fieldEditor="gridpicker" motors.fieldOptions.columns=2 
-     //% advanced=true
     export function microIoT_motorStop(motors: aMotors): void {
         let buf = pins.createBuffer(3);
         if (motors == 0) {
@@ -302,7 +294,7 @@ namespace microIoT {
         pins.i2cWriteBuffer(IIC_ADDRESS, buf);
     }
 
-    
+
     function microIoT_setPara(cmd: number, para: string): void {
         let buf = pins.createBuffer(para.length + 4);
         buf[0] = 0x1E
@@ -368,10 +360,10 @@ namespace microIoT {
     }
 
     /**
-         * Two parallel stepper motors are executed simultaneously(DegreeDual).
-         * @param SSID to SSID ,eg: "yourSSID"
-         * @param PASSWORD to PASSWORD ,eg: "yourPASSWORD"
-         */
+    * WiFi configuration
+    * @param SSID to SSID ,eg: "yourSSID"
+    * @param PASSWORD to PASSWORD ,eg: "yourPASSWORD"
+    */
 
     //% weight=100
     //% blockId=microIoT_wifi block="Micro:IoT setup |Wi-Fi: |name: %SSID| password：%PASSWORD"
@@ -382,14 +374,16 @@ namespace microIoT {
         microIoT_CheckStatus("WiFiConnected");
         Wifi_Status = WIFI_CONNECTED
     }
+
     /**
-     * Two parallel stepper motors are executed simultaneously(DegreeDual).
+     * MQTT configuration
      * @param SSID to SSID ,eg: "yourSSID"
      * @param PASSWORD to PASSWORD ,eg: "yourPASSWORD"
      * @param IOT_ID to IOT_ID ,eg: "yourIotId"
      * @param IOT_PWD to IOT_PWD ,eg: "yourIotPwd"
      * @param IOT_TOPIC to IOT_TOPIC ,eg: "yourIotTopic"
     */
+
     //% weight=100
     //% blockExternalInputs=1
     //% blockId=microIoT_MQTT block="Micro:IoT setup mqtt|IOT_ID: %IOT_ID| IOT_PWD :%IOT_PWD| IoT service:|(default topic_0) Topic: %IOT_TOPIC| start connection:| server: %SERVERS"
@@ -397,7 +391,6 @@ namespace microIoT {
         IOT_ID: string, IOT_PWD: string,
         IOT_TOPIC: string, servers: SERVERS):
         void {
-       
         if (servers == SERVERS.China) {
             microIoT_setPara(SETMQTT_SERVER, OBLOQ_MQTT_EASY_IOT_SERVER_CHINA)
         } else if (servers == SERVERS.English) {
@@ -406,35 +399,38 @@ namespace microIoT {
         microIoT_setPara(SETMQTT_PORT, "1883")
         microIoT_setPara(SETMQTT_ID, IOT_ID)
         microIoT_setPara(SETMQTT_PASSWORLD, IOT_PWD)
-       
-       
         serial.writeString("wifi conneced ok\r\n");
-       
         microIoT_runCommand(CONNECT_MQTT);
         microIoT_CheckStatus("MQTTConnected");
         serial.writeString("mqtt connected\r\n");
-      
+
         Topic_0 = IOT_TOPIC
         microIoT_ParaRunCommand(SUB_TOPIC0, IOT_TOPIC);
         microIoT_CheckStatus("SubTopicOK");
         serial.writeString("sub topic ok\r\n");
-       
 
     }
+
+    /**
+     * Add an MQTT subscription
+     */
 
     //% weight=200
     //% blockId=microIoT_add_topic
     //% block="subscribe additional %top |: %IOT_TOPIC"
     //% top.fieldEditor="gridpicker" top.fieldOptions.columns=2
+    //% advanced=true
     export function microIoT_add_topic(top: TOPIC, IOT_TOPIC: string): void {
         microIoT_ParaRunCommand((top + 0x06), IOT_TOPIC);
-       
         microIoT_CheckStatus("SubTopicOK");
 
     }
+
     /**
+     * MQTT sends information to the corresponding subscription
      * @param Mess to Mess ,eg: "mess"
      */
+
     //% weight=99
     //% blockId=microIoT_SendMessage block="MQTT Send Message %string| to |%TOPIC"
     export function microIoT_SendMessage(Mess: string, Topic: TOPIC): void {
@@ -485,7 +481,9 @@ namespace microIoT {
                 break;
         }
     }
-
+    /**
+     * MQTT processes the subscription receiving information
+     */
     //% weight=98
     //% blockGap=60
     //% blockId=obloq_mqtt_callback_user_more block="MQTT on %top |received"
@@ -500,22 +498,20 @@ namespace microIoT {
 
 
     /**
-         * @param EVENT to EVENT ,eg: "yourEvent"
-         * @param KEY to KEY ,eg: "yourKey"
-        */
+    * IFTTT configuration
+    * @param EVENT to EVENT ,eg: "yourEvent"
+    * @param KEY to KEY ,eg: "yourKey"
+    */
     //% weight=80
     //% receive.fieldEditor="gridpicker" receive.fieldOptions.columns=3
     //% send.fieldEditor="gridpicker" send.fieldOptions.columns=3
     //% blockId=microIoT_http_IFTTT
     //% block="Webhooks config:|event: %EVENT|key: %KEY|"
     export function microIoT_http_IFTTT(EVENT: string, KEY: string): void {
-       
         microIoT_WEBHOOKS_EVENT = EVENT
         microIoT_WEBHOOKS_KEY = KEY
-      
     }
 
- 
 
     function microIoT_http_wait_request(time: number): string {
         if (time < 100) {
@@ -538,26 +534,28 @@ namespace microIoT {
             }
         }
     }
-   
+
     /**
+    * ThingSpeak configured and sent data
     * @param KEY to KEY ,eg: "your write api key"
     */
 
     //% weight=99
     //% blockId=IFTTT_MQTT_Weather_ThingSpeak_Get
     //% block="ThingSpeak(Get) | key %KEY|value1 %field1| value2 %field2| value3 %field3|  value4 %field4| value5 %field5| value6 %field6| value7 %field7| timeout(ms) %time"
-    export function Obloq_http_TK_GET(KEY: string, field1: string, field2: string, field3: string, field4: string, field5: string, field6: string, field7: string, time: number): void {
+    export function microIoT_http_TK_GET(KEY: string, field1: string, field2: string, field3: string, field4: string, field5: string, field6: string, field7: string, time: number): void {
         microIoT_setPara(SETHTTP_IP, OBLOQ_MQTT_EASY_IOT_SERVER_TK)
         let tempStr = ""
         tempStr = "update?api_key=" + KEY + "&field1=" + field1 + "&field2=" + field2 + "&field3=" + field3 + "&field4=" + field4 + "&field5=" + field5 + "&field6=" + field6 + "&field7=" + field7 + "\r"
         microIoT_ParaRunCommand(GET_URL, tempStr);
-        //return microIoT_http_wait_request(time);
     }
+
     /**
-     * The HTTP post request.url(string): URL; content(string):content
+     * IFTTT send data
      * time(ms): private long maxWait
      * @param time set timeout, eg: 10000
     */
+
     //% weight=78
     //% blockId=microIoT_http_post
     //% block="IFTTT(post) | value1 %value1| value2 %value2| value3 %value3| timeout(ms) %time"
@@ -566,55 +564,50 @@ namespace microIoT {
         let tempStr = ""
         tempStr = "trigger/" + microIoT_WEBHOOKS_EVENT + "/with/key/" + microIoT_WEBHOOKS_KEY + ",{\"value1\":\"" + value1 + "\",\"value2\":\"" + value2 + "\",\"value3\":\"" + value3 + "\" }" + "\r"
         microIoT_ParaRunCommand(POST_URL, tempStr)
-        //return microIoT_http_wait_request(time);
     }
 
-    
+
 
     /**
      * Get IP address.
     */
-    // //% weight=51
-    // //% blockId=microIoT_wifi_ipconfig
-    // //% block="ipconfig"
-    // //% advanced=true
-    // export function microIoT_wifi_ipconfig(): string {
-    //     return microIoT_IP;
-    //     //microIoT_readValue(READ_IP)
-    // }
+
+    //% weight=51
+    //% blockId=microIoT_wifi_ipconfig
+    //% block="ipconfig"
+    //% advanced=true
+    export function microIoT_wifi_ipconfig(): string {
+        return microIoT_IP;
+        //microIoT_readValue(READ_IP)
+    }
 
 
     /**
      * Send the ping.time(ms): private long maxWait
      * @param time to timeout, eg: 10000
     */
-    // //% weight=49
-    // //% blockId=Obloq_send_ping
-    // //% block="sendPing"
-    // //% advanced=true
-    // export function microIoT_send_ping(): boolean {
-    //     let buf = pins.createBuffer(3);
-    //     buf[0] = 0x1E;
-    //     buf[1] = RUN_COMMAND;
-    //     buf[2] = SEND_PING;
-    //     pins.i2cWriteBuffer(IIC_ADDRESS, buf);
-    //     microIoT_CheckStatus("PingOK");
-    //     /*
-    //     while (true) {
-    //         if (microIoTStatus == "PingOK") {
-    //             break;
-    //         }
-    //         basic.pause(50);
-    //     }*/
-    //     return true;
-    // }
+
+    //% weight=49
+    //% blockId=Obloq_send_ping
+    //% block="sendPing"
+    //% advanced=true
+    export function microIoT_send_ping(): boolean {
+        let buf = pins.createBuffer(3);
+        buf[0] = 0x1E;
+        buf[1] = RUN_COMMAND;
+        buf[2] = SEND_PING;
+        pins.i2cWriteBuffer(IIC_ADDRESS, buf);
+        microIoT_CheckStatus("PingOK");
+        return true;
+    }
 
 
     /**
      * Get the software version.time(ms): private long maxWait
      * @param time to timeout, eg: 10000
     */
-    //% weight=20
+
+    //% weight=50
     //% blockId=microIoT_get_version
     //% block="get version"
     //% advanced=true
@@ -633,194 +626,193 @@ namespace microIoT {
      * Heartbeat request.time(ms): private long maxWait
      * @param time to timeout, eg: 10000
     */
-    // //% weight=48
-    // //% blockId=microIoT_get_heartbeat
-    // //% block="get heartbeat"
-    // //% advanced=true
-    // export function microIoT_get_heartbeat(): boolean {
-    //     return true
-    // }
+    //% weight=48
+    //% blockId=microIoT_get_heartbeat
+    //% block="get heartbeat"
+    //% advanced=true
+    export function microIoT_get_heartbeat(): boolean {
+        return true
+    }
 
     /**
      * Stop the heartbeat request.
     */
-    // //% weight=47
-    // //% blockId=microIoT_stop_heartbeat
-    // //% block="stop heartbeat"
-    // //% advanced=true
-    // export function microIoT_stop_heartbeat(): boolean {
-    //     return true
-    // }
+    //% weight=47
+    //% blockId=microIoT_stop_heartbeat
+    //% block="stop heartbeat"
+    //% advanced=true
+    export function microIoT_stop_heartbeat(): boolean {
+        return true
+    }
 
-    // function microIoT_GetData(len: number): void {
-    //     RECDATA = ""
-    //     let tempbuf = pins.createBuffer(1)
-    //     tempbuf[0] = 0x22
-    //     pins.i2cWriteBuffer(IIC_ADDRESS, tempbuf);
-    //     let tempRecbuf = pins.createBuffer(len)
-    //     tempRecbuf = pins.i2cReadBuffer(IIC_ADDRESS, len, false)
-    //     for (let i = 0; i < len; i++) {
-    //         RECDATA += String.fromCharCode(tempRecbuf[i])
-    //     }
-    // }
+    function microIoT_GetData(len: number): void {
+        RECDATA = ""
+        let tempbuf = pins.createBuffer(1)
+        tempbuf[0] = 0x22
+        pins.i2cWriteBuffer(IIC_ADDRESS, tempbuf);
+        let tempRecbuf = pins.createBuffer(len)
+        tempRecbuf = pins.i2cReadBuffer(IIC_ADDRESS, len, false)
+        for (let i = 0; i < len; i++) {
+            RECDATA += String.fromCharCode(tempRecbuf[i])
+        }
+    }
 
-    // function microIoT_InquireStatus(): void {
-    //     let buf = pins.createBuffer(3)
-    //     let tempId = 0
-    //     let tempStatus = 0
-    //     buf[0] = 0x1E
-    //     buf[1] = READ_STATUS
-    //     buf[2] = 0x06
-    //     pins.i2cWriteBuffer(IIC_ADDRESS, buf);
-    //     let recbuf = pins.createBuffer(2)
-    //     recbuf = pins.i2cReadBuffer(IIC_ADDRESS, 2, false)
-    //     tempId = recbuf[0]
-    //     tempStatus = recbuf[1]
-    //     switch (tempId) {
-    //         case READ_PING:
-    //             if (tempStatus == PING_OK) {
-    //                 microIoTStatus = "PingOK"
-    //             } else {
-    //                 microIoTStatus = "PingERR"
-    //             }
-    //             break;
-    //         case READ_WIFISTATUS:
-    //             if (tempStatus == WIFI_CONNECTING) {
-    //                 microIoTStatus = "WiFiConnecting"
-    //             } else if (tempStatus == WIFI_CONNECTED) {
-    //                 microIoTStatus = "WiFiConnected"
-    //             } else if (tempStatus == WIFI_DISCONNECT) {
-    //                 microIoTStatus = "WiFiDisconnect"
-    //             } else {
-    //             }
-    //             break;
-    //         case READ_MQTTSTATUS:
-    //             if (tempStatus == MQTT_CONNECTED) {
-    //                 microIoTStatus = "MQTTConnected"
-    //             } else if (tempStatus == MQTT_CONNECTERR) {
-    //                 microIoTStatus = "MQTTConnectERR"
-    //             }
-    //             break;
-    //         case READ_SUBSTATUS:
-    //             if (tempStatus == SUB_TOPIC_OK) {
-    //                 microIoTStatus = "SubTopicOK"
-    //             } else if (tempStatus == SUB_TOPIC_Ceiling) {
-    //                 microIoTStatus = "SubTopicCeiling"
-    //             } else {
-    //                 microIoTStatus = "SubTopicERR"
-    //             }
-    //             break;
-    //         case READ_IP:
-    //             microIoTStatus = "READ_IP"
-    //             microIoT_GetData(tempStatus)
-    //             microIoT_IP = RECDATA
-    //             break;
-    //         case SUB_TOPIC0:
-    //             microIoTStatus = "READ_TOPICDATA"
-    //             microIoT_GetData(tempStatus)
-    //             if (Topic0CallBack != null) {
-    //                 Topic0CallBack();
-    //             }
-    //             break;
-    //         case SUB_TOPIC1:
-    //             microIoTStatus = "READ_TOPICDATA"
-    //             microIoT_GetData(tempStatus)
-    //             if (Topic1CallBack != null) {
-    //                 Topic1CallBack();
-    //             }
-    //             break;
-    //         case SUB_TOPIC2:
-    //             microIoTStatus = "READ_TOPICDATA"
-    //             microIoT_GetData(tempStatus)
-    //             if (Topic2CallBack != null) {
-    //                 Topic2CallBack();
-    //             }
-    //             break;
-    //         case SUB_TOPIC3:
-    //             microIoTStatus = "READ_TOPICDATA"
-    //             microIoT_GetData(tempStatus)
-    //             if (Topic3CallBack != null) {
-    //                 Topic3CallBack();
-    //             }
-    //             break;
-    //         case SUB_TOPIC4:
-    //             microIoTStatus = "READ_TOPICDATA"
-    //             microIoT_GetData(tempStatus)
-    //             if (Topic4CallBack != null) {
-    //                 Topic4CallBack();
-    //             }
-    //             break;
-    //         case HTTP_REQUEST:
-    //             microIoTStatus = "HTTP_REQUEST"
-    //             microIoT_GetData(tempStatus)
-    //             break;
-    //         case READ_VERSION:
-    //             microIoTStatus = "READ_VERSION"
-    //             microIoT_GetData(tempStatus)
-    //             break;
-    //         default:
-    //             break;
-    //     }
-    //     basic.pause(200);
-    // }
-    // basic.forever(function () {
-    //     microIoT_InquireStatus();
-    // })
+    function microIoT_InquireStatus(): void {
+        let buf = pins.createBuffer(3)
+        let tempId = 0
+        let tempStatus = 0
+        buf[0] = 0x1E
+        buf[1] = READ_STATUS
+        buf[2] = 0x06
+        pins.i2cWriteBuffer(IIC_ADDRESS, buf);
+        let recbuf = pins.createBuffer(2)
+        recbuf = pins.i2cReadBuffer(IIC_ADDRESS, 2, false)
+        tempId = recbuf[0]
+        tempStatus = recbuf[1]
+        switch (tempId) {
+            case READ_PING:
+                if (tempStatus == PING_OK) {
+                    microIoTStatus = "PingOK"
+                } else {
+                    microIoTStatus = "PingERR"
+                }
+                break;
+            case READ_WIFISTATUS:
+                if (tempStatus == WIFI_CONNECTING) {
+                    microIoTStatus = "WiFiConnecting"
+                } else if (tempStatus == WIFI_CONNECTED) {
+                    microIoTStatus = "WiFiConnected"
+                } else if (tempStatus == WIFI_DISCONNECT) {
+                    microIoTStatus = "WiFiDisconnect"
+                } else {
+                }
+                break;
+            case READ_MQTTSTATUS:
+                if (tempStatus == MQTT_CONNECTED) {
+                    microIoTStatus = "MQTTConnected"
+                } else if (tempStatus == MQTT_CONNECTERR) {
+                    microIoTStatus = "MQTTConnectERR"
+                }
+                break;
+            case READ_SUBSTATUS:
+                if (tempStatus == SUB_TOPIC_OK) {
+                    microIoTStatus = "SubTopicOK"
+                } else if (tempStatus == SUB_TOPIC_Ceiling) {
+                    microIoTStatus = "SubTopicCeiling"
+                } else {
+                    microIoTStatus = "SubTopicERR"
+                }
+                break;
+            case READ_IP:
+                microIoTStatus = "READ_IP"
+                microIoT_GetData(tempStatus)
+                microIoT_IP = RECDATA
+                break;
+            case SUB_TOPIC0:
+                microIoTStatus = "READ_TOPICDATA"
+                microIoT_GetData(tempStatus)
+                if (Topic0CallBack != null) {
+                    Topic0CallBack();
+                }
+                break;
+            case SUB_TOPIC1:
+                microIoTStatus = "READ_TOPICDATA"
+                microIoT_GetData(tempStatus)
+                if (Topic1CallBack != null) {
+                    Topic1CallBack();
+                }
+                break;
+            case SUB_TOPIC2:
+                microIoTStatus = "READ_TOPICDATA"
+                microIoT_GetData(tempStatus)
+                if (Topic2CallBack != null) {
+                    Topic2CallBack();
+                }
+                break;
+            case SUB_TOPIC3:
+                microIoTStatus = "READ_TOPICDATA"
+                microIoT_GetData(tempStatus)
+                if (Topic3CallBack != null) {
+                    Topic3CallBack();
+                }
+                break;
+            case SUB_TOPIC4:
+                microIoTStatus = "READ_TOPICDATA"
+                microIoT_GetData(tempStatus)
+                if (Topic4CallBack != null) {
+                    Topic4CallBack();
+                }
+                break;
+            case HTTP_REQUEST:
+                microIoTStatus = "HTTP_REQUEST"
+                microIoT_GetData(tempStatus)
+                break;
+            case READ_VERSION:
+                microIoTStatus = "READ_VERSION"
+                microIoT_GetData(tempStatus)
+                break;
+            default:
+                break;
+        }
+        basic.pause(200);
+    }
+    basic.forever(function () {
+        microIoT_InquireStatus();
+    })
 
 
 
     /**
-     * OLED
+    * OLED init
     */
 
-    //% weight=250
+    //% weight=200
     //% block="initDisplay"
-    //% advanced=true
-    export function initDisplay(): void {
-        cmd(0xAE);  // Set display OFF
-        cmd(0xD5);  // Set Display Clock Divide Ratio / OSC Frequency 0xD4
-        cmd(0x80);  // Display Clock Divide Ratio / OSC Frequency 
-        cmd(0xA8);  // Set Multiplex Ratio
-        cmd(0x3F);  // Multiplex Ratio for 128x64 (64-1)
-        cmd(0xD3);  // Set Display Offset
-        cmd(0x00);  // Display Offset
-        cmd(0x40);  // Set Display Start Line
-        cmd(0x8D);  // Set Charge Pump
-        cmd(0x14);  // Charge Pump (0x10 External, 0x14 Internal DC/DC)
-        cmd(0xA1);  // Set Segment Re-Map
-        cmd(0xC8);  // Set Com Output Scan Direction
-        cmd(0xDA);  // Set COM Hardware Configuration
-        cmd(0x12);  // COM Hardware Configuration
-        cmd(0x81);  // Set Contrast
-        cmd(0xCF);  // Contrast
-        cmd(0xD9);  // Set Pre-Charge Period
-        cmd(0xF1);  // Set Pre-Charge Period (0x22 External, 0xF1 Internal)
-        cmd(0xDB);  // Set VCOMH Deselect Level
-        cmd(0x40);  // VCOMH Deselect Level
-        cmd(0xA4);  // Set all pixels OFF
-        cmd(0xA6);  // Set display not inverted
-        cmd(0xAF);  // Set display On
+    export function microIoT_initDisplay(): void {
+        microIoT_cmd(0xAE);  // Set display OFF
+        microIoT_cmd(0xD5);  // Set Display Clock Divide Ratio / OSC Frequency 0xD4
+        microIoT_cmd(0x80);  // Display Clock Divide Ratio / OSC Frequency 
+        microIoT_cmd(0xA8);  // Set Multiplex Ratio
+        microIoT_cmd(0x3F);  // Multiplex Ratio for 128x64 (64-1)
+        microIoT_cmd(0xD3);  // Set Display Offset
+        microIoT_cmd(0x00);  // Display Offset
+        microIoT_cmd(0x40);  // Set Display Start Line
+        microIoT_cmd(0x8D);  // Set Charge Pump
+        microIoT_cmd(0x14);  // Charge Pump (0x10 External, 0x14 Internal DC/DC)
+        microIoT_cmd(0xA1);  // Set Segment Re-Map
+        microIoT_cmd(0xC8);  // Set Com Output Scan Direction
+        microIoT_cmd(0xDA);  // Set COM Hardware Configuration
+        microIoT_cmd(0x12);  // COM Hardware Configuration
+        microIoT_cmd(0x81);  // Set Contrast
+        microIoT_cmd(0xCF);  // Contrast
+        microIoT_cmd(0xD9);  // Set Pre-Charge Period
+        microIoT_cmd(0xF1);  // Set Pre-Charge Period (0x22 External, 0xF1 Internal)
+        microIoT_cmd(0xDB);  // Set VCOMH Deselect Level
+        microIoT_cmd(0x40);  // VCOMH Deselect Level
+        microIoT_cmd(0xA4);  // Set all pixels OFF
+        microIoT_cmd(0xA6);  // Set display not inverted
+        microIoT_cmd(0xAF);  // Set display On
         clear();
     }
+    /**
+     * OLED clear
+     */
     //% weight=60
-    //% block="clear"
-    //% advanced=true
+    //% block="OLED clear"
     export function clear() {
-        //cmd(DISPLAY_OFF);   //display off
         for (let j = 0; j < 8; j++) {
-            setText(j, 0);
+            showUserNumber(j, 0);
             {
                 for (let i = 0; i < 16; i++)  //clear all columns
                 {
-                    putChar(' ');
+                    microIoT_putChar(' ');
                 }
             }
         }
-        //cmd(DISPLAY_ON);    //display on
-        setText(0, 0);
+        showUserNumber(0, 0);
     }
 
-    function setText(row: number, column: number) {
+    function showUserNumber(row: number, column: number) {
         let r = row;
         let c = column;
         if (row < 0) { r = 0 }
@@ -828,62 +820,63 @@ namespace microIoT {
         if (row > 7) { r = 7 }
         if (column > 15) { c = 15 }
 
-        cmd(0xB0 + r);            //set page address
-        cmd(0x00 + (8 * c & 0x0F));  //set column lower address
-        cmd(0x10 + ((8 * c >> 4) & 0x0F));   //set column higher address
+        microIoT_cmd(0xB0 + r);            //set page address
+        microIoT_cmd(0x00 + (8 * c & 0x0F));  //set column lower address
+        microIoT_cmd(0x10 + ((8 * c >> 4) & 0x0F));   //set column higher address
     }
 
-    function putChar(c: string) {
+    function microIoT_putChar(c: string) {
         let c1 = c.charCodeAt(0);
-        writeCustomChar(basicFont[c1 - 32]);
+        microIoT_writeCustomChar(basicFont[c1 - 32]);
     }
     /**
-     * OLED 12864 display string
+     * @param line line num (8 pixels per line), eg: 0
+     * @param text value , eg: DFRobot
+     * OLED  display string
      */
     //% weight=60
     //% text.defl="DFRobot"
     //% line.min=0 line.max=7
     //% block="OLED show line %line|text %text"
-    //% advanced=true
     export function showUserText(line: number, text: string): void {
-        setText(line, 0);
+        showUserNumber(line, 0);
         for (let c of text) {
-            putChar(c);
+            microIoT_putChar(c);
         }
 
         for (let i = text.length; i < 16; i++) {
-            setText(line, i);
-            putChar(" ");
+            showUserNumber(line, i);
+            microIoT_putChar(" ");
         }
 
     }
 	/**
-     * * @param line line num (8 pixels per line), eg: 0
+     * @param line line num (8 pixels per line), eg: 0
      * @param n value , eg: 2019
-     * OLED 12864 shows the number
+     * OLED  shows the number
      */
     //% weight=60
     //% line.min=0 line.max=7
     //% block="OLED show line %line|number %n"
-    //% advanced=true
-    export function showUserNumber(line: number, n: number): void {
+
+    export function showUserNumbers(line: number, n: number): void {
         microIoT.showUserText(line, "" + n)
     }
 
 
-    function writeCustomChar(c: string) {
+    function microIoT_writeCustomChar(c: string) {
         for (let i = 0; i < 8; i++) {
-            writeData(c.charCodeAt(i));
+            microIoT_writeData(c.charCodeAt(i));
         }
     }
 
 
-    function cmd(c: number) {
+    function microIoT_cmd(c: number) {
         pins.i2cWriteNumber(0x3C, c, NumberFormat.UInt16BE);
     }
 
 
-    function writeData(n: number) {
+    function microIoT_writeData(n: number) {
         let b = n;
         if (n < 0) { n = 0 }
         if (n > 255) { n = 255 }
@@ -992,40 +985,45 @@ namespace microIoT {
     ];
 
 
-    let microIoT_Weather_URL = "api.dfrobot.top"
-   
+
     let _brightness = 255
     let neopixel_buf = pins.createBuffer(16 * 3);
     for (let i = 0; i < 16 * 3; i++) {
         neopixel_buf[i] = 0
     }
 
-    //RGB灯
+    /**
+     * 设置RGB三原色
+     * Set the RGB primary colors
+     */
     //% weight=60
     //% r.min=0 r.max=255
     //% g.min=0 g.max=255
     //% b.min=0 b.max=255
-    //%  block="R|%r G|%g B|%b"
-    //% advanced=true
+    //%  block="red|%r green|%g blue|%b"
     export function rgb(r: number, g: number, b: number): number {
         return (r << 16) + (g << 8) + (b);
     }
 
+    /**
+     * RGB灯从多少点亮到多少
+     */
     //% weight=60
     //% from.min=0 from.max3
     //% to.min=0 to.max=3
     //% to.defl=3
-    //%  block="led range from|%from to|%to"
-    //% advanced=true
+    //%  block="RGB light |%from to|%to"
     export function ledRange(from: number, to: number): number {
         return (from << 16) + (2 << 8) + (to);
     }
-
+    /**
+     * 设置第几个灯的颜色
+     * Set the color of the first light
+     */
     //% weight=60
     //% index.min=0 index.max=3
     //% rgb.shadow="colorNumberPicker"
-    //% block="set led index |%index color|%rgb"
-    //% advanced=true
+    //%  block="RGB lights |%index show color|%rgb"
     export function setIndexColor(index: number, rgb: number) {
         let f = index;
         let t = index;
@@ -1050,11 +1048,13 @@ namespace microIoT {
         ws2812b.sendBuffer(neopixel_buf, DigitalPin.P15)
 
     }
-
+    /**
+        * 设置全部RGB灯颜色
+        * Set all the RGB light color
+        */
     //% weight=60
     //% rgb.shadow="colorNumberPicker"
     //%  block="show color |%rgb"
-    //% advanced=true
     export function showColor(rgb: number) {
         let r = (rgb >> 16) * (_brightness / 255);
         let g = ((rgb >> 8) & 0xFF) * (_brightness / 255);
@@ -1069,17 +1069,22 @@ namespace microIoT {
         }
         ws2812b.sendBuffer(neopixel_buf, DigitalPin.P15)
     }
-
+    /**
+     * 设置RGB灯亮度
+     * Set the brightness of the RGB light
+     */
     //% weight=60
     //% brightness.min=0 brightness.max=255
-    //% block="set brightness |%brightness"
-    //% advanced=true
+    //% block="RGB set brightness to |%brightness"
     export function setBrightness(brightness: number) {
         _brightness = brightness;
     }
+    /**
+     * 关闭RGB灯
+     * Close the RGB lights
+     */
     //% weight=60
-    //%  block="turn off all leds"
-    //% advanced=true
+    //%  block="RGB lights are all off"
     export function ledBlank() {
         showColor(0)
     }
@@ -1333,12 +1338,14 @@ namespace microIoT {
         }
         pins.digitalWritePin(fan_T, fan)
     }
+
     //TDS
      /**
      * TDS meter reading
      * @param t temperture; eg: 25, 20, 30
      */
-     //% weight=40
+    
+    //% weight=40
     //% block="set pin|%pin reade(ppm) set temperture|%t"
     //% advanced=true
     export function getTds(pin:PIN_1,t:number):number{

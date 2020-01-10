@@ -20,7 +20,7 @@
     "microIoT.microIoT_get_heartbeat|block": "心跳请求",
     "microIoT.microIoT_stop_heartbeat|block": "停止心跳请求",
     "microIoT.microIoT_wifi_ipconfig|block": "获取IP地址",
-    "microIoT.showUserNumber|block": "OLED 显示屏 第%line行|显示数字%n",
+    "microIoT.showUserNumbers|block": "OLED 显示屏 第%line行|显示数字%n",
     "microIoT.showUserText|block": "OLED 显示屏 第%line行|显示文本%text",
     "microIoT.clear|block": "OLED清屏",
     "microIoT.drawUserLine|block": "OLED画线起点 x1:%x1|y1:%y1| 终点x2:%x2|y2:%y2",

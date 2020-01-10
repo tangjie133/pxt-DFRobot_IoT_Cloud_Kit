@@ -15,5 +15,8 @@
     "dependencies": {
         "core": "*"
     },
-    "preferredEditor": "tsprj"
+    "preferredEditor": "tsprj",
+    "supportedTargets": [
+        "microbit"
+    ]
 }
