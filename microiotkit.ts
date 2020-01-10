@@ -538,6 +538,7 @@ namespace microIoT {
     /**
     * ThingSpeak configured and sent data
     * @param KEY to KEY ,eg: "your write api key"
+    * @param time set timeout, eg: 10000
     */
 
     //% weight=99
