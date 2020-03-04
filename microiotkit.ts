@@ -166,7 +166,7 @@ namespace microIoT {
     let HTTP_PORT = ""
     let microIoT_IP = "0.0.0.0"
     let G_city = 0;
-    
+
     export enum aMotors {
         //% blockId="M1" block="M1"
         M1 = 0,
@@ -1094,7 +1094,7 @@ namespace microIoT {
     //% weight=40
     //% block="read ultrasonic sensor T|%T E|%E (cm)"
     //% advanced=true
-    export function ultraSonic(T: PIN, E: PIN,): number {
+    export function ultraSonic(T: PIN, E: PIN, ): number {
         let maxCmDistance = 500;
         let ultraSonic_T;
         let ultraSonic_E;
@@ -1146,9 +1146,9 @@ namespace microIoT {
     }
     //光线
     //% weight=40
-    //% block="set pin|%pin reading intensity "
+    //% block="set pin|%pin get light intensity "
     //% advanced=true
-    export function intenskity(pin:PIN_1): number{
+    export function intenskity(pin: PIN_1): number {
         let intenskity_T;
         switch (pin) {
             case PIN_1.P0: intenskity_T = AnalogPin.P0; break;
@@ -1172,15 +1172,15 @@ namespace microIoT {
             default: motinSensor_T = AnalogPin.P0; break;
         }
         let motinSensor_x = pins.analogReadPin(motinSensor_T);
-        if (motinSensor_x == 1){return 0}
-        else {return 1}
+        if (motinSensor_x == 1) { return 0 }
+        else { return 1 }
     }
 
     //声音
     //% weight=40
     //% block="set pin|%pin read sound intensity "
     //% advanced=true
-    export function soundIntensity(pin:PIN_1):number{
+    export function soundIntensity(pin: PIN_1): number {
         let soundIntensity_T;
         switch (pin) {
             case PIN_1.P0: soundIntensity_T = AnalogPin.P0; break;
@@ -1195,7 +1195,7 @@ namespace microIoT {
     //% weight=40
     //% block="set pin|%pin read flame sensor "
     //% advanced=true
-    export function flame(pin:PIN_1):number{
+    export function flame(pin: PIN_1): number {
         let flame_T;
         switch (pin) {
             case PIN_1.P0: flame_T = AnalogPin.P0; break;
@@ -1209,7 +1209,7 @@ namespace microIoT {
     //% weight=40
     //% block="set pin|%pin read moisture sensor"
     //% advanced=true
-    export function moisture(pin:PIN_1):number{
+    export function moisture(pin: PIN_1): number {
         let moisture_T;
         switch (pin) {
             case PIN_1.P0: moisture_T = AnalogPin.P0; break;
@@ -1245,11 +1245,11 @@ namespace microIoT {
             case PIN_1.P0: readeUV_T = AnalogPin.P0; break;
             case PIN_1.P1: readeUV_T = AnalogPin.P1; break;
             case PIN_1.P2: readeUV_T = AnalogPin.P2; break;
-            default: readeUV_T = AnalogPin.P0; 
+            default: readeUV_T = AnalogPin.P0;
         }
         readeUV_x = pins.analogReadPin(readeUV_T);
-        switch (readeUV_x){
-            case 0: readeUV_y = 5;break;
+        switch (readeUV_x) {
+            case 0: readeUV_y = 5; break;
             case 1: readeUV_y = 46; break;
             case 2: readeUV_y = 65; break;
             case 3: readeUV_y = 83; break;
@@ -1260,15 +1260,15 @@ namespace microIoT {
             case 8: readeUV_y = 180; break;
             case 9: readeUV_y = 200; break;
             case 10: readeUV_y = 221; break;
-            default: readeUV_y =240;
+            default: readeUV_y = 240;
         }
-        return readeUV_y; 
+        return readeUV_y;
     }
     //温湿度传感器
     //% weight=40
     //% block="set pin|%pin read |%index"
     //% advanced=true
-    export function index(pin: PIN, index: DT11):number{
+    export function index(pin: PIN, index: DT11): number {
 
         let index_T;
         switch (pin) {
@@ -1286,7 +1286,7 @@ namespace microIoT {
         pins.digitalWritePin(index_T, 0);
         basic.pause(20);
         //pins.digitalWritePin(index_T, 1);
-       let i = pins.digitalReadPin(index_T);
+        let i = pins.digitalReadPin(index_T);
         pins.setPull(index_T, PinPullMode.PullUp);
 
         //while (pins.digitalReadPin(index_T) == 1);
@@ -1297,7 +1297,7 @@ namespace microIoT {
         let index_counter = 0;
 
         for (let i = 0; i <= 32 - 1; i++) {
-            while (pins.digitalReadPin(index_T) == 0){
+            while (pins.digitalReadPin(index_T) == 0) {
                 index_counter = 0;
             }
             while (pins.digitalReadPin(index_T) == 1) {
@@ -1310,20 +1310,21 @@ namespace microIoT {
             }
         }
         basic.pause(1100);
-           switch(index){
-               case 1: return Math.round((index_value & 0x0000ff00)>>8);break
-               case 2: return Math.round((((index_value & 0x0000ff00) >> 8) * 9 / 5) + 32); break
-               default: return Math.round(index_value>> 24)
-           }
-           
-        
+        switch (index) {
+            case 1: return Math.round((index_value & 0x0000ff00) >> 8); break
+            case 2: return Math.round((((index_value & 0x0000ff00) >> 8) * 9 / 5) + 32); break
+            case 3: return Math.round(index_value >> 24); break
+            default: return null
+        }
+
+
     }
-   
+
     //电扇
     //% weight=40
     //% block="set pin|%pin turn |%fan small fan"
     //% advanced=true
-    export function fan(pin: PIN, fan:Switch):void{
+    export function fan(pin: PIN, fan: Switch): void {
         let fan_T;
         switch (pin) {
             case PIN.P0: fan_T = DigitalPin.P0; break;
@@ -1341,15 +1342,15 @@ namespace microIoT {
     }
 
     //TDS
-     /**
-     * TDS meter reading
-     * @param t temperture; eg: 25, 20, 30
-     */
-    
+    /**
+    * TDS meter reading
+    * @param t temperture; eg: 25, 20, 30
+    */
+
     //% weight=40
     //% block="set pin|%pin reade(ppm) set temperture|%t"
     //% advanced=true
-    export function getTds(pin:PIN_1,t:number):number{
+    export function getTds(pin: PIN_1, t: number): number {
         let getTds_T;
         switch (pin) {
             case PIN_1.P0: getTds_T = AnalogPin.P0; break;
@@ -1367,9 +1368,9 @@ namespace microIoT {
         let voltage = getMedian(analogValue) * 5 / 1024
         let compensationVolatge = voltage / coeff
         let tdsValue = (133.42 * compensationVolatge * compensationVolatge * compensationVolatge - 255.86 * compensationVolatge * compensationVolatge + 857.39 * compensationVolatge) * 0.5
-        return Math.round(tdsValue/2)
+        return Math.round(tdsValue / 2)
     }
-    
+
     function getMedian(bArray: number[]): number {
         let bTab: number[] = []
         let iFilterLen = bArray.length
