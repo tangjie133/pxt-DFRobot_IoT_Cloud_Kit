@@ -1289,34 +1289,91 @@ namespace microIoT {
         let i = pins.digitalReadPin(index_T);
         pins.setPull(index_T, PinPullMode.PullUp);
 
-        //while (pins.digitalReadPin(index_T) == 1);
-        while (pins.digitalReadPin(index_T) == 0);
-        while (pins.digitalReadPin(index_T) == 1);
+        // while (pins.digitalReadPin(index_T) == 1);
+        // while (pins.digitalReadPin(index_T) == 0);
+        // while (pins.digitalReadPin(index_T) == 1);
 
-        let index_value = 0;
-        let index_counter = 0;
+        // let index_value = 0;
+        // let index_counter = 0;
 
-        for (let i = 0; i <= 32 - 1; i++) {
-            while (pins.digitalReadPin(index_T) == 0) {
-                index_counter = 0;
-            }
-            while (pins.digitalReadPin(index_T) == 1) {
-                index_counter += 1;
-            }
-            if (i > 15) {
-                if (index_counter > 2) {
-                    index_value = index_value + (1 << (31 - i));
-                }
-            }
-        }
-        basic.pause(1100);
+        // for (let i = 0; i <= 32 - 1; i++) {
+        //     while (pins.digitalReadPin(index_T) == 0) {
+        //         index_counter = 0;
+        //     }
+        //     while (pins.digitalReadPin(index_T) == 1) {
+        //         index_counter += 1;
+        //     }
+        //     if (i > 15) {
+        //         if (index_counter > 2) {
+        //             index_value = index_value + (1 << (31 - i));
+        //         }
+        //     }
+        // }
+         //basic.pause(1100);
         switch (index) {
-            case 1: return Math.round((index_value & 0x0000ff00) >> 8); break
-            case 2: return Math.round((((index_value & 0x0000ff00) >> 8) * 9 / 5) + 32); break
-            case 3: return Math.round(index_value >> 24); break
-            default: return null
+            case 1: 
+                    let dhtvalue1 = 0;
+                    let dhtcounter1 = 0;
+                    while (pins.digitalReadPin(index_T) == 1);
+                    while (pins.digitalReadPin(index_T) == 0);
+                    while (pins.digitalReadPin(index_T) == 1);
+                    for (let i = 0; i <= 32 - 1; i++) {
+                        while (pins.digitalReadPin(index_T) == 0);
+                        dhtcounter1 = 0
+                        while (pins.digitalReadPin(index_T) == 1) {
+                            dhtcounter1 += 1;
+                        }
+                        if (i > 15) {
+                            if (dhtcounter1 > 2) {
+                                dhtvalue1 = dhtvalue1 + (1 << (31 - i));
+                            }
+                        }
+                    }
+                    basic.pause(1100);
+                    return ((dhtvalue1 & 0x0000ff00) >> 8);
+                    break;
+            case 2:  
+                    while (pins.digitalReadPin(index_T) == 1);
+                    while (pins.digitalReadPin(index_T) == 0);
+                    while (pins.digitalReadPin(index_T) == 1);
+                    let dhtvalue = 0;
+                    let dhtcounter = 0;
+                    for (let i = 0; i <= 32 - 1; i++) {
+                        while (pins.digitalReadPin(index_T) == 0);
+                        dhtcounter = 0
+                        while (pins.digitalReadPin(index_T) == 1) {
+                            dhtcounter += 1;
+                        }
+                        if (i > 15) {
+                            if (dhtcounter > 2) {
+                                dhtvalue = dhtvalue + (1 << (31 - i));
+                            }
+                        }
+                    }
+                    basic.pause(1100);
+                    return Math.round((((dhtvalue & 0x0000ff00) >> 8) * 9 / 5) + 32);
+                    break;
+            case 3: 
+                    while (pins.digitalReadPin(index_T) == 1);
+                    while (pins.digitalReadPin(index_T) == 0);
+                    while (pins.digitalReadPin(index_T) == 1);
+                    let index_value = 0;
+                    let index_counter = 0;
+                    for (let i = 0; i <= 8 - 1; i++) {
+                    while (pins.digitalReadPin(index_T) == 0);
+                    index_counter = 0
+                    while (pins.digitalReadPin(index_T) == 1) {
+                        index_counter += 1;
+                    }
+                    if (index_counter > 3) {
+                        index_value = index_value + (1 << (7 - i));
+                    }
+                }
+                    basic.pause(1100);
+                    return index_value;
+                    break;
+            default: return 0
         }
-
 
     }
 
