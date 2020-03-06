@@ -1329,7 +1329,7 @@ namespace microIoT {
                             }
                         }
                     }
-                    basic.pause(1100);
+                    basic.pause(1500);
                     return ((dhtvalue1 & 0x0000ff00) >> 8);
                     break;
             case 2:  
@@ -1350,7 +1350,7 @@ namespace microIoT {
                             }
                         }
                     }
-                    basic.pause(1100);
+                    basic.pause(1500);
                     return Math.round((((dhtvalue & 0x0000ff00) >> 8) * 9 / 5) + 32);
                     break;
             case 3: 
@@ -1369,7 +1369,7 @@ namespace microIoT {
                         index_value = index_value + (1 << (7 - i));
                     }
                 }
-                    basic.pause(1100);
+                    basic.pause(1500);
                     return index_value;
                     break;
             default: return 0
