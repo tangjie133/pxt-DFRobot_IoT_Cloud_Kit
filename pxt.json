@@ -1,5 +1,8 @@
 {
     "name": "microbit_iot_kit",
+    "dependencies": {
+        "core": "*"
+    },
     "files": [
         ".vscode/settings.json",
         ".vscode/tasks.json",
@@ -7,17 +10,14 @@
         "_locales/zh-cn/microbit_iot_kit-strings.json",
         "main.blocks",
         "main.ts",
-		"sendBuffer.asm",
+        "sendBuffer.asm",
         "microiotkit.ts",
         "test.ts",
         "tsconfig.json",
         "ws2812b.ts"
     ],
-    "dependencies": {
-        "core": "*"
-    },
-    "preferredEditor": "tsprj",
     "supportedTargets": [
         "microbit"
-    ]
+    ],
+    "preferredEditor": "tsprj"
 }

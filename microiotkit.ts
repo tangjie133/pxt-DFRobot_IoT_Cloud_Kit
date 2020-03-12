@@ -81,7 +81,7 @@ enum Switch {
  */
 //% weight=10 color=#ff9da5 icon="\uf1eb" block="Micro:bit Iot Kit"
 namespace microIoT {
-    let IIC_ADDRESS = 0x16
+    let IIC_ADDRESS = 0x10
     let Topic0CallBack: Action = null;
     let Topic1CallBack: Action = null;
     let Topic2CallBack: Action = null;
