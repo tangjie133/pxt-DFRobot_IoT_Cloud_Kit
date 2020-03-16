@@ -228,7 +228,7 @@ namespace microIoT {
             buf[0] = 0x15;
         }
         buf[1] = angle;
-        pins.i2cWriteBuffer(0x16, buf);
+        pins.i2cWriteBuffer(IIC_ADDRESS, buf);
     }
 
     /**
