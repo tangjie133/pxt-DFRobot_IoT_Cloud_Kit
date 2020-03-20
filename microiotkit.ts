@@ -228,7 +228,7 @@ namespace microIoT {
             buf[0] = 0x15;
         }
         buf[1] = angle;
-        pins.i2cWriteBuffer(0x10, buf);
+        pins.i2cWriteBuffer(IIC_ADDRESS, buf);
     }
 
     /**
@@ -260,13 +260,13 @@ namespace microIoT {
                 buf[1] = 0x00;
             }
             buf[2] = speed;
-            pins.i2cWriteBuffer(0x10, buf);
+            pins.i2cWriteBuffer(IIC_ADDRESS, buf);
             buf[0] = 0x02;
             buf[1] = direction;
         } else {
         }
         buf[2] = speed;
-        pins.i2cWriteBuffer(0x10, buf);
+        pins.i2cWriteBuffer(IIC_ADDRESS, buf);
     }
 
     /**
@@ -286,12 +286,12 @@ namespace microIoT {
             buf[0] = 0x00;
             buf[1] = 0;
             buf[2] = 0;
-            pins.i2cWriteBuffer(0x10, buf);
+            pins.i2cWriteBuffer(IIC_ADDRESS, buf);
             buf[0] = 0x02;
         }
         buf[1] = 0;
         buf[2] = 0;
-        pins.i2cWriteBuffer(0x10, buf);
+        pins.i2cWriteBuffer(IIC_ADDRESS, buf);
     }
 
 
@@ -1309,57 +1309,57 @@ namespace microIoT {
         //         }
         //     }
         // }
-         //basic.pause(1100);
+        //basic.pause(1100);
         switch (index) {
-            case 1: 
-                    let dhtvalue1 = 0;
-                    let dhtcounter1 = 0;
-                    while (pins.digitalReadPin(index_T) == 1);
+            case 1:
+                let dhtvalue1 = 0;
+                let dhtcounter1 = 0;
+                while (pins.digitalReadPin(index_T) == 1);
+                while (pins.digitalReadPin(index_T) == 0);
+                while (pins.digitalReadPin(index_T) == 1);
+                for (let i = 0; i <= 32 - 1; i++) {
                     while (pins.digitalReadPin(index_T) == 0);
-                    while (pins.digitalReadPin(index_T) == 1);
-                    for (let i = 0; i <= 32 - 1; i++) {
-                        while (pins.digitalReadPin(index_T) == 0);
-                        dhtcounter1 = 0
-                        while (pins.digitalReadPin(index_T) == 1) {
-                            dhtcounter1 += 1;
-                        }
-                        if (i > 15) {
-                            if (dhtcounter1 > 2) {
-                                dhtvalue1 = dhtvalue1 + (1 << (31 - i));
-                            }
+                    dhtcounter1 = 0
+                    while (pins.digitalReadPin(index_T) == 1) {
+                        dhtcounter1 += 1;
+                    }
+                    if (i > 15) {
+                        if (dhtcounter1 > 2) {
+                            dhtvalue1 = dhtvalue1 + (1 << (31 - i));
                         }
                     }
-                    basic.pause(1500);
-                    return ((dhtvalue1 & 0x0000ff00) >> 8);
-                    break;
-            case 2:  
-                    while (pins.digitalReadPin(index_T) == 1);
+                }
+                basic.pause(1500);
+                return ((dhtvalue1 & 0x0000ff00) >> 8);
+                break;
+            case 2:
+                while (pins.digitalReadPin(index_T) == 1);
+                while (pins.digitalReadPin(index_T) == 0);
+                while (pins.digitalReadPin(index_T) == 1);
+                let dhtvalue = 0;
+                let dhtcounter = 0;
+                for (let i = 0; i <= 32 - 1; i++) {
                     while (pins.digitalReadPin(index_T) == 0);
-                    while (pins.digitalReadPin(index_T) == 1);
-                    let dhtvalue = 0;
-                    let dhtcounter = 0;
-                    for (let i = 0; i <= 32 - 1; i++) {
-                        while (pins.digitalReadPin(index_T) == 0);
-                        dhtcounter = 0
-                        while (pins.digitalReadPin(index_T) == 1) {
-                            dhtcounter += 1;
-                        }
-                        if (i > 15) {
-                            if (dhtcounter > 2) {
-                                dhtvalue = dhtvalue + (1 << (31 - i));
-                            }
+                    dhtcounter = 0
+                    while (pins.digitalReadPin(index_T) == 1) {
+                        dhtcounter += 1;
+                    }
+                    if (i > 15) {
+                        if (dhtcounter > 2) {
+                            dhtvalue = dhtvalue + (1 << (31 - i));
                         }
                     }
-                    basic.pause(1500);
-                    return Math.round((((dhtvalue & 0x0000ff00) >> 8) * 9 / 5) + 32);
-                    break;
-            case 3: 
-                    while (pins.digitalReadPin(index_T) == 1);
-                    while (pins.digitalReadPin(index_T) == 0);
-                    while (pins.digitalReadPin(index_T) == 1);
-                    let index_value = 0;
-                    let index_counter = 0;
-                    for (let i = 0; i <= 8 - 1; i++) {
+                }
+                basic.pause(1500);
+                return Math.round((((dhtvalue & 0x0000ff00) >> 8) * 9 / 5) + 32);
+                break;
+            case 3:
+                while (pins.digitalReadPin(index_T) == 1);
+                while (pins.digitalReadPin(index_T) == 0);
+                while (pins.digitalReadPin(index_T) == 1);
+                let index_value = 0;
+                let index_counter = 0;
+                for (let i = 0; i <= 8 - 1; i++) {
                     while (pins.digitalReadPin(index_T) == 0);
                     index_counter = 0
                     while (pins.digitalReadPin(index_T) == 1) {
@@ -1369,9 +1369,9 @@ namespace microIoT {
                         index_value = index_value + (1 << (7 - i));
                     }
                 }
-                    basic.pause(1500);
-                    return index_value;
-                    break;
+                basic.pause(1500);
+                return index_value;
+                break;
             default: return 0
         }
 
