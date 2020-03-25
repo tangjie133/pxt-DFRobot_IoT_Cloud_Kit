@@ -216,7 +216,7 @@ namespace microIoT {
      */
 
     //% weight=50
-    //% blockId=microIoT_ServoRun block="Servo|%index|angle|%angle"
+    //% blockId=microIoT_ServoRun block="servo|%index|angle|%angle"
     //% angle.min=0 angle.max=180
     //% index.fieldEditor="gridpicker" index.fieldOptions.columns=2
     export function microIoT_ServoRun(index: aServos, angle: number): void {
@@ -236,7 +236,7 @@ namespace microIoT {
      */
 
     //% weight=49
-    //% blockId=microIoT_MotorRun block="Motor|%index|dir|%Dir|speed|%speed"
+    //% blockId=microIoT_MotorRun block="motor|%index|dir|%Dir|speed|%speed"
     //% speed.min=0 speed.max=255
     //% index.fieldEditor="gridpicker" index.fieldOptions.columns=2
     //% direction.fieldEditor="gridpicker" direction.fieldOptions.columns=2
@@ -274,7 +274,7 @@ namespace microIoT {
      */
 
     //% weight=48
-    //% blockId=microIoT_motorStop block="Motor stop|%motors"
+    //% blockId=microIoT_motorStop block="motor stop|%motors"
     //% motors.fieldEditor="gridpicker" motors.fieldOptions.columns=2 
     export function microIoT_motorStop(motors: aMotors): void {
         let buf = pins.createBuffer(3);
@@ -432,7 +432,7 @@ namespace microIoT {
      */
 
     //% weight=99
-    //% blockId=microIoT_SendMessage block="MQTT Send Message %string| to |%TOPIC"
+    //% blockId=microIoT_SendMessage block="MQTT send message %string| to |%TOPIC"
     export function microIoT_SendMessage(Mess: string, Topic: TOPIC): void {
         let topic = 0
 
@@ -506,7 +506,7 @@ namespace microIoT {
     //% receive.fieldEditor="gridpicker" receive.fieldOptions.columns=3
     //% send.fieldEditor="gridpicker" send.fieldOptions.columns=3
     //% blockId=microIoT_http_IFTTT
-    //% block="Webhooks config:|event: %EVENT|key: %KEY|"
+    //% block="webhooks config:|event: %EVENT|key: %KEY|"
     export function microIoT_http_IFTTT(EVENT: string, KEY: string): void {
         microIoT_WEBHOOKS_EVENT = EVENT
         microIoT_WEBHOOKS_KEY = KEY
@@ -573,14 +573,14 @@ namespace microIoT {
      * Get IP address.
     */
 
-    //% weight=51
-    //% blockId=microIoT_wifi_ipconfig
-    //% block="ipconfig"
-    //% advanced=true
-    export function microIoT_wifi_ipconfig(): string {
-        return microIoT_IP;
-        //microIoT_readValue(READ_IP)
-    }
+    // //% weight=51
+    // //% blockId=microIoT_wifi_ipconfig
+    // //% block="ipconfig"
+    // //% advanced=true
+    // export function microIoT_wifi_ipconfig(): string {
+    //     return microIoT_IP;
+    //     //microIoT_readValue(READ_IP)
+    // }
 
 
     /**
@@ -588,19 +588,19 @@ namespace microIoT {
      * @param time to timeout, eg: 10000
     */
 
-    //% weight=49
-    //% blockId=Obloq_send_ping
-    //% block="sendPing"
-    //% advanced=true
-    export function microIoT_send_ping(): boolean {
-        let buf = pins.createBuffer(3);
-        buf[0] = 0x1E;
-        buf[1] = RUN_COMMAND;
-        buf[2] = SEND_PING;
-        pins.i2cWriteBuffer(IIC_ADDRESS, buf);
-        microIoT_CheckStatus("PingOK");
-        return true;
-    }
+    // //% weight=49
+    // //% blockId=Obloq_send_ping
+    // //% block="sendPing"
+    // //% advanced=true
+    // export function microIoT_send_ping(): boolean {
+    //     let buf = pins.createBuffer(3);
+    //     buf[0] = 0x1E;
+    //     buf[1] = RUN_COMMAND;
+    //     buf[2] = SEND_PING;
+    //     pins.i2cWriteBuffer(IIC_ADDRESS, buf);
+    //     microIoT_CheckStatus("PingOK");
+    //     return true;
+    // }
 
 
     /**
@@ -608,43 +608,43 @@ namespace microIoT {
      * @param time to timeout, eg: 10000
     */
 
-    //% weight=50
-    //% blockId=microIoT_get_version
-    //% block="get version"
-    //% advanced=true
-    export function microIoT_get_version(): string {
-        let buf = pins.createBuffer(3);
-        buf[0] = 0x1E;
-        buf[1] = RUN_COMMAND;
-        buf[2] = GET_VERSION;
-        pins.i2cWriteBuffer(IIC_ADDRESS, buf);
-        microIoT_CheckStatus("READ_VERSION");
-        return RECDATA
-    }
+    // //% weight=50
+    // //% blockId=microIoT_get_version
+    // //% block="get version"
+    // //% advanced=true
+    // export function microIoT_get_version(): string {
+    //     let buf = pins.createBuffer(3);
+    //     buf[0] = 0x1E;
+    //     buf[1] = RUN_COMMAND;
+    //     buf[2] = GET_VERSION;
+    //     pins.i2cWriteBuffer(IIC_ADDRESS, buf);
+    //     microIoT_CheckStatus("READ_VERSION");
+    //     return RECDATA
+    // }
 
 
     /**
      * Heartbeat request.time(ms): private long maxWait
      * @param time to timeout, eg: 10000
     */
-    //% weight=48
-    //% blockId=microIoT_get_heartbeat
-    //% block="get heartbeat"
-    //% advanced=true
-    export function microIoT_get_heartbeat(): boolean {
-        return true
-    }
+    // //% weight=48
+    // //% blockId=microIoT_get_heartbeat
+    // //% block="get heartbeat"
+    // //% advanced=true
+    // export function microIoT_get_heartbeat(): boolean {
+    //     return true
+    // }
 
     /**
      * Stop the heartbeat request.
     */
-    //% weight=47
-    //% blockId=microIoT_stop_heartbeat
-    //% block="stop heartbeat"
-    //% advanced=true
-    export function microIoT_stop_heartbeat(): boolean {
-        return true
-    }
+    // //% weight=47
+    // //% blockId=microIoT_stop_heartbeat
+    // //% block="stop heartbeat"
+    // //% advanced=true
+    // export function microIoT_stop_heartbeat(): boolean {
+    //     return true
+    // }
 
     function microIoT_GetData(len: number): void {
         RECDATA = ""
@@ -1013,7 +1013,7 @@ namespace microIoT {
     //% from.min=0 from.max3
     //% to.min=0 to.max=3
     //% to.defl=3
-    //%  block="RGB light |%from to|%to"
+    //%  block="RGB |%from to|%to"
     export function ledRange(from: number, to: number): number {
         return (from << 16) + (2 << 8) + (to);
     }
@@ -1024,7 +1024,7 @@ namespace microIoT {
     //% weight=60
     //% index.min=0 index.max=3
     //% rgb.shadow="colorNumberPicker"
-    //%  block="RGB lights |%index show color|%rgb"
+    //%  block="RGB |%index show color|%rgb"
     export function setIndexColor(index: number, rgb: number) {
         let f = index;
         let t = index;
@@ -1076,7 +1076,7 @@ namespace microIoT {
      */
     //% weight=60
     //% brightness.min=0 brightness.max=255
-    //% block="RGB set brightness to |%brightness"
+    //% block="set RGB brightness|%brightness"
     export function setBrightness(brightness: number) {
         _brightness = brightness;
     }
@@ -1085,14 +1085,14 @@ namespace microIoT {
      * Close the RGB lights
      */
     //% weight=60
-    //%  block="RGB lights are all off"
+    //%  block="Close all rgbs"
     export function ledBlank() {
         showColor(0)
     }
 
     //超声波
     //% weight=40
-    //% block="read ultrasonic sensor T|%T E|%E (cm)"
+    //% block="read ultrasonic sensor T|%T E|%E unit(cm inch)"
     //% advanced=true
     export function ultraSonic(T: PIN, E: PIN, ): number {
         let maxCmDistance = 500;
@@ -1146,7 +1146,7 @@ namespace microIoT {
     }
     //光线
     //% weight=40
-    //% block="set pin|%pin reading light intensity "
+    //% block="read pin|%pin light intensity "
     //% advanced=true
     export function intenskity(pin: PIN_1): number {
         let intenskity_T;
@@ -1161,7 +1161,7 @@ namespace microIoT {
 
     //运动
     //% weight=40
-    //% block="set pin|%pin reading motion sensor "
+    //% block="read pin|%pin digital infrared motion sensor"
     //% advanced=true
     export function motinSensor(pin: PIN_1): number {
         let motinSensor_T;
@@ -1178,7 +1178,7 @@ namespace microIoT {
 
     //声音
     //% weight=40
-    //% block="set pin|%pin read sound intensity "
+    //% block="read pin|%pin loudness"
     //% advanced=true
     export function soundIntensity(pin: PIN_1): number {
         let soundIntensity_T;
@@ -1193,7 +1193,7 @@ namespace microIoT {
 
     //火焰
     //% weight=40
-    //% block="set pin|%pin read flame sensor "
+    //% block="read pin|%pin flame sensor "
     //% advanced=true
     export function flame(pin: PIN_1): number {
         let flame_T;
@@ -1207,7 +1207,7 @@ namespace microIoT {
     }
     //水份
     //% weight=40
-    //% block="set pin|%pin read moisture sensor"
+    //% block="read pin|%pin steam sensor"
     //% advanced=true
     export function moisture(pin: PIN_1): number {
         let moisture_T;
@@ -1221,7 +1221,7 @@ namespace microIoT {
     }
     //土壤湿度
     //% weight=40
-    //% block="set pin|%pin read the soil moisture sensor"
+    //% block="read pin|%pin soil moisture sensor"
     //% advanced=true
     export function soilMoisture(pin: PIN_1): number {
         let soilMoisture_T;
@@ -1235,7 +1235,7 @@ namespace microIoT {
     }
     //紫外线传感器
     //% weight=40
-    //% block="set pin|%pin read uv intensity"
+    //% block="read pin|%pin UV intensity"
     //% advanced=true
     export function readeUV(pin: PIN_1): number {
         let readeUV_T;
@@ -1266,7 +1266,7 @@ namespace microIoT {
     }
     //温湿度传感器
     //% weight=40
-    //% block="set pin|%pin read |%index"
+    //% block="read pin|%pin|%index"
     //% advanced=true
     export function index(pin: PIN, index: DT11): number {
 
@@ -1405,7 +1405,7 @@ namespace microIoT {
     */
 
     //% weight=40
-    //% block="set pin|%pin reade TDS sensor(ppm)"
+    //% block="read pin|%pin reade TDS sensor(ppm)"
     //% advanced=true
     export function getTds(pin: PIN_1, t: number=25): number {
         let getTds_T;
