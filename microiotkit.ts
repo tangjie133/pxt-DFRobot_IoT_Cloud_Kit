@@ -1405,7 +1405,7 @@ namespace microIoT {
     */
 
     //% weight=40
-    //% block="set pin|%pin reade(ppm)"
+    //% block="set pin|%pin reade TDS sensor(ppm)"
     //% advanced=true
     export function getTds(pin: PIN_1, t: number=25): number {
         let getTds_T;
