@@ -1085,7 +1085,7 @@ namespace microIoT {
      * Close the RGB lights
      */
     //% weight=60
-    //%  block="Close all rgbs"
+    //%  block="close all rgbs"
     export function ledBlank() {
         showColor(0)
     }
