@@ -1,6 +1,6 @@
 {
     "name": "microbit_iot_kit",
-    "version": "0.0.5",
+    "version": "0.0.6",
     "dependencies": {
         "core": "*"
     },
