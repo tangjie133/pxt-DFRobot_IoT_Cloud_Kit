@@ -1092,7 +1092,7 @@ namespace microIoT {
 
     //超声波
     //% weight=40
-    //% block="read ultrasonic sensor T|%T E|%E unit(cm inch)"
+    //% block="read ultrasonic sensor T|%T E|%E unit(cm)"
     //% advanced=true
     export function ultraSonic(T: PIN, E: PIN, ): number {
         let maxCmDistance = 500;
