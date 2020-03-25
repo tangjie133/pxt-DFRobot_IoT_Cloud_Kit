@@ -1146,7 +1146,7 @@ namespace microIoT {
     }
     //光线
     //% weight=40
-    //% block="set pin|%pin get light intensity "
+    //% block="set pin|%pin reading light intensity "
     //% advanced=true
     export function intenskity(pin: PIN_1): number {
         let intenskity_T;
@@ -1405,9 +1405,9 @@ namespace microIoT {
     */
 
     //% weight=40
-    //% block="set pin|%pin reade(ppm) set temperture|%t"
+    //% block="set pin|%pin reade(ppm)"
     //% advanced=true
-    export function getTds(pin: PIN_1, t: number): number {
+    export function getTds(pin: PIN_1, t: number=25): number {
         let getTds_T;
         switch (pin) {
             case PIN_1.P0: getTds_T = AnalogPin.P0; break;
