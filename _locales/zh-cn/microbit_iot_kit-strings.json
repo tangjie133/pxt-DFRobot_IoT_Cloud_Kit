@@ -51,7 +51,9 @@
     "microIoT.fan|block":"设置引脚 |%pin |%fan 风扇",
     "Switch.ON|block":"打开",
     "Switch.OFF|block": "关闭",
-    "microIoT.getTds|block":"设置引脚|%pin读取（PWM）设置温度|%t"
+    "microIoT.getTds|block":"设置引脚|%pin读取（PWM）设置温度|%t",
+    "microIoT.ss|block":"初始化CCS",
+    "microIoT.ccsSensor|block":"读取CCS传感器|%deta"
     
 
 }

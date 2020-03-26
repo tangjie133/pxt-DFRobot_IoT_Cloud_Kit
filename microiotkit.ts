@@ -76,18 +76,26 @@ enum Switch {
     OFF = 0
 }
 
+enum CCS{
+    //% block="CO2"
+    CO2 = 1,
+    //% block="TVOC"
+    TVOC = 2
+}
+
 /**
  *Obloq implementation method.
  */
 //% weight=10 color=#ff9da5 icon="\uf1eb" block="Micro:bit Iot Kit"
 namespace microIoT {
-    let IIC_ADDRESS = 0x16
+    let IIC_ADDRESS = 0x16;
+    let CCS811_I2C_ADDRESS1 = 0x5A;
     let Topic0CallBack: Action = null;
     let Topic1CallBack: Action = null;
     let Topic2CallBack: Action = null;
     let Topic3CallBack: Action = null;
     let Topic4CallBack: Action = null;
-    let Wifi_Status = 0x00
+    let Wifi_Status = 0x00;
 
     let microIoT_WEBHOOKS_KEY = ""
     let microIoT_WEBHOOKS_EVENT = ""
@@ -1449,5 +1457,64 @@ namespace microIoT {
         else
             bTemp = (bTab[iFilterLen / 2] + bTab[iFilterLen / 2 - 1]) / 2
         return bTemp
+    }
+
+    //CCS
+    /**
+    * CCS sensor reading
+    * @param t temperture; eg: 25, 20, 30
+    */
+    //% weight=40
+    //% block="read CCS sensor|%deta"
+    //% advanced=true
+    export function ccsSensor(deta:CCS):number{
+        if(checkDataReady() == true){ 
+            switch(deta){
+                case 1:return getCO2PPM();break;
+                default:return getTVOCPPB();
+            }
+        }
+        return 0;
+    }
+
+    //% weight=40
+    //% block="init CCS sensor "
+    //% advanced=true
+    export function ss():void{
+        softReset();
+        pins.i2cWriteNumber(CCS811_I2C_ADDRESS1, 0xF4, NumberFormat.Int8LE)
+        pins.i2cWriteNumber(CCS811_I2C_ADDRESS1, null, NumberFormat.Int8LE)
+        setMeasCycle();
+    }
+
+    function checkDataReady():boolean{
+        pins.i2cWriteNumber(CCS811_I2C_ADDRESS1, 0, NumberFormat.Int8LE)
+        pins.i2cWriteNumber(CCS811_I2C_ADDRESS1, 0, NumberFormat.Int8LE)
+        let status = pins.i2cReadBuffer(CCS811_I2C_ADDRESS1,1)
+        if(!((status[0] >> 3) & 0x01))
+            return false;
+        else 
+            return true;
+    }
+    function setMeasCycle():void{
+        let buffer:number[] = [0x01,0x40] 
+        let Buffer = pins.createBufferFromArray(buffer);
+        pins.i2cWriteBuffer(CCS811_I2C_ADDRESS1, Buffer)
+    }
+    function getCO2PPM():number{
+        pins.i2cWriteNumber(CCS811_I2C_ADDRESS1, 0x02, NumberFormat.Int8LE)
+        let BUF = pins.i2cReadBuffer(CCS811_I2C_ADDRESS1, 8)
+        return (BUF[0]<<8)|BUF[1];
+    }
+    function getTVOCPPB():number{
+        pins.i2cWriteNumber(CCS811_I2C_ADDRESS1, 0x02, NumberFormat.Int8LE)
+        let BUF = pins.i2cReadBuffer(CCS811_I2C_ADDRESS1, 8)
+        return (BUF[2]<<8)|BUF[3];
+    }
+    function softReset():void{
+        pins.i2cWriteNumber(CCS811_I2C_ADDRESS1, 0xFF, NumberFormat.Int8LE)
+        let buffer:number[] = [0x11, 0xE5, 0x72, 0x8A] 
+        let Buffer = pins.createBufferFromArray(buffer);
+        pins.i2cWriteBuffer(CCS811_I2C_ADDRESS1, Buffer)
     }
 }
