@@ -1465,7 +1465,7 @@ namespace microIoT {
     * @param t temperture; eg: 25, 20, 30
     */
     //% weight=40
-    //% block="read CCS sensor|%deta"
+    //% block="read air quality sensor|%deta"
     //% advanced=true
     export function ccsSensor(deta:CCS):number{
         if(checkDataReady() == true){ 
@@ -1478,7 +1478,7 @@ namespace microIoT {
     }
 
     //% weight=40
-    //% block="init CCS sensor "
+    //% block="init air quality sensor "
     //% advanced=true
     export function ss():void{
         softReset();
