@@ -1490,7 +1490,7 @@ namespace microIoT {
     }
 
     function checkDataReady():boolean{
-        //pins.i2cWriteNumber(CCS811_I2C_ADDRESS1, 0, NumberFormat.Int8LE)
+        pins.i2cWriteNumber(CCS811_I2C_ADDRESS1, 0, NumberFormat.Int8LE)
         pins.i2cWriteNumber(CCS811_I2C_ADDRESS1, 0, NumberFormat.Int8LE)
         let status = pins.i2cReadBuffer(CCS811_I2C_ADDRESS1,1)
         if(!((status[0] >> 3) & 0x01))
