@@ -1468,13 +1468,14 @@ namespace microIoT {
     //% block="read air quality sensor|%deta"
     //% advanced=true
     export function ccsSensor(deta:CCS):number{
+        let make
         if(checkDataReady() == true){ 
             switch(deta){
-                case 1:return getCO2PPM();break;
-                default:return getTVOCPPB();
+                case 1: make= getCO2PPM();break;
+                default:make = getTVOCPPB();
             }
         }
-        return 0;
+        return make;
     }
 
     //% weight=40
@@ -1488,7 +1489,7 @@ namespace microIoT {
     }
 
     function checkDataReady():boolean{
-        pins.i2cWriteNumber(CCS811_I2C_ADDRESS1, 0, NumberFormat.Int8LE)
+        //pins.i2cWriteNumber(CCS811_I2C_ADDRESS1, 0, NumberFormat.Int8LE)
         pins.i2cWriteNumber(CCS811_I2C_ADDRESS1, 0, NumberFormat.Int8LE)
         let status = pins.i2cReadBuffer(CCS811_I2C_ADDRESS1,1)
         if(!((status[0] >> 3) & 0x01))
