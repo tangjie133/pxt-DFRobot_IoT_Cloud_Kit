@@ -1475,6 +1475,7 @@ namespace microIoT {
                 default:make = getTVOCPPB();
             }
         }
+        basic.pause(300)
         return make;
     }
 
