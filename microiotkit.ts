@@ -86,7 +86,7 @@ enum CCS{
 /**
  *Obloq implementation method.
  */
-//% weight=10 color=#ff9da5 icon="\uf1eb" block="Micro:bit Iot Kit"
+//% weight=10 color=#ff9da5 icon="\uf1eb" block="micro:bit Iot Kit"
 namespace microIoT {
     let IIC_ADDRESS = 0x16;
     let CCS811_I2C_ADDRESS1 = 0x5A;
@@ -374,7 +374,7 @@ namespace microIoT {
     */
 
     //% weight=100
-    //% blockId=microIoT_wifi block="Micro:IoT setup |Wi-Fi: |name: %SSID| password：%PASSWORD"
+    //% blockId=microIoT_wifi block="micro:IoT setup |Wi-Fi: |name: %SSID| password：%PASSWORD"
     export function microIoT_WIFI(SSID: string, PASSWORD: string): void {
         microIoT_setPara(SETWIFI_NAME, SSID)
         microIoT_setPara(SETWIFI_PASSWORLD, PASSWORD)
@@ -394,7 +394,7 @@ namespace microIoT {
 
     //% weight=100
     //% blockExternalInputs=1
-    //% blockId=microIoT_MQTT block="Micro:IoT setup mqtt|IOT_ID(user): %IOT_ID| IOT_PWD(password):%IOT_PWD|(default topic_0) Topic: %IOT_TOPIC| server: %SERVERS"
+    //% blockId=microIoT_MQTT block="micro:IoT setup mqtt|IOT_ID(user): %IOT_ID| IOT_PWD(password):%IOT_PWD|(default topic_0) Topic: %IOT_TOPIC| server: %SERVERS"
     export function microIoT_MQTT(/*SSID: string, PASSWORD: string,*/
         IOT_ID: string, IOT_PWD: string,
         IOT_TOPIC: string, servers: SERVERS):
@@ -1093,7 +1093,7 @@ namespace microIoT {
      * Close the RGB lights
      */
     //% weight=60
-    //%  block="close all rgbs"
+    //%  block="close all RGB"
     export function ledBlank() {
         showColor(0)
     }
