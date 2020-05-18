@@ -86,7 +86,7 @@ enum CCS{
 /**
  *Obloq implementation method.
  */
-//% weight=10 color=#ff9da5 icon="\uf1eb" block="micro:bit Iot Kit"
+//% weight=10 color=#ff9da5 icon="\uf1eb" block="micro:bit IoT KIT"
 namespace microIoT {
     let IIC_ADDRESS = 0x16;
     let CCS811_I2C_ADDRESS1 = 0x5A;
