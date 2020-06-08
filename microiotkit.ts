@@ -113,7 +113,7 @@ namespace microIoT {
     let SETMQTT_ID = 0x05
     let SETMQTT_PASSWORLD = 0x06
     let SETHTTP_IP = 0x07
-    let SETHTTP_PORT = 0x08
+    //let SETHTTP_PORT = 0x08
 
     /*run command*/
     let SEND_PING = 0x01
