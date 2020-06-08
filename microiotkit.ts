@@ -1,15 +1,13 @@
 /*！
  * @file pxt-microIoT/microIoT.ts
  * @brief DFRobot's obloq makecode library.
- * @n [Get the module here](http://www.dfrobot.com.cn/goods-1577.html)
- * @n Obloq is a serial port of WIFI connection module, Obloq can connect 
- *    to Microsoft Azure IoT and other standard MQTT protocol IoT.
+ * @n [Get the module here](等网址)
+ * @n 
  *
  * @copyright	[DFRobot](http://www.dfrobot.com), 2016
  * @copyright	MIT Lesser General Public License
  *
  * @author [email](jie.tang@dfrobot.com)
- * @version  V0.0.3
  * @date  2019-12-31
  */
 
@@ -65,7 +63,7 @@ enum DT11 {
     temperature_C = 1,
     //% block="temperature(℉)"
     temperature_F = 2,
-    //% block="humidity"
+    //% block="humidity(%)"
     humidity = 3
 }
 
@@ -83,11 +81,8 @@ enum CCS{
     TVOC = 2
 }
 
-/**
- *Obloq implementation method.
- */
-
 //% weight=10 color=#e7660b icon="\uf1eb" block="micro:bit Iot Kit"
+//% groups=['IOT', 'Sensor', 'OLED', 'Motor', 'RGB', 'Servo', 'others']
 namespace microIoT {
     let IIC_ADDRESS = 0x16;
     let CCS811_I2C_ADDRESS1 = 0x5A;
@@ -225,6 +220,7 @@ namespace microIoT {
      */
 
     //% weight=50
+    //% group="Servo"
     //% blockId=microIoT_ServoRun block="servo|%index|angle|%angle"
     //% angle.min=0 angle.max=180
     //% index.fieldEditor="gridpicker" index.fieldOptions.columns=2
@@ -245,6 +241,7 @@ namespace microIoT {
      */
 
     //% weight=49
+    //% group="Motor"
     //% blockId=microIoT_MotorRun block="motor|%index|dir|%Dir|speed|%speed"
     //% speed.min=0 speed.max=255
     //% index.fieldEditor="gridpicker" index.fieldOptions.columns=2
@@ -283,6 +280,7 @@ namespace microIoT {
      */
 
     //% weight=48
+    //% group="Motor"
     //% blockId=microIoT_motorStop block="motor stop|%motors"
     //% motors.fieldEditor="gridpicker" motors.fieldOptions.columns=2 
     export function microIoT_motorStop(motors: aMotors): void {
@@ -375,6 +373,7 @@ namespace microIoT {
     */
 
     //% weight=100
+    //% group="IOT"
     //% blockId=microIoT_wifi block="micro:IoT setup |Wi-Fi: |name: %SSID| password：%PASSWORD"
     export function microIoT_WIFI(SSID: string, PASSWORD: string): void {
         microIoT_setPara(SETWIFI_NAME, SSID)
@@ -393,7 +392,8 @@ namespace microIoT {
      * @param IOT_TOPIC to IOT_TOPIC ,eg: "yourIotTopic"
     */
 
-    //% weight=100
+    //% weight=90
+    //% group="IOT"
     //% blockExternalInputs=1
     //% blockId=microIoT_MQTT block="micro:IoT setup mqtt|IOT_ID(user): %IOT_ID| IOT_PWD(password):%IOT_PWD|(default topic_0) Topic: %IOT_TOPIC| server: %SERVERS"
     export function microIoT_MQTT(/*SSID: string, PASSWORD: string,*/
@@ -424,11 +424,11 @@ namespace microIoT {
      * Add an MQTT subscription
      */
 
-    //% weight=200
+    //% weight=70
+    //% group="IOT"
     //% blockId=microIoT_add_topic
     //% block="subscribe additional %top |: %IOT_TOPIC"
     //% top.fieldEditor="gridpicker" top.fieldOptions.columns=2
-    //% advanced=true
     export function microIoT_add_topic(top: TOPIC, IOT_TOPIC: string): void {
         microIoT_ParaRunCommand((top + 0x06), IOT_TOPIC);
         microIoT_CheckStatus("SubTopicOK");
@@ -440,8 +440,9 @@ namespace microIoT {
      * @param Mess to Mess ,eg: "mess"
      */
 
-    //% weight=99
-    //% blockId=microIoT_SendMessage block="MQTT send message %string| to |%TOPIC"
+    //% weight=80
+    //% group="IOT"
+    //% blockId=microIoT_SendMessage block="send message %string| to |%TOPIC"
     export function microIoT_SendMessage(Mess: string, Topic: TOPIC): void {
         let topic = 0
 
@@ -493,9 +494,9 @@ namespace microIoT {
     /**
      * MQTT processes the subscription receiving information
      */
-    //% weight=98
-    //% blockGap=60
-    //% blockId=obloq_mqtt_callback_user_more block="MQTT on %top |received"
+    //% weight=60
+    //% group="IOT"
+    //% blockId=obloq_mqtt_callback_user_more block="on %top |received"
     //% top.fieldEditor="gridpicker" top.fieldOptions.columns=2
     export function microIoT_MQTT_Event(top: TOPIC, cb: (message: string) => void) {
         microIoT_callback(top, () => {
@@ -511,11 +512,12 @@ namespace microIoT {
     * @param EVENT to EVENT ,eg: "yourEvent"
     * @param KEY to KEY ,eg: "yourKey"
     */
-    //% weight=80
+    //% weight=50
+    //% group="IOT"
     //% receive.fieldEditor="gridpicker" receive.fieldOptions.columns=3
     //% send.fieldEditor="gridpicker" send.fieldOptions.columns=3
     //% blockId=microIoT_http_IFTTT
-    //% block="webhooks config:|event: %EVENT|key: %KEY|"
+    //% block="webhooks config: event: %EVENT key: %KEY"
     export function microIoT_http_IFTTT(EVENT: string, KEY: string): void {
         microIoT_WEBHOOKS_EVENT = EVENT
         microIoT_WEBHOOKS_KEY = KEY
@@ -544,16 +546,19 @@ namespace microIoT {
         }
     }
 
-    /**
-    * ThingSpeak configured and sent data
-    * @param KEY to KEY ,eg: "your write api key"
-    * @param time set timeout, eg: 10000
-    */
+   /**
+     * ThingSpeak configured and sent data
+     * @param KEY to KEY ,eg: "your write api key"
+     * @param field1 ,eg: 2020
+     */
 
-    //% weight=99
-    //% blockId=IFTTT_MQTT_Weather_ThingSpeak_Get
-    //% block="ThingSpeak(Get) | key %KEY|value1 %field1| value2 %field2| value3 %field3|  value4 %field4| value5 %field5| value6 %field6| value7 %field7| timeout(ms) %time"
-    export function microIoT_http_TK_GET(KEY: string, field1: string, field2: string, field3: string, field4: string, field5: string, field6: string, field7: string, time: number): void {
+    //% weight=30
+    //% group="IOT"
+    //% blockId=naturalScience_microIoT_http_TK_GET
+    //% expandableArgumentMode="enabled"
+    //% inlineInputMode=inline
+    //% block="ThingSpeak configured key: %KEY  send value1: %field1 || value2: %field2 value3: %field3 value4: %field4 value5: %field5 value6: %field6 value7: %field7" 
+    export function microIoT_http_TK_GET(KEY: string, field1: string, field2?: string, field3?: string, field4?: string, field5?: string, field6?: string, field7?: string): void {
         microIoT_setPara(SETHTTP_IP, OBLOQ_MQTT_EASY_IOT_SERVER_TK)
         let tempStr = ""
         tempStr = "update?api_key=" + KEY + "&field1=" + field1 + "&field2=" + field2 + "&field3=" + field3 + "&field4=" + field4 + "&field5=" + field5 + "&field6=" + field6 + "&field7=" + field7 + "\r"
@@ -563,97 +568,21 @@ namespace microIoT {
     /**
      * IFTTT send data
      * time(ms): private long maxWait
-     * @param time set timeout, eg: 10000
+     * @param value1 ,eg: "Hi"
+     * @param value2 ,eg: "DFRobot"
+     * @param value3 ,eg: "2020"
     */
 
-    //% weight=78
-    //% blockId=microIoT_http_post
-    //% block="IFTTT(post) | value1 %value1| value2 %value2| value3 %value3| timeout(ms) %time"
-    export function microIoT_http_post(value1: string, value2: string, value3: string, time: number): void {
+    //% weight=40
+    //% group="IOT"
+    //% blockId=OBLOQ-I2C_http_post
+    //% block="IFTTT send value1: %value1 value2: %value2 value3: %value3"
+    export function microIoT_http_post(value1: string, value2: string, value3: string): void {
         microIoT_setPara(SETHTTP_IP, microIoT_WEBHOOKS_URL)
         let tempStr = ""
         tempStr = "trigger/" + microIoT_WEBHOOKS_EVENT + "/with/key/" + microIoT_WEBHOOKS_KEY + ",{\"value1\":\"" + value1 + "\",\"value2\":\"" + value2 + "\",\"value3\":\"" + value3 + "\" }" + "\r"
         microIoT_ParaRunCommand(POST_URL, tempStr)
     }
-
-
-
-    /**
-     * Get IP address.
-    */
-
-    // //% weight=51
-    // //% blockId=microIoT_wifi_ipconfig
-    // //% block="ipconfig"
-    // //% advanced=true
-    // export function microIoT_wifi_ipconfig(): string {
-    //     return microIoT_IP;
-    //     //microIoT_readValue(READ_IP)
-    // }
-
-
-    /**
-     * Send the ping.time(ms): private long maxWait
-     * @param time to timeout, eg: 10000
-    */
-
-    // //% weight=49
-    // //% blockId=Obloq_send_ping
-    // //% block="sendPing"
-    // //% advanced=true
-    // export function microIoT_send_ping(): boolean {
-    //     let buf = pins.createBuffer(3);
-    //     buf[0] = 0x1E;
-    //     buf[1] = RUN_COMMAND;
-    //     buf[2] = SEND_PING;
-    //     pins.i2cWriteBuffer(IIC_ADDRESS, buf);
-    //     microIoT_CheckStatus("PingOK");
-    //     return true;
-    // }
-
-
-    /**
-     * Get the software version.time(ms): private long maxWait
-     * @param time to timeout, eg: 10000
-    */
-
-    // //% weight=50
-    // //% blockId=microIoT_get_version
-    // //% block="get version"
-    // //% advanced=true
-    // export function microIoT_get_version(): string {
-    //     let buf = pins.createBuffer(3);
-    //     buf[0] = 0x1E;
-    //     buf[1] = RUN_COMMAND;
-    //     buf[2] = GET_VERSION;
-    //     pins.i2cWriteBuffer(IIC_ADDRESS, buf);
-    //     microIoT_CheckStatus("READ_VERSION");
-    //     return RECDATA
-    // }
-
-
-    /**
-     * Heartbeat request.time(ms): private long maxWait
-     * @param time to timeout, eg: 10000
-    */
-    // //% weight=48
-    // //% blockId=microIoT_get_heartbeat
-    // //% block="get heartbeat"
-    // //% advanced=true
-    // export function microIoT_get_heartbeat(): boolean {
-    //     return true
-    // }
-
-    /**
-     * Stop the heartbeat request.
-    */
-    // //% weight=47
-    // //% blockId=microIoT_stop_heartbeat
-    // //% block="stop heartbeat"
-    // //% advanced=true
-    // export function microIoT_stop_heartbeat(): boolean {
-    //     return true
-    // }
 
     function microIoT_GetData(len: number): void {
         RECDATA = ""
@@ -770,13 +699,8 @@ namespace microIoT {
         microIoT_InquireStatus();
     })
 
-
-
-    /**
-    * OLED init
-    */
-
-    //% weight=200
+    //% weight=100
+    //% group="OLED"
     //% block="initDisplay"
     export function microIoT_initDisplay(): void {
         microIoT_cmd(0xAE);  // Set display OFF
@@ -808,6 +732,7 @@ namespace microIoT {
      * OLED clear
      */
     //% weight=60
+    //% group="OLED"
     //% block="OLED clear"
     export function clear() {
         for (let j = 0; j < 8; j++) {
@@ -844,7 +769,8 @@ namespace microIoT {
      * @param text value , eg: DFRobot
      * OLED  display string
      */
-    //% weight=60
+    //% weight=90
+    //% group="OLED"
     //% text.defl="DFRobot"
     //% line.min=0 line.max=7
     //% block="OLED show line %line|text %text"
@@ -865,7 +791,8 @@ namespace microIoT {
      * @param n value , eg: 2019
      * OLED  shows the number
      */
-    //% weight=60
+    //% weight=80
+    //% group="OLED"
     //% line.min=0 line.max=7
     //% block="OLED show line %line|number %n"
 
@@ -1002,49 +929,59 @@ namespace microIoT {
         neopixel_buf[i] = 0
     }
 
-    /**
-     * 设置RGB三原色
-     * Set the RGB primary colors
+    /** 
+     * Set the three primary color:red, green, and blue
+     * @param r  , eg: 100
+     * @param g  , eg: 100
+     * @param b  , eg: 100
      */
+
     //% weight=60
+    //% group="RGB"
     //% r.min=0 r.max=255
     //% g.min=0 g.max=255
     //% b.min=0 b.max=255
-    //%  block="red|%r green|%g blue|%b"
-    export function rgb(r: number, g: number, b: number): number {
+    //% block="red|%r green|%g blue|%b"
+    export function microIoT_rgb(r: number, g: number, b: number): number {
         return (r << 16) + (g << 8) + (b);
     }
 
     /**
-     * RGB灯从多少点亮到多少
+     * RGB LEDs light up from A to B
+     * @param from  , eg: 1
+     * @param to  , eg: 4
      */
+
     //% weight=60
-    //% from.min=0 from.max3
-    //% to.min=0 to.max=3
-    //% to.defl=3
-    //%  block="RGB |%from to|%to"
-    export function ledRange(from: number, to: number): number {
-        return (from << 16) + (2 << 8) + (to);
+    //% group="RGB"
+    //% from.min=1 from.max=4
+    //% to.min=1 to.max=4
+    //% block="range from |%from with|%to leds"
+    export function microIoT_ledRange(from: number, to: number): number {
+        return ((from-1) << 16) + (2 << 8) + (to);
     }
+
     /**
-     * 设置第几个灯的颜色
-     * Set the color of the first light
+     * Set the color of the specified LEDs
+     * @param index  , eg: 1
      */
+
     //% weight=60
-    //% index.min=0 index.max=3
+    //% group="RGB"
+    //% index.min=1 index.max=4
     //% rgb.shadow="colorNumberPicker"
-    //%  block="RGB |%index show color|%rgb"
-    export function setIndexColor(index: number, rgb: number) {
-        let f = index;
-        let t = index;
+    //% block="RGB light |%index show color|%rgb"
+    export function microIoT_setIndexColor(index: number, rgb: number) {
+        let f = index-1;
+        let t = index-1;
         let r = (rgb >> 16) * (_brightness / 255);
         let g = ((rgb >> 8) & 0xFF) * (_brightness / 255);
         let b = ((rgb) & 0xFF) * (_brightness / 255);
 
-        if (index > 15) {
-            if (((index >> 8) & 0xFF) == 0x02) {
-                f = index >> 16;
-                t = index & 0xff;
+        if ((index-1) > 15) {
+            if ((((index-1) >> 8) & 0xFF) == 0x02) {
+                f = (index-1) >> 16;
+                t = (index-1) & 0xff;
             } else {
                 f = 0;
                 t = -1;
@@ -1058,14 +995,16 @@ namespace microIoT {
         ws2812b.sendBuffer(neopixel_buf, DigitalPin.P15)
 
     }
+
     /**
-        * 设置全部RGB灯颜色
-        * Set all the RGB light color
-        */
+     * Set the color of all RGB LEDs
+     */
+
     //% weight=60
+    //% group="RGB"
     //% rgb.shadow="colorNumberPicker"
-    //%  block="show color |%rgb"
-    export function showColor(rgb: number) {
+    //% block=" RGB show color |%rgb"
+    export function microIoT_showColor(rgb: number) {
         let r = (rgb >> 16) * (_brightness / 255);
         let g = ((rgb >> 8) & 0xFF) * (_brightness / 255);
         let b = ((rgb) & 0xFF) * (_brightness / 255);
@@ -1079,28 +1018,152 @@ namespace microIoT {
         }
         ws2812b.sendBuffer(neopixel_buf, DigitalPin.P15)
     }
+
     /**
-     * 设置RGB灯亮度
-     * Set the brightness of the RGB light
+     * Set the brightness of RGB LED
+     * @param brightness  , eg: 100
      */
-    //% weight=60
+
+    //% weight=70
+    //% group="RGB"
     //% brightness.min=0 brightness.max=255
-    //% block="set RGB brightness|%brightness"
-    export function setBrightness(brightness: number) {
+    //% block="set RGB brightness to |%brightness"
+    export function microIoT_setBrightness(brightness: number) {
         _brightness = brightness;
     }
+
     /**
-     * 关闭RGB灯
-     * Close the RGB lights
+     * Turn off all RGB LEDs
      */
-    //% weight=60
-    //%  block="close all RGB"
-    export function ledBlank() {
-        showColor(0)
+
+    //% weight=40
+    //% group="RGB"
+    //% block="clear all RGB"
+    export function microIoT_ledBlank() {
+        microIoT_showColor(0)
+    }
+
+    /**
+     * RGB LEDs display rainbow colors 
+     */
+
+    //% weight=50
+    //% group="RGB"
+    //% startHue.defl=1
+    //% endHue.defl=360
+    //% startHue.min=0 startHue.max=360
+    //% endHue.min=0 endHue.max=360
+    //% blockId=led_rainbow block="set RGB show rainbow color from|%startHue to|%endHue"
+    export function ledRainbow(startHue: number, endHue: number) {
+        startHue = startHue >> 0;
+        endHue = endHue >> 0;
+        const saturation = 100;
+        const luminance = 50;
+        let steps = 3 + 1;
+        const direction = HueInterpolationDirection.Clockwise;
+
+        //hue
+        const h1 = startHue;
+        const h2 = endHue;
+        const hDistCW = ((h2 + 360) - h1) % 360;
+        const hStepCW = Math.idiv((hDistCW * 100), steps);
+        const hDistCCW = ((h1 + 360) - h2) % 360;
+        const hStepCCW = Math.idiv(-(hDistCCW * 100), steps);
+        let hStep: number;
+        if (direction === HueInterpolationDirection.Clockwise) {
+            hStep = hStepCW;
+        } else if (direction === HueInterpolationDirection.CounterClockwise) {
+            hStep = hStepCCW;
+        } else {
+            hStep = hDistCW < hDistCCW ? hStepCW : hStepCCW;
+        }
+        const h1_100 = h1 * 100; //we multiply by 100 so we keep more accurate results while doing interpolation
+
+        //sat
+        const s1 = saturation;
+        const s2 = saturation;
+        const sDist = s2 - s1;
+        const sStep = Math.idiv(sDist, steps);
+        const s1_100 = s1 * 100;
+
+        //lum
+        const l1 = luminance;
+        const l2 = luminance;
+        const lDist = l2 - l1;
+        const lStep = Math.idiv(lDist, steps);
+        const l1_100 = l1 * 100
+
+        //interpolate
+        if (steps === 1) {
+            writeBuff(0, hsl(h1 + hStep, s1 + sStep, l1 + lStep))
+        } else {
+            writeBuff(0, hsl(startHue, saturation, luminance));
+            for (let i = 1; i < steps - 1; i++) {
+                const h = Math.idiv((h1_100 + i * hStep), 100) + 360;
+                const s = Math.idiv((s1_100 + i * sStep), 100);
+                const l = Math.idiv((l1_100 + i * lStep), 100);
+                writeBuff(0 + i, hsl(h, s, l));
+            }
+            writeBuff(3, hsl(endHue, saturation, luminance));
+        }
+        ws2812b.sendBuffer(neopixel_buf, DigitalPin.P15)
+    }
+
+    export enum HueInterpolationDirection {
+        Clockwise,
+        CounterClockwise,
+        Shortest
+    }
+
+    function writeBuff(index: number, rgb: number) {
+        let r = (rgb >> 16) * (_brightness / 255);
+        let g = ((rgb >> 8) & 0xFF) * (_brightness / 255);
+        let b = ((rgb) & 0xFF) * (_brightness / 255);
+        neopixel_buf[index * 3 + 0] = Math.round(g)
+        neopixel_buf[index * 3 + 1] = Math.round(r)
+        neopixel_buf[index * 3 + 2] = Math.round(b)
+    }
+
+    function hsl(h: number, s: number, l: number): number {
+        h = Math.round(h);
+        s = Math.round(s);
+        l = Math.round(l);
+
+        h = h % 360;
+        s = Math.clamp(0, 99, s);
+        l = Math.clamp(0, 99, l);
+        let c = Math.idiv((((100 - Math.abs(2 * l - 100)) * s) << 8), 10000); //chroma, [0,255]
+        let h1 = Math.idiv(h, 60);//[0,6]
+        let h2 = Math.idiv((h - h1 * 60) * 256, 60);//[0,255]
+        let temp = Math.abs((((h1 % 2) << 8) + h2) - 256);
+        let x = (c * (256 - (temp))) >> 8;//[0,255], second largest component of this color
+        let r$: number;
+        let g$: number;
+        let b$: number;
+        if (h1 == 0) {
+            r$ = c; g$ = x; b$ = 0;
+        } else if (h1 == 1) {
+            r$ = x; g$ = c; b$ = 0;
+        } else if (h1 == 2) {
+            r$ = 0; g$ = c; b$ = x;
+        } else if (h1 == 3) {
+            r$ = 0; g$ = x; b$ = c;
+        } else if (h1 == 4) {
+            r$ = x; g$ = 0; b$ = c;
+        } else if (h1 == 5) {
+            r$ = c; g$ = 0; b$ = x;
+        }
+        let m = Math.idiv((Math.idiv((l * 2 << 8), 100) - c), 2);
+        let r = r$ + m;
+        let g = g$ + m;
+        let b = b$ + m;
+
+        return (r << 16) + (g << 8) + b;
     }
 
     //超声波
     //% weight=40
+    //% group="Sensor"
     //% block="read ultrasonic sensor T|%T E|%E unit(cm)"
     //% advanced=true
     export function ultraSonic(T: PIN, E: PIN, ): number {
@@ -1112,7 +1175,6 @@ namespace microIoT {
             case PIN.P1: ultraSonic_T = DigitalPin.P1; break;
             case PIN.P2: ultraSonic_T = DigitalPin.P2; break;
             case PIN.P8: ultraSonic_T = DigitalPin.P8; break;
-            //case PIN.P9: _T = DigitalPin.P9; break;
             case PIN.P12: ultraSonic_T = DigitalPin.P12; break;
             case PIN.P13: ultraSonic_T = DigitalPin.P13; break;
             case PIN.P14: ultraSonic_T = DigitalPin.P14; break;
@@ -1125,7 +1187,6 @@ namespace microIoT {
             case PIN.P1: ultraSonic_E = DigitalPin.P1; break;
             case PIN.P2: ultraSonic_E = DigitalPin.P2; break;
             case PIN.P8: ultraSonic_E = DigitalPin.P8; break;
-            //case PIN.P9: _E = DigitalPin.P9; break;
             case PIN.P12: ultraSonic_E = DigitalPin.P12; break;
             case PIN.P13: ultraSonic_E = DigitalPin.P13; break;
             case PIN.P14: ultraSonic_E = DigitalPin.P14; break;
@@ -1137,12 +1198,10 @@ namespace microIoT {
         pins.digitalWritePin(ultraSonic_T, 0);
         if (pins.digitalReadPin(ultraSonic_E) == 0) {
             pins.digitalWritePin(ultraSonic_T, 1);
-            // basic.pause(10);
             pins.digitalWritePin(ultraSonic_T, 0);
             ultraSonic_d = pins.pulseIn(ultraSonic_E, PulseValue.High, maxCmDistance * 58);
         } else {
             pins.digitalWritePin(ultraSonic_T, 0);
-            // basic.pause(10);
             pins.digitalWritePin(ultraSonic_T, 1);
             ultraSonic_d = pins.pulseIn(ultraSonic_E, PulseValue.Low, maxCmDistance * 58);
         }
@@ -1155,6 +1214,7 @@ namespace microIoT {
     }
     //光线
     //% weight=40
+    //% group="Sensor"
     //% block="read pin|%pin light intensity "
     //% advanced=true
     export function intenskity(pin: PIN_1): number {
@@ -1170,6 +1230,7 @@ namespace microIoT {
 
     //运动
     //% weight=40
+    //% group="Sensor"
     //% block="read pin|%pin digital infrared motion sensor"
     //% advanced=true
     export function motinSensor(pin: PIN_1): number {
@@ -1187,6 +1248,7 @@ namespace microIoT {
 
     //声音
     //% weight=40
+    //% group="Sensor"
     //% block="read pin|%pin loudness"
     //% advanced=true
     export function soundIntensity(pin: PIN_1): number {
@@ -1202,6 +1264,7 @@ namespace microIoT {
 
     //火焰
     //% weight=40
+    //% group="Sensor"
     //% block="read pin|%pin flame sensor "
     //% advanced=true
     export function flame(pin: PIN_1): number {
@@ -1216,6 +1279,7 @@ namespace microIoT {
     }
     //水份
     //% weight=40
+    //% group="Sensor"
     //% block="read pin|%pin steam sensor"
     //% advanced=true
     export function moisture(pin: PIN_1): number {
@@ -1230,6 +1294,7 @@ namespace microIoT {
     }
     //土壤湿度
     //% weight=40
+    //% group="Sensor"
     //% block="read pin|%pin soil moisture sensor"
     //% advanced=true
     export function soilMoisture(pin: PIN_1): number {
@@ -1244,6 +1309,7 @@ namespace microIoT {
     }
     //紫外线传感器
     //% weight=40
+    //% group="Sensor"
     //% block="read pin|%pin UV intensity"
     //% advanced=true
     export function readeUV(pin: PIN_1): number {
@@ -1275,6 +1341,7 @@ namespace microIoT {
     }
     //温湿度传感器
     //% weight=40
+    //% group="Sensor"
     //% block="read pin|%pin|%index"
     //% advanced=true
     export function index(pin: PIN, index: DT11): number {
@@ -1285,7 +1352,6 @@ namespace microIoT {
             case PIN.P1: index_T = DigitalPin.P1; break;
             case PIN.P2: index_T = DigitalPin.P2; break;
             case PIN.P8: index_T = DigitalPin.P8; break;
-            //case PIN.P9: _T = DigitalPin.P9; break;
             case PIN.P12: index_T = DigitalPin.P12; break;
             case PIN.P13: index_T = DigitalPin.P13; break;
             case PIN.P14: index_T = DigitalPin.P14; break;
@@ -1294,31 +1360,8 @@ namespace microIoT {
         }
         pins.digitalWritePin(index_T, 0);
         basic.pause(20);
-        //pins.digitalWritePin(index_T, 1);
         let i = pins.digitalReadPin(index_T);
         pins.setPull(index_T, PinPullMode.PullUp);
-
-        // while (pins.digitalReadPin(index_T) == 1);
-        // while (pins.digitalReadPin(index_T) == 0);
-        // while (pins.digitalReadPin(index_T) == 1);
-
-        // let index_value = 0;
-        // let index_counter = 0;
-
-        // for (let i = 0; i <= 32 - 1; i++) {
-        //     while (pins.digitalReadPin(index_T) == 0) {
-        //         index_counter = 0;
-        //     }
-        //     while (pins.digitalReadPin(index_T) == 1) {
-        //         index_counter += 1;
-        //     }
-        //     if (i > 15) {
-        //         if (index_counter > 2) {
-        //             index_value = index_value + (1 << (31 - i));
-        //         }
-        //     }
-        // }
-        //basic.pause(1100);
         switch (index) {
             case 1:
                 let dhtvalue1 = 0;
@@ -1388,8 +1431,8 @@ namespace microIoT {
 
     //电扇
     //% weight=40
+    //% group="Motor"
     //% block="set pin|%pin turn |%fan small fan"
-    //% advanced=true
     export function fan(pin: PIN, fan: Switch): void {
         let fan_T;
         switch (pin) {
@@ -1397,7 +1440,6 @@ namespace microIoT {
             case PIN.P1: fan_T = DigitalPin.P1; break;
             case PIN.P2: fan_T = DigitalPin.P2; break;
             case PIN.P8: fan_T = DigitalPin.P8; break;
-            //case PIN.P9: _T = DigitalPin.P9; break;
             case PIN.P12: fan_T = DigitalPin.P12; break;
             case PIN.P13: fan_T = DigitalPin.P13; break;
             case PIN.P14: fan_T = DigitalPin.P14; break;
@@ -1414,6 +1456,7 @@ namespace microIoT {
     */
 
     //% weight=40
+    //% group="Sensor"
     //% block="read pin|%pin reade TDS sensor(ppm)"
     //% advanced=true
     export function getTds(pin: PIN_1, t: number=25): number {
@@ -1460,12 +1503,12 @@ namespace microIoT {
         return bTemp
     }
 
-    //CCS
     /**
     * CCS sensor reading
     * @param t temperture; eg: 25, 20, 30
     */
     //% weight=40
+    //% group="Sensor"
     //% block="read air quality sensor|%deta"
     //% advanced=true
     export function ccsSensor(deta:CCS):number{
@@ -1481,6 +1524,7 @@ namespace microIoT {
     }
 
     //% weight=40
+    //% group="Sensor"
     //% block="init air quality sensor "
     //% advanced=true
     export function ss():void{

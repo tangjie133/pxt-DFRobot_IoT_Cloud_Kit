@@ -9,8 +9,6 @@
         ".vscode/tasks.json",
         "README.md",
         "_locales/zh-cn/microbit_iot_kit-strings.json",
-        "main.blocks",
-        "main.ts",
         "sendBuffer.asm",
         "microiotkit.ts",
         "test.ts",
