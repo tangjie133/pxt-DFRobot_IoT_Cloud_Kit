@@ -374,7 +374,7 @@ namespace microIoT {
 
     //% weight=100
     //% group="IOT"
-    //% blockId=microIoT_wifi block="micro:IoT setup |Wi-Fi: |name: %SSID| password：%PASSWORD"
+    //% blockId=microIoT_wifi block="micro:IoT setup |Wi-Fi: |name: %SSID| password：%PASSWORD start connection"
     export function microIoT_WIFI(SSID: string, PASSWORD: string): void {
         microIoT_setPara(SETWIFI_NAME, SSID)
         microIoT_setPara(SETWIFI_PASSWORLD, PASSWORD)
@@ -1165,7 +1165,6 @@ namespace microIoT {
     //% weight=40
     //% group="Sensor"
     //% block="read ultrasonic sensor T|%T E|%E unit(cm)"
-    //% advanced=true
     export function ultraSonic(T: PIN, E: PIN, ): number {
         let maxCmDistance = 500;
         let ultraSonic_T;
@@ -1216,7 +1215,6 @@ namespace microIoT {
     //% weight=40
     //% group="Sensor"
     //% block="read pin|%pin light intensity "
-    //% advanced=true
     export function intenskity(pin: PIN_1): number {
         let intenskity_T;
         switch (pin) {
@@ -1232,7 +1230,6 @@ namespace microIoT {
     //% weight=40
     //% group="Sensor"
     //% block="read pin|%pin digital infrared motion sensor"
-    //% advanced=true
     export function motinSensor(pin: PIN_1): number {
         let motinSensor_T;
         switch (pin) {
@@ -1250,7 +1247,6 @@ namespace microIoT {
     //% weight=40
     //% group="Sensor"
     //% block="read pin|%pin loudness"
-    //% advanced=true
     export function soundIntensity(pin: PIN_1): number {
         let soundIntensity_T;
         switch (pin) {
@@ -1266,7 +1262,6 @@ namespace microIoT {
     //% weight=40
     //% group="Sensor"
     //% block="read pin|%pin flame sensor "
-    //% advanced=true
     export function flame(pin: PIN_1): number {
         let flame_T;
         switch (pin) {
@@ -1281,7 +1276,6 @@ namespace microIoT {
     //% weight=40
     //% group="Sensor"
     //% block="read pin|%pin steam sensor"
-    //% advanced=true
     export function moisture(pin: PIN_1): number {
         let moisture_T;
         switch (pin) {
@@ -1296,7 +1290,6 @@ namespace microIoT {
     //% weight=40
     //% group="Sensor"
     //% block="read pin|%pin soil moisture sensor"
-    //% advanced=true
     export function soilMoisture(pin: PIN_1): number {
         let soilMoisture_T;
         switch (pin) {
@@ -1311,7 +1304,6 @@ namespace microIoT {
     //% weight=40
     //% group="Sensor"
     //% block="read pin|%pin UV intensity"
-    //% advanced=true
     export function readeUV(pin: PIN_1): number {
         let readeUV_T;
         let readeUV_x;
@@ -1343,7 +1335,6 @@ namespace microIoT {
     //% weight=40
     //% group="Sensor"
     //% block="read pin|%pin|%index"
-    //% advanced=true
     export function index(pin: PIN, index: DT11): number {
 
         let index_T;
@@ -1458,7 +1449,6 @@ namespace microIoT {
     //% weight=40
     //% group="Sensor"
     //% block="read pin|%pin reade TDS sensor(ppm)"
-    //% advanced=true
     export function getTds(pin: PIN_1, t: number=25): number {
         let getTds_T;
         switch (pin) {
@@ -1510,7 +1500,6 @@ namespace microIoT {
     //% weight=40
     //% group="Sensor"
     //% block="read air quality sensor|%deta"
-    //% advanced=true
     export function ccsSensor(deta:CCS):number{
         let make
         if(checkDataReady() == true){ 
@@ -1526,7 +1515,6 @@ namespace microIoT {
     //% weight=40
     //% group="Sensor"
     //% block="init air quality sensor "
-    //% advanced=true
     export function ss():void{
         softReset();
         pins.i2cWriteNumber(CCS811_I2C_ADDRESS1, 0xF4, NumberFormat.Int8LE)
