@@ -17,7 +17,6 @@ const OBLOQ_MQTT_EASY_IOT_SERVER_GLOBAL = "mqtt.beebotte.com"
 const OBLOQ_MQTT_EASY_IOT_SERVER_EN = "iot.dfrobot.com"
 const microIoT_WEBHOOKS_URL = "maker.ifttt.com"
 const OBLOQ_MQTT_EASY_IOT_SERVER_TK = "api.thingspeak.com"
-const microIoT_Weather_URL = "api.dfrobot.top"
 
 enum NeoPixelColors {
     //% block=red
@@ -71,7 +70,7 @@ enum DT11 {
 enum Switch {
     //% block="turn ON"
     ON = 1,
-    //% block="turnOFF"
+    //% block="turn OFF"
     OFF = 0
 }
 
@@ -385,7 +384,7 @@ namespace microIoT {
     }
 
     /**
-     * MQTT configuration
+     * Access to EasyIOT_CN, SIOT, EasyIOT_EN by configuring this module
      * @param SSID to SSID ,eg: "yourSSID"
      * @param PASSWORD to PASSWORD ,eg: "yourPASSWORD"
      * @param IOT_ID to IOT_ID ,eg: "yourIotId"
@@ -428,7 +427,7 @@ namespace microIoT {
     //% weight=70
     //% group="IOT"
     //% blockId=microIoT_add_topic
-    //% block="subscribe additional %top |: %IOT_TOPIC"
+    //% block="subscribe to additional %top |: %IOT_TOPIC"
     //% top.fieldEditor="gridpicker" top.fieldOptions.columns=2
     export function microIoT_add_topic(top: TOPIC, IOT_TOPIC: string): void {
         microIoT_ParaRunCommand((top + 0x06), IOT_TOPIC);
@@ -509,10 +508,10 @@ namespace microIoT {
 
 
     /**
-    * IFTTT configuration
-    * @param EVENT to EVENT ,eg: "yourEvent"
-    * @param KEY to KEY ,eg: "yourKey"
-    */
+     * IFTTT configuration
+     * @param EVENT to EVENT ,eg: "yourEvent"
+     * @param KEY to KEY ,eg: "yourKey"
+     */
     //% weight=50
     //% group="IOT"
     //% receive.fieldEditor="gridpicker" receive.fieldOptions.columns=3
@@ -572,7 +571,7 @@ namespace microIoT {
      * @param value1 ,eg: "Hi"
      * @param value2 ,eg: "DFRobot"
      * @param value3 ,eg: "2020"
-    */
+     */
 
     //% weight=40
     //% group="IOT"
@@ -699,7 +698,9 @@ namespace microIoT {
     basic.forever(function () {
         microIoT_InquireStatus();
     })
-
+    /**
+     * 初始化OLED
+     */
     //% weight=100
     //% group="OLED"
     //% block="initDisplay"
@@ -730,7 +731,7 @@ namespace microIoT {
         clear();
     }
     /**
-     * OLED clear
+     * 清除OLED屏幕
      */
     //% weight=60
     //% group="OLED"
@@ -766,9 +767,9 @@ namespace microIoT {
         microIoT_writeCustomChar(basicFont[c1 - 32]);
     }
     /**
+     * OLED  display string
      * @param line line num (8 pixels per line), eg: 0
      * @param text value , eg: DFRobot
-     * OLED  display string
      */
     //% weight=90
     //% group="OLED"
@@ -788,9 +789,9 @@ namespace microIoT {
 
     }
 	/**
+     * OLED  shows the number
      * @param line line num (8 pixels per line), eg: 0
      * @param n value , eg: 2020
-     * OLED  shows the number
      */
     //% weight=80
     //% group="OLED"
@@ -1267,7 +1268,9 @@ namespace microIoT {
         return pins.analogReadPin(soundIntensity_T);
     }
 
-    //火焰
+    /**
+     * 设置火焰传感器引脚获取火焰传感器值
+     */
     //% weight=40
     //% group="Sensor"
     //% block="read pin|%pin flame sensor "
@@ -1281,7 +1284,10 @@ namespace microIoT {
         }
         return pins.analogReadPin(flame_T);
     }
-    //水份
+
+    /**
+     * 设置水份传感器引脚获取水份值
+     */
     //% weight=40
     //% group="Sensor"
     //% block="read pin|%pin steam sensor"
@@ -1295,7 +1301,9 @@ namespace microIoT {
         }
         return Math.round(pins.analogReadPin(moisture_T));
     }
-    //土壤湿度
+    /**
+     * 设置土壤湿度传感器引脚获取土壤湿度
+     */
     //% weight=40
     //% group="Sensor"
     //% block="read pin|%pin soil moisture sensor"
@@ -1309,7 +1317,9 @@ namespace microIoT {
         }
         return Math.round(pins.analogReadPin(soilMoisture_T));
     }
-    //紫外线传感器
+    /**
+     * 设置紫外线传感器引脚获取紫外线值
+     */
     //% weight=40
     //% group="Sensor"
     //% block="read pin|%pin UV intensity"
@@ -1340,7 +1350,9 @@ namespace microIoT {
         }
         return readeUV_y;
     }
-    //温湿度传感器
+    /**
+     * 设置温湿度传感器引脚获取温湿度值
+     */
     //% weight=40
     //% group="Sensor"
     //% block="read pin|%pin|%index"
@@ -1429,7 +1441,9 @@ namespace microIoT {
 
     }
 
-    //电扇
+    /**
+     * 设置电扇控制引脚控制电扇
+     */
     //% weight=40
     //% group="Motor"
     //% block="small fanset %fan at %pin"
@@ -1450,8 +1464,7 @@ namespace microIoT {
     }
 
     /**
-    * TDS meter reading
-    * @param t temperture; eg: 25, 20, 30
+    *设置TDS引脚获取TDS值
     */
 
     //% weight=40
@@ -1502,8 +1515,7 @@ namespace microIoT {
     }
 
     /**
-    * CCS sensor reading
-    * @param t temperture; eg: 25, 20, 30
+    * 获取CO2或TVOC值
     */
     //% weight=40
     //% group="Sensor"
@@ -1519,7 +1531,9 @@ namespace microIoT {
         basic.pause(300)
         return make;
     }
-
+    /**
+     * 初始化空气质量传感器
+     */
     //% weight=40
     //% group="Sensor"
     //% block="init air quality sensor "
