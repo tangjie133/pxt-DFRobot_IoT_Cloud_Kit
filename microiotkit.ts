@@ -496,7 +496,7 @@ namespace microIoT {
      */
     //% weight=60
     //% group="IOT"
-    //% blockId=obloq_mqtt_callback_user_more block="on %top |received"
+    //% blockId=obloq_mqtt_callback_user_more block="on received %top"
     //% top.fieldEditor="gridpicker" top.fieldOptions.columns=2
     export function microIoT_MQTT_Event(top: TOPIC, cb: (message: string) => void) {
         microIoT_callback(top, () => {
@@ -1515,13 +1515,12 @@ namespace microIoT {
     }
 
     /**
-    * 获取CO2或TVOC值
-    */
+     * 获取CO2或TVOC值
+     */
     //% weight=40
     //% group="Sensor"
     //% block="read air quality sensor|%deta"
     export function ccsSensor(deta:CCS):number{
-        ss();
         let make
         if(checkDataReady() == true){ 
             switch(deta){
@@ -1529,16 +1528,16 @@ namespace microIoT {
                 default:make = getTVOCPPB();
             }
         }
-        basic.pause(300)
+        basic.pause(500)
         return make;
     }
-    // /**
-    //  * 初始化空气质量传感器
-    //  */
-    // //% weight=40
-    // //% group="Sensor"
-    // //% block="init air quality sensor "
-    function ss():void{
+    /**
+     * 初始化空气质量传感器
+     */
+    //% weight=40
+    //% group="Sensor"
+    //% block="init air quality sensor "
+    export function ss():void{
         softReset();
         pins.i2cWriteNumber(CCS811_I2C_ADDRESS1, 0xF4, NumberFormat.Int8LE)
         pins.i2cWriteNumber(CCS811_I2C_ADDRESS1, null, NumberFormat.Int8LE)

@@ -9,7 +9,7 @@
     "microIoT.microIoT_ServoRun|block": "舵机|%index|角度|%angle",
     "microIoT.microIoT_MQTT|block": "MQTT 配置|IoT_id(用户): %IOT_ID| IoT_pwd(密码): %IOT_PWD| (默认topic_0)TOPIC: %IOT_TOPIC| 服务器: %SERVERS",
     "microIoT.microIoT_SendMessage|block": "发送消息 %string| 至 |%TOPIC",
-    "microIoT.microIoT_MQTT_Event|block": "当 %top |收到消息时运行",
+    "microIoT.microIoT_MQTT_Event|block": "当收到%top",
     "microIoT.microIoT_add_topic|block": "新增订阅 %top |: %IOT_TOPIC",
     "microIoT.microIoT_WIFI|block": "WIFI 配置: 名称: %SSID| 密码:%PASSWORD| 启动连接",
     "microIoT.microIoT_http_IFTTT|block": "IFTTT配置：事件: %EVENT| 密钥:%KEY| ",
