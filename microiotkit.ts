@@ -1168,7 +1168,7 @@ namespace microIoT {
      */
     //% weight=40
     //% group="Sensor"
-    //% block="Ultrasonic distance at T|%T E|%E (cm)"
+    //% block="reade ultrasonic sensor unit(cm), trig|%T echo|%E (cm)"
     export function ultraSonic(T: PIN, E: PIN, ): number {
         let maxCmDistance = 500;
         let ultraSonic_T;
@@ -1220,7 +1220,7 @@ namespace microIoT {
      */
     //% weight=40
     //% group="Sensor"
-    //% block="light intensity at %pin"
+    //% block="read pin %pin ambient light"
     export function intenskity(pin: PIN_1): number {
         let intenskity_T;
         switch (pin) {
@@ -1521,6 +1521,7 @@ namespace microIoT {
     //% group="Sensor"
     //% block="read air quality sensor|%deta"
     export function ccsSensor(deta:CCS):number{
+        ss();
         let make
         if(checkDataReady() == true){ 
             switch(deta){
@@ -1531,13 +1532,13 @@ namespace microIoT {
         basic.pause(300)
         return make;
     }
-    /**
-     * 初始化空气质量传感器
-     */
-    //% weight=40
-    //% group="Sensor"
-    //% block="init air quality sensor "
-    export function ss():void{
+    // /**
+    //  * 初始化空气质量传感器
+    //  */
+    // //% weight=40
+    // //% group="Sensor"
+    // //% block="init air quality sensor "
+    function ss():void{
         softReset();
         pins.i2cWriteNumber(CCS811_I2C_ADDRESS1, 0xF4, NumberFormat.Int8LE)
         pins.i2cWriteNumber(CCS811_I2C_ADDRESS1, null, NumberFormat.Int8LE)
