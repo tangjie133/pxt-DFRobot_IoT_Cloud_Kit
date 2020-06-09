@@ -2,7 +2,8 @@
  * @file pxt-microIoT/microIoT.ts
  * @brief DFRobot's obloq makecode library.
  * @n [Get the module here](等网址)
- * @n 
+ * @n micro:bit IoT Kit is a set of modules designed to incorporate IoT in education, supporting multiple popular IoT platforms like easyIoT, Thingspeak, and IFTTT. 
+ * It includes 14 external sensors and 15 application tutorials.  
  *
  * @copyright	[DFRobot](http://www.dfrobot.com), 2016
  * @copyright	MIT Lesser General Public License
@@ -68,9 +69,9 @@ enum DT11 {
 }
 
 enum Switch {
-    //% block="ON"
+    //% block="turn ON"
     ON = 1,
-    //% block="OFF"
+    //% block="turnOFF"
     OFF = 0
 }
 
@@ -374,7 +375,7 @@ namespace microIoT {
 
     //% weight=100
     //% group="IOT"
-    //% blockId=microIoT_wifi block="micro:IoT setup |Wi-Fi: |name: %SSID| password：%PASSWORD start connection"
+    //% blockId=microIoT_wifi block="micro:IoT WI-FI configure|name: %SSID| password：%PASSWORD start connection"
     export function microIoT_WIFI(SSID: string, PASSWORD: string): void {
         microIoT_setPara(SETWIFI_NAME, SSID)
         microIoT_setPara(SETWIFI_PASSWORLD, PASSWORD)
@@ -395,7 +396,7 @@ namespace microIoT {
     //% weight=90
     //% group="IOT"
     //% blockExternalInputs=1
-    //% blockId=microIoT_MQTT block="micro:IoT setup mqtt|IOT_ID(user): %IOT_ID| IOT_PWD(password):%IOT_PWD|(default topic_0) Topic: %IOT_TOPIC| server: %SERVERS"
+    //% blockId=microIoT_MQTT block="micro:IoT MQTT configure|IOT_ID(user): %IOT_ID| IOT_PWD(password):%IOT_PWD|(default topic_0) Topic: %IOT_TOPIC| server: %SERVERS"
     export function microIoT_MQTT(/*SSID: string, PASSWORD: string,*/
         IOT_ID: string, IOT_PWD: string,
         IOT_TOPIC: string, servers: SERVERS):
@@ -517,7 +518,7 @@ namespace microIoT {
     //% receive.fieldEditor="gridpicker" receive.fieldOptions.columns=3
     //% send.fieldEditor="gridpicker" send.fieldOptions.columns=3
     //% blockId=microIoT_http_IFTTT
-    //% block="webhooks config: event: %EVENT key: %KEY"
+    //% block="IFTTT configure event: %EVENT key: %KEY"
     export function microIoT_http_IFTTT(EVENT: string, KEY: string): void {
         microIoT_WEBHOOKS_EVENT = EVENT
         microIoT_WEBHOOKS_KEY = KEY
@@ -788,7 +789,7 @@ namespace microIoT {
     }
 	/**
      * @param line line num (8 pixels per line), eg: 0
-     * @param n value , eg: 2019
+     * @param n value , eg: 2020
      * OLED  shows the number
      */
     //% weight=80
@@ -1161,10 +1162,12 @@ namespace microIoT {
         return (r << 16) + (g << 8) + b;
     }
 
-    //超声波
+    /**
+     * 获取超声波返回的距离信息
+     */
     //% weight=40
     //% group="Sensor"
-    //% block="read ultrasonic sensor T|%T E|%E unit(cm)"
+    //% block="Ultrasonic distance at T|%T E|%E (cm)"
     export function ultraSonic(T: PIN, E: PIN, ): number {
         let maxCmDistance = 500;
         let ultraSonic_T;
@@ -1211,10 +1214,12 @@ namespace microIoT {
         return Math.round(ultraSonic_x);
 
     }
-    //光线
+    /**
+     * 设置光线传感器引脚获取光线强度
+     */
     //% weight=40
     //% group="Sensor"
-    //% block="read pin|%pin light intensity "
+    //% block="light intensity at %pin"
     export function intenskity(pin: PIN_1): number {
         let intenskity_T;
         switch (pin) {
@@ -1226,7 +1231,9 @@ namespace microIoT {
         return pins.analogReadPin(intenskity_T);
     }
 
-    //运动
+    /**
+     * 设置运动传感器引脚获取运动传感器状态
+     */
     //% weight=40
     //% group="Sensor"
     //% block="read pin|%pin digital infrared motion sensor"
@@ -1243,7 +1250,9 @@ namespace microIoT {
         else { return 1 }
     }
 
-    //声音
+    /**
+     * 设置声音传感器引脚获取声音强度
+     */
     //% weight=40
     //% group="Sensor"
     //% block="read pin|%pin loudness"
@@ -1423,7 +1432,7 @@ namespace microIoT {
     //电扇
     //% weight=40
     //% group="Motor"
-    //% block="set pin|%pin turn |%fan small fan"
+    //% block="small fanset %fan at %pin"
     export function fan(pin: PIN, fan: Switch): void {
         let fan_T;
         switch (pin) {
@@ -1440,7 +1449,6 @@ namespace microIoT {
         pins.digitalWritePin(fan_T, fan)
     }
 
-    //TDS
     /**
     * TDS meter reading
     * @param t temperture; eg: 25, 20, 30
@@ -1448,7 +1456,7 @@ namespace microIoT {
 
     //% weight=40
     //% group="Sensor"
-    //% block="read pin|%pin reade TDS sensor(ppm)"
+    //% block="TDS at|%pin"
     export function getTds(pin: PIN_1, t: number=25): number {
         let getTds_T;
         switch (pin) {

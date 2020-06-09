@@ -36,7 +36,7 @@
     "DT11.temperature_C|block":"温度（℃）",
     "DT11.temperature_F|block":"温度（℉）",
     "DT11.humidity|block":"湿度",
-    "microIoT.fan|block":"设置引脚 |%pin |%fan 风扇",
+    "microIoT.fan|block":"小风扇 %fan 在 %pin",
     "Switch.ON|block":"打开",
     "Switch.OFF|block": "关闭",
     "microIoT.getTds|block":"设置引脚|%pin读取（PWM）设置温度|%t",
