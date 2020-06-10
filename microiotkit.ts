@@ -1469,7 +1469,7 @@ namespace microIoT {
 
     //% weight=40
     //% group="Sensor"
-    //% block="TDS at|%pin"
+    //% block="read pin|%pin TDS sensor(ppm)"
     export function getTds(pin: PIN_1, t: number=25): number {
         let getTds_T;
         switch (pin) {

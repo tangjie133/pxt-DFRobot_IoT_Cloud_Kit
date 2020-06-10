@@ -39,7 +39,7 @@
     "microIoT.fan|block":"小风扇 %fan 在 %pin",
     "Switch.ON|block":"打开",
     "Switch.OFF|block": "关闭",
-    "microIoT.getTds|block":"读取引脚|%pin|%t",
+    "microIoT.getTds|block":"读取引脚|%pin TDS传感器(ppm)",
     "microIoT.ss|block":"初始化CCS",
     "microIoT.ccsSensor|block":"读取CCS传感器|%deta"
     
