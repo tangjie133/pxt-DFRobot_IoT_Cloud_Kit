@@ -525,6 +525,7 @@ namespace microIoT {
      * @param KEY to KEY ,eg: "yourKey"
      */
     //% weight=31
+    //% group="IOT"
     //% receive.fieldEditor="gridpicker" receive.fieldOptions.columns=3
     //% send.fieldEditor="gridpicker" send.fieldOptions.columns=3
     //% blockId=OBLOQ_microIoT_ThingSpeak_configura
