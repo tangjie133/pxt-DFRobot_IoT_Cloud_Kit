@@ -95,6 +95,7 @@ namespace microIoT {
 
     let microIoT_WEBHOOKS_KEY = ""
     let microIoT_WEBHOOKS_EVENT = ""
+    let microIoT_THINGSPEAK_KEY = ""
 
     let READ_STATUS = 0x00
     let SET_PARA = 0x01
@@ -519,6 +520,19 @@ namespace microIoT {
         }
     }
 
+    /**
+     * ThingSpeak configuration
+     * @param KEY to KEY ,eg: "yourKey"
+     */
+    //% weight=31
+    //% receive.fieldEditor="gridpicker" receive.fieldOptions.columns=3
+    //% send.fieldEditor="gridpicker" send.fieldOptions.columns=3
+    //% blockId=OBLOQ_microIoT_ThingSpeak_configura
+    //% block="ThingSpeak configure key: %KEY"
+    export function microIoT_ThingSpeak_configura(KEY: string): void {
+        microIoT_THINGSPEAK_KEY = KEY
+    }
+
    /**
      * ThingSpeak configured and sent data
      * @param KEY to KEY ,eg: "your write api key"
@@ -530,11 +544,11 @@ namespace microIoT {
     //% blockId=naturalScience_microIoT_http_TK_GET
     //% expandableArgumentMode="enabled"
     //% inlineInputMode=inline
-    //% block="ThingSpeak configured key: %KEY  send value1: %field1 || value2: %field2 value3: %field3 value4: %field4 value5: %field5 value6: %field6 value7: %field7" 
-    export function microIoT_http_TK_GET(KEY: string, field1: string, field2?: string, field3?: string, field4?: string, field5?: string, field6?: string, field7?: string): void {
+    //% block="ThingSpeak send value1: %field1 || value2: %field2 value3: %field3 value4: %field4 value5: %field5 value6: %field6 value7: %field7" 
+    export function microIoT_http_TK_GET(field1: string, field2?: string, field3?: string, field4?: string, field5?: string, field6?: string, field7?: string): void {
         microIoT_setPara(SETHTTP_IP, OBLOQ_MQTT_EASY_IOT_SERVER_TK)
         let tempStr = ""
-        tempStr = "update?api_key=" + KEY + "&field1=" + field1 + "&field2=" + field2 + "&field3=" + field3 + "&field4=" + field4 + "&field5=" + field5 + "&field6=" + field6 + "&field7=" + field7 + "\r"
+        tempStr = "update?api_key=" + microIoT_THINGSPEAK_KEY + "&field1=" + field1 + "&field2=" + field2 + "&field3=" + field3 + "&field4=" + field4 + "&field5=" + field5 + "&field6=" + field6 + "&field7=" + field7 + "\r"
         microIoT_ParaRunCommand(GET_URL, tempStr);
     }
 

@@ -41,7 +41,10 @@
     "Switch.OFF|block": "关闭",
     "microIoT.getTds|block":"读取引脚|%pin TDS传感器(ppm)",
     "microIoT.ss|block":"初始化CCS",
-    "microIoT.ccsSensor|block":"读取CCS传感器|%deta"
+    "microIoT.ccsSensor|block":"读取CCS传感器|%deta",
+    "microIoT.microIoT_http_post|block": "IFTTT发送 值1: %value1 值2: %value2 值3: %value3",
+    "microIoT.microIoT_http_TK_GET|block": "ThingSpeak发送 值1: %field1 || 值2: %field2 值3: %field3 值4: %field4 值5: %field5 值6: %field6 值7: %field7",
+    "microIoT.microIoT_ThingSpeak_configura|block": "ThingSpeak配置 密钥: %KEY"
     
 
 }
