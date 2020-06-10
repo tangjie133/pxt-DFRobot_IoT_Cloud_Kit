@@ -242,35 +242,18 @@ namespace microIoT {
 
     //% weight=49
     //% group="Motor"
-    //% blockId=microIoT_MotorRun block="motor|%index|dir|%Dir|speed|%speed"
+    //% blockId=microIoT_MotorRun block="control motor dir|%Dir|speed|%speed"
     //% speed.min=0 speed.max=255
     //% index.fieldEditor="gridpicker" index.fieldOptions.columns=2
     //% direction.fieldEditor="gridpicker" direction.fieldOptions.columns=2
-    export function microIoT_MotorRun(index: aMotors, direction: Dir, speed: number): void {
+    export function microIoT_MotorRun(direction: Dir, speed: number): void {
         let buf = pins.createBuffer(3);
-        if (index == 0) {
             buf[0] = 0x00;
             if (direction == 0x00) {
                 buf[1] = 0x01;
             } else {
                 buf[1] = 0x00;
             }
-        } else if (index == 1) {
-            buf[0] = 0x02;
-            buf[1] = direction;
-        } else if (index == 2) {
-            buf[0] = 0x00;
-            if (direction == 0x00) {
-                buf[1] = 0x01;
-            } else {
-                buf[1] = 0x00;
-            }
-            buf[2] = speed;
-            pins.i2cWriteBuffer(IIC_ADDRESS, buf);
-            buf[0] = 0x02;
-            buf[1] = direction;
-        } else {
-        }
         buf[2] = speed;
         pins.i2cWriteBuffer(IIC_ADDRESS, buf);
     }
@@ -281,21 +264,11 @@ namespace microIoT {
 
     //% weight=48
     //% group="Motor"
-    //% blockId=microIoT_motorStop block="motor stop|%motors"
+    //% blockId=microIoT_motorStop block="motor stop"
     //% motors.fieldEditor="gridpicker" motors.fieldOptions.columns=2 
-    export function microIoT_motorStop(motors: aMotors): void {
+    export function microIoT_motorStop(): void {
         let buf = pins.createBuffer(3);
-        if (motors == 0) {
-            buf[0] = 0x00;
-        } else if (motors == 1) {
-            buf[0] = 0x02;
-        } else if (motors == 2) {
-            buf[0] = 0x00;
-            buf[1] = 0;
-            buf[2] = 0;
-            pins.i2cWriteBuffer(IIC_ADDRESS, buf);
-            buf[0] = 0x02;
-        }
+        buf[0] = 0x00;
         buf[1] = 0;
         buf[2] = 0;
         pins.i2cWriteBuffer(IIC_ADDRESS, buf);
@@ -437,7 +410,7 @@ namespace microIoT {
 
     /**
      * MQTT sends information to the corresponding subscription
-     * @param Mess to Mess ,eg: "mess"
+     * @param Mess to Mess ,eg: "message"
      */
 
     //% weight=80
