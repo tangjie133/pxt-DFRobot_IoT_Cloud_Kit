@@ -85,6 +85,7 @@ enum CCS{
 //% groups=['IOT', 'Sensor', 'OLED', 'Motor', 'RGB', 'Servo', 'others']
 namespace microIoT {
     let IIC_ADDRESS = 0x16;
+    let IIC_ADDRESS1 = 0x10;
     let CCS811_I2C_ADDRESS1 = 0x5A;
     let Topic0CallBack: Action = null;
     let Topic1CallBack: Action = null;
@@ -234,7 +235,7 @@ namespace microIoT {
             buf[0] = 0x15;
         }
         buf[1] = angle;
-        pins.i2cWriteBuffer(IIC_ADDRESS, buf);
+        pins.i2cWriteBuffer(IIC_ADDRESS1, buf);
     }
 
     /**
@@ -256,7 +257,7 @@ namespace microIoT {
                 buf[1] = 0x00;
             }
         buf[2] = speed;
-        pins.i2cWriteBuffer(IIC_ADDRESS, buf);
+        pins.i2cWriteBuffer(IIC_ADDRESS1, buf);
     }
 
     /**
@@ -272,7 +273,7 @@ namespace microIoT {
         buf[0] = 0x00;
         buf[1] = 0;
         buf[2] = 0;
-        pins.i2cWriteBuffer(IIC_ADDRESS, buf);
+        pins.i2cWriteBuffer(IIC_ADDRESS1, buf);
     }
 
 
