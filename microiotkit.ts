@@ -87,20 +87,24 @@ namespace microIoT {
     let IIC_ADDRESS = 0x16;
     let IIC_ADDRESS1 = 0x10;
     let CCS811_I2C_ADDRESS1 = 0x5A;
+
     let Topic0CallBack: Action = null;
     let Topic1CallBack: Action = null;
     let Topic2CallBack: Action = null;
     let Topic3CallBack: Action = null;
     let Topic4CallBack: Action = null;
-    let Wifi_Status = 0x00;
+    let Wifi_Status = 0x00
 
     let microIoT_WEBHOOKS_KEY = ""
     let microIoT_WEBHOOKS_EVENT = ""
     let microIoT_THINGSPEAK_KEY = ""
+    let microIoT_BEEBOTTE_Token = ""
 
-    let READ_STATUS = 0x00
+    let READmode = 0x00
+    let Wifimode = 0x00
     let SET_PARA = 0x01
     let RUN_COMMAND = 0x02
+    let HTTP_Mode = 0x00
 
     /*set para*/
     let SETWIFI_NAME = 0x01
@@ -110,7 +114,7 @@ namespace microIoT {
     let SETMQTT_ID = 0x05
     let SETMQTT_PASSWORLD = 0x06
     let SETHTTP_IP = 0x07
-    //let SETHTTP_PORT = 0x08
+    let SETHTTP_PORT = 0x08
 
     /*run command*/
     let SEND_PING = 0x01
@@ -299,7 +303,7 @@ namespace microIoT {
     function microIoT_readStatus(para: number): number {
         let buf = pins.createBuffer(3);
         buf[0] = 0x1E
-        buf[1] = READ_STATUS
+        buf[1] = READmode
         buf[2] = para
         pins.i2cWriteBuffer(IIC_ADDRESS, buf);
         let recbuf = pins.createBuffer(2)
@@ -313,7 +317,7 @@ namespace microIoT {
         let tempLen = 0x00
         let dataValue = ""
         buf[0] = 0x1E
-        buf[1] = READ_STATUS
+        buf[1] = READmode
         buf[2] = para
         pins.i2cWriteBuffer(IIC_ADDRESS, buf);
         microIoT_CheckStatus("READ_IP");
@@ -331,6 +335,7 @@ namespace microIoT {
         pins.i2cWriteBuffer(IIC_ADDRESS, buf);
 
     }
+
     function microIoT_CheckStatus(cmd: string): void {
         while (true) {
             if (microIoTStatus == cmd) {
@@ -349,45 +354,50 @@ namespace microIoT {
 
     //% weight=100
     //% group="IOT"
-    //% blockId=microIoT_wifi block="micro:IoT WI-FI configure|name: %SSID| password：%PASSWORD start connection"
-    export function microIoT_WIFI(SSID: string, PASSWORD: string): void {
+    //% blockId=WiFi_IoT_I2C_WIFI_Setup block="Wi-Fi configure name: %SSID| password：%PASSWORD start connection"
+    export function WIFISetup(SSID: string, PASSWORD: string): void {
         microIoT_setPara(SETWIFI_NAME, SSID)
         microIoT_setPara(SETWIFI_PASSWORLD, PASSWORD)
         microIoT_runCommand(CONNECT_WIFI)
         microIoT_CheckStatus("WiFiConnected");
-        Wifi_Status = WIFI_CONNECTED
+        Wifimode = WIFI_CONNECTED
     }
 
     /**
-     * Access to EasyIOT_CN, SIOT, EasyIOT_EN by configuring this module
+     * MQTT configuration
      * @param SSID to SSID ,eg: "yourSSID"
      * @param PASSWORD to PASSWORD ,eg: "yourPASSWORD"
      * @param IOT_ID to IOT_ID ,eg: "yourIotId"
      * @param IOT_PWD to IOT_PWD ,eg: "yourIotPwd"
      * @param IOT_TOPIC to IOT_TOPIC ,eg: "yourIotTopic"
+     * @param IP to IP ,eg: "192.168."
     */
 
     //% weight=90
     //% group="IOT"
     //% blockExternalInputs=1
-    //% blockId=microIoT_MQTT block="micro:IoT MQTT configure|IOT_ID(user): %IOT_ID| IOT_PWD(password):%IOT_PWD|(default topic_0) Topic: %IOT_TOPIC| server: %SERVERS"
-    export function microIoT_MQTT(/*SSID: string, PASSWORD: string,*/
+    //% blockId=WiFi_IoT_I2C_MQTT block="MQTT configure|IOT_ID(user):%IOT_ID|IOT_PWD(password):%IOT_PWD|Topic(default topic_0):%IOT_TOPIC|server:%SERVERS||IP:%IP"
+    export function mqttSetup(
         IOT_ID: string, IOT_PWD: string,
-        IOT_TOPIC: string, servers: SERVERS):
+        IOT_TOPIC: string,servers: SERVERS, IP?: string):
         void {
         if (servers == SERVERS.China) {
             microIoT_setPara(SETMQTT_SERVER, OBLOQ_MQTT_EASY_IOT_SERVER_CHINA)
         } else if (servers == SERVERS.English) {
             microIoT_setPara(SETMQTT_SERVER, OBLOQ_MQTT_EASY_IOT_SERVER_EN)
-        } else { microIoT_setPara(SETMQTT_SERVER, OBLOQ_MQTT_EASY_IOT_SERVER_GLOBAL) }
-        microIoT_setPara(SETMQTT_PORT, "1883")
+        } 
+        // else if(servers == SERVERS.Global){
+        //     microIoT_setPara(SETMQTT_SERVER, OBLOQ_MQTT_EASY_IOT_SERVER_GLOBAL)
+        // }
+        else{microIoT_setPara(SETMQTT_SERVER, IP)}
+        microIoT_setPara(SETMQTT_PORT, "1883")//1883
         microIoT_setPara(SETMQTT_ID, IOT_ID)
         microIoT_setPara(SETMQTT_PASSWORLD, IOT_PWD)
         serial.writeString("wifi conneced ok\r\n");
         microIoT_runCommand(CONNECT_MQTT);
         microIoT_CheckStatus("MQTTConnected");
         serial.writeString("mqtt connected\r\n");
-
+      
         Topic_0 = IOT_TOPIC
         microIoT_ParaRunCommand(SUB_TOPIC0, IOT_TOPIC);
         microIoT_CheckStatus("SubTopicOK");
@@ -397,14 +407,15 @@ namespace microIoT {
 
     /**
      * Add an MQTT subscription
+     * @param IOT_TOPIC ,eg: "yourIotTopic"
      */
 
     //% weight=70
     //% group="IOT"
-    //% blockId=microIoT_add_topic
-    //% block="subscribe to additional %top |: %IOT_TOPIC"
+    //% blockId=WiFi_IoT_I2C_add_topic
+    //% block="subscribe additional %top |: %IOT_TOPIC"
     //% top.fieldEditor="gridpicker" top.fieldOptions.columns=2
-    export function microIoT_add_topic(top: TOPIC, IOT_TOPIC: string): void {
+    export function mqttAddTopic(top: TOPIC, IOT_TOPIC: string): void {
         microIoT_ParaRunCommand((top + 0x06), IOT_TOPIC);
         microIoT_CheckStatus("SubTopicOK");
 
@@ -412,13 +423,13 @@ namespace microIoT {
 
     /**
      * MQTT sends information to the corresponding subscription
-     * @param Mess to Mess ,eg: "message"
+     * @param Mess to Mess ,eg: "mess"
      */
 
     //% weight=80
     //% group="IOT"
-    //% blockId=microIoT_SendMessage block="send message %string| to |%TOPIC"
-    export function microIoT_SendMessage(Mess: string, Topic: TOPIC): void {
+    //% blockId=WiFi_IoT_I2C_SendMessage block="send message %Mess| to |%TOPIC"
+    export function mqttSendMessageMore(Mess: string, Topic: TOPIC): void {
         let topic = 0
 
         switch (Topic) {
@@ -466,14 +477,16 @@ namespace microIoT {
                 break;
         }
     }
+
     /**
-     * MQTT processes the subscription receiving information
+     * MQTT processes the subscription when receiving message
      */
+
     //% weight=60
     //% group="IOT"
-    //% blockId=obloq_mqtt_callback_user_more block="on received %top"
+    //% blockId=WiFi_IoT_I2C_MQTT_Event block="on received %top"
     //% top.fieldEditor="gridpicker" top.fieldOptions.columns=2
-    export function microIoT_MQTT_Event(top: TOPIC, cb: (message: string) => void) {
+    export function mqttCallbackUserMore(top: TOPIC, cb: (message: string) => void) {
         microIoT_callback(top, () => {
             const packet = new PacketMqtt()
             packet.message = RECDATA
@@ -481,24 +494,44 @@ namespace microIoT {
         });
     }
 
-
     /**
-     * IFTTT configuration
-     * @param EVENT to EVENT ,eg: "yourEvent"
-     * @param KEY to KEY ,eg: "yourKey"
-     */
-    //% weight=50
+    * IFTTT configuration
+    * @param EVENT to EVENT ,eg: "yourEvent"
+    * @param KEY to KEY ,eg: "yourKey"
+    */
+
+    //% weight=26
     //% group="IOT"
     //% receive.fieldEditor="gridpicker" receive.fieldOptions.columns=3
     //% send.fieldEditor="gridpicker" send.fieldOptions.columns=3
-    //% blockId=microIoT_http_IFTTT
-    //% block="IFTTT configure event: %EVENT key: %KEY"
-    export function microIoT_http_IFTTT(EVENT: string, KEY: string): void {
+    //% blockId=WiFi_IoT_I2C_IFTTT_Configure
+    //% block="IFTTT configure|event: %EVENT|key: %KEY"
+    export function IFTTTConfigure(EVENT: string, KEY: string): void {
         microIoT_WEBHOOKS_EVENT = EVENT
         microIoT_WEBHOOKS_KEY = KEY
     }
-
-
+     /**Beebotte Configure 
+     * @param token ,eg: "Your Channel Token"
+     */
+    //% weight=2
+    //% blockID=WiFi_IoT_I2C_BeeBotte_Configura block="BeeBotte configura key: %token "
+    export function token(token:string):void{
+        microIoT_BEEBOTTE_Token = token;
+    }
+    /**BeeBotte send data
+     * @param channel ,eg: "Your Channel Name"
+     * @param resource ,eg: "Your Resource Name"
+     * @param data ,eg: "Send Message"
+     */
+    //% weight=1
+    //% group="IOT"
+    //% blockID=WiFi_IoT_I2C_BeeBotte_sendmessage block="BeeBotte Channel: %channel Resource: %resource send value %data "
+    export function sendmessage(channel:string, resource:string, data:string){
+        microIoT_setPara(SETHTTP_IP, OBLOQ_MQTT_EASY_IOT_SERVER_GLOBAL)
+        let tempStr = ""
+        tempStr = "v1/data/write/" + channel + "/" + resource + "?token=" + microIoT_BEEBOTTE_Token +",{\"data\":" + data + "}\r\n";
+        microIoT_ParaRunCommand(POST_URL, tempStr);
+    }
     function microIoT_http_wait_request(time: number): string {
         if (time < 100) {
             time = 100
@@ -520,34 +553,34 @@ namespace microIoT {
             }
         }
     }
-
+    
     /**
      * ThingSpeak configuration
-     * @param KEY to KEY ,eg: "yourKey"
+     * @param KEY to KEY ,eg: "your Key"
      */
-    //% weight=31
+    
+    //% weight=28
     //% group="IOT"
     //% receive.fieldEditor="gridpicker" receive.fieldOptions.columns=3
     //% send.fieldEditor="gridpicker" send.fieldOptions.columns=3
-    //% blockId=OBLOQ_microIoT_ThingSpeak_configura
+    //% blockId=WiFi_IoT_I2C_ThingSpeak_configura
     //% block="ThingSpeak configure key: %KEY"
-    export function microIoT_ThingSpeak_configura(KEY: string): void {
+    export function ThingSpeakConfigure(KEY: string): void {
         microIoT_THINGSPEAK_KEY = KEY
     }
 
-   /**
-     * ThingSpeak configured and sent data
-     * @param KEY to KEY ,eg: "your write api key"
-     * @param field1 ,eg: 2020
-     */
+    /**
+    * ThingSpeak configured and sent data
+    * @param field1 ,eg: 2020
+    */
 
-    //% weight=30
+    //% weight=27
     //% group="IOT"
-    //% blockId=naturalScience_microIoT_http_TK_GET
+    //% blockId=WiFi_IoT_I2C_ThingSpeak_Configure
     //% expandableArgumentMode="enabled"
     //% inlineInputMode=inline
-    //% block="ThingSpeak send value1: %field1 || value2: %field2 value3: %field3 value4: %field4 value5: %field5 value6: %field6 value7: %field7 value8: %field8" 
-    export function microIoT_http_TK_GET(field1: string, field2?: string, field3?: string, field4?: string, field5?: string, field6?: string, field7?: string, field8?: string): void {
+    //% block="ThingSpeak send value1: %field1||value2: %field2|value3: %field3|value4: %field4|value5: %field5|value6: %field6|value7: %field7 value8: %field8" 
+    export function ThingSpeakSend(field1: string, field2?: string, field3?: string, field4?: string, field5?: string, field6?: string, field7?: string, field8?: string): void {
         microIoT_setPara(SETHTTP_IP, OBLOQ_MQTT_EASY_IOT_SERVER_TK)
         let tempStr = ""
         tempStr = "update?api_key=" + microIoT_THINGSPEAK_KEY + "&field1=" + field1 + "&field2=" + field2 + "&field3=" + field3 + "&field4=" + field4 + "&field5=" + field5 + "&field6=" + field6 + "&field7=" + field7 + "&field8=" + field8 + "\r"
@@ -557,20 +590,108 @@ namespace microIoT {
     /**
      * IFTTT send data
      * time(ms): private long maxWait
-     * @param value1 ,eg: "Hi"
-     * @param value2 ,eg: "DFRobot"
-     * @param value3 ,eg: "2020"
-     */
+     * @param value1 ,eg: Hi
+     * @param value2 ,eg: DFRobot
+     * @param value3 ,eg: 2020
+    */
 
-    //% weight=40
+    //% weight=25
     //% group="IOT"
-    //% blockId=OBLOQ-I2C_http_post
-    //% block="IFTTT send value1: %value1 value2: %value2 value3: %value3"
-    export function microIoT_http_post(value1: string, value2: string, value3: string): void {
+    //% blockId=WiFi_IoT_I2C_IFTTT_Send
+    //% block="IFTTT send value1:%value1|value2:%value2|value3:%value3"
+    //% inlineInputMode=inline
+    export function IFTTTSend(value1: string, value2: string, value3: string): void {
         microIoT_setPara(SETHTTP_IP, microIoT_WEBHOOKS_URL)
         let tempStr = ""
         tempStr = "trigger/" + microIoT_WEBHOOKS_EVENT + "/with/key/" + microIoT_WEBHOOKS_KEY + ",{\"value1\":\"" + value1 + "\",\"value2\":\"" + value2 + "\",\"value3\":\"" + value3 + "\" }" + "\r"
         microIoT_ParaRunCommand(POST_URL, tempStr)
+    }
+
+
+    /**
+     * Two parallel stepper motors are executed simultaneously(DegreeDual).
+     * @param IP to IP ,eg: "0.0.0.0"
+     * @param PORT to PORT ,eg: 80
+    */
+	
+    //% weight=24
+    //% group="IOT"
+    //% receive.fieldEditor="gridpicker" receive.fieldOptions.columns=3
+    //% send.fieldEditor="gridpicker" send.fieldOptions.columns=3
+    //% blockId=WiFi_IoT_UART_http_setup
+    //% block="configure http ip: %IP port: %PORT  start connection"
+    export function httpSetup(IP: string, PORT: number):void {
+        microIoT_setPara(SETHTTP_IP, IP)
+        microIoT_setPara(SETHTTP_PORT, PORT.toString())
+        microIoT_runCommand(CONNECT_WIFI)
+        microIoT_CheckStatus("WiFiConnected");
+        Wifi_Status = WIFI_CONNECTED
+    }
+    /**
+     * The HTTP get request.url(string):URL:time(ms): private long maxWait
+     * @param time set timeout, eg: 10000
+    */
+	
+    //% weight=23
+    //% group="IOT"
+    //% blockId=WiFi_IoT_I2C_http_get
+    //% block="http(get) | url %url| timeout(ms) %time"
+    export function httpGet(url: string, time: number): string {
+        microIoT_ParaRunCommand(GET_URL, url)
+        return microIoT_http_wait_request(time);
+    }
+
+
+    /**
+     * The HTTP post request.url(string): URL; content(string):content
+     * time(ms): private long maxWait
+     * @param time set timeout, eg: 10000
+    */
+    //% weight=22
+    //% group="IOT"
+    //% blockId=WiFi_IoT_I2C_http_post
+    //% block="http(post) | url %url| content %content| timeout(ms) %time"
+    export function httpPost(url: string, content: string, time: number): string {
+        let tempStr = ""
+        tempStr = url + "," + content;
+        microIoT_ParaRunCommand(POST_URL, tempStr)
+        return microIoT_http_wait_request(time);
+    }
+
+     /**
+     * The HTTP put request,Obloq.put() can only be used for http protocol!
+     * url(string): URL; content(string):content; time(ms): private long maxWait
+     * @param time set timeout, eg: 10000
+    */
+	
+    //% weight=21
+    //% group="IOT"
+    //% blockId=WiFi_IoT_I2C_http_put
+    //% block="http(put) | url %url| content %content| timeout(ms) %time"
+    export function httpPut(url: string, content: string, time: number): string {
+        let tempStr = ""
+        tempStr = url + "," + content;
+        microIoT_ParaRunCommand(PUT_URL, tempStr)
+        return microIoT_http_wait_request(time);
+    }
+	
+    /**
+     * Get the software version.time(ms): private long maxWait
+     * @param time to timeout, eg: 10000
+    */
+
+    //% weight=20
+    //% group="IOT"
+    //% blockId=WiFi_IoT_I2C_get_version
+    //% block="get version"
+    export function getVersion(): string {
+        let buf = pins.createBuffer(3);
+        buf[0] = 0x1E;
+        buf[1] = RUN_COMMAND;
+        buf[2] = GET_VERSION;
+        pins.i2cWriteBuffer(IIC_ADDRESS, buf);
+        microIoT_CheckStatus("READ_VERSION");
+        return RECDATA
     }
 
     function microIoT_GetData(len: number): void {
@@ -590,7 +711,7 @@ namespace microIoT {
         let tempId = 0
         let tempStatus = 0
         buf[0] = 0x1E
-        buf[1] = READ_STATUS
+        buf[1] = READmode
         buf[2] = 0x06
         pins.i2cWriteBuffer(IIC_ADDRESS, buf);
         let recbuf = pins.createBuffer(2)
@@ -687,6 +808,7 @@ namespace microIoT {
     basic.forever(function () {
         microIoT_InquireStatus();
     })
+
     /**
      * 初始化OLED
      */
