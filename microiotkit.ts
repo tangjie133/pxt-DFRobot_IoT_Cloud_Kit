@@ -809,12 +809,13 @@ namespace microIoT {
         microIoT_InquireStatus();
     })
 
-    /**
-     * 初始化OLED
-     */
-    //% weight=100
+     /**
+    * Initialize OLED, just put the module in the module at the beginning of the code, no need to reuse
+    */
+
+    //% weight=200
     //% group="OLED"
-    //% block="initDisplay"
+    //% block="init display"
     export function microIoT_initDisplay(): void {
         microIoT_cmd(0xAE);  // Set display OFF
         microIoT_cmd(0xD5);  // Set Display Clock Divide Ratio / OSC Frequency 0xD4
@@ -839,17 +840,17 @@ namespace microIoT {
         microIoT_cmd(0xA4);  // Set all pixels OFF
         microIoT_cmd(0xA6);  // Set display not inverted
         microIoT_cmd(0xAF);  // Set display On
-        clear();
+        microIoT_clear();
     }
     /**
-     * 清除OLED屏幕
+     * OLED clear
      */
     //% weight=60
     //% group="OLED"
-    //% block="OLED clear"
-    export function clear() {
+    //% block="clear OLED"
+    export function microIoT_clear() {
         for (let j = 0; j < 8; j++) {
-            showUserNumber(j, 0);
+            microIoT_setText(j, 0);
             {
                 for (let i = 0; i < 16; i++)  //clear all columns
                 {
@@ -857,10 +858,10 @@ namespace microIoT {
                 }
             }
         }
-        showUserNumber(0, 0);
+        microIoT_setText(0, 0);
     }
 
-    function showUserNumber(row: number, column: number) {
+    function microIoT_setText(row: number, column: number) {
         let r = row;
         let c = column;
         if (row < 0) { r = 0 }
@@ -878,39 +879,39 @@ namespace microIoT {
         microIoT_writeCustomChar(basicFont[c1 - 32]);
     }
     /**
-     * OLED  display string
      * @param line line num (8 pixels per line), eg: 0
      * @param text value , eg: DFRobot
+     * OLED  display string
      */
-    //% weight=90
+    //% weight=60
     //% group="OLED"
     //% text.defl="DFRobot"
     //% line.min=0 line.max=7
-    //% block="OLED show line %line|text %text"
-    export function showUserText(line: number, text: string): void {
-        showUserNumber(line, 0);
+    //% block="OLED show text %text|on line %line"
+    export function microIoT_showUserText(line: number, text: string): void {
+        microIoT_setText(line, 0);
         for (let c of text) {
             microIoT_putChar(c);
         }
 
         for (let i = text.length; i < 16; i++) {
-            showUserNumber(line, i);
+            microIoT_setText(line, i);
             microIoT_putChar(" ");
         }
 
     }
 	/**
-     * OLED  shows the number
      * @param line line num (8 pixels per line), eg: 0
-     * @param n value , eg: 2020
+     * @param n value , eg: 2019
+     * OLED  shows the number
      */
-    //% weight=80
+    //% weight=60
     //% group="OLED"
     //% line.min=0 line.max=7
-    //% block="OLED show line %line|number %n"
+    //% block="OLED show number %n|on line %line"
 
-    export function showUserNumbers(line: number, n: number): void {
-        microIoT.showUserText(line, "" + n)
+    export function microIoT_showUserNumber(line: number, n: number): void {
+        microIoT.microIoT_showUserText(line, "" + n)
     }
 
 
@@ -1033,6 +1034,7 @@ namespace microIoT {
         "\x00\x41\x36\x08\x00\x00\x00\x00", // "}"
         "\x00\x02\x01\x01\x02\x01\x00\x00"  // "~"
     ];
+
 
 
 

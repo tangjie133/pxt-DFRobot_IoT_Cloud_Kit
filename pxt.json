@@ -11,9 +11,11 @@
         "_locales/zh-cn/microbit_iot_kit-strings.json",
         "sendBuffer.asm",
         "microiotkit.ts",
-        "test.ts",
         "tsconfig.json",
         "ws2812b.ts"
+    ],
+    "testFiles": [
+        "test.ts"
     ],
     "supportedTargets": [
         "microbit"
