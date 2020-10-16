@@ -82,7 +82,7 @@ enum CCS{
 }
 
 //% weight=10 color=#e7660b icon="\uf1eb" block="micro:bit Iot Kit"
-//% groups=['IOT', 'Sensor', 'OLED', 'Motor', 'RGB', 'Servo', 'others']
+//% groups=['IoT', 'Sensor', 'OLED', 'Motor', 'RGB', 'Servo', 'others']
 namespace microIoT {
     let IIC_ADDRESS = 0x16;
     let IIC_ADDRESS1 = 0x10;
@@ -201,9 +201,9 @@ namespace microIoT {
     }
 
     export enum SERVERS {
-        //% blockId=SERVERS_China block="EasyIOT_CN"
+        //% blockId=SERVERS_China block="EasyIoT_CN"
         China,
-        //% blockId=SERVERS_English block="EasyIOT_EN"
+        //% blockId=SERVERS_English block="EasyI0T_EN"
         English,
         //% blockId=SERVERS_Global block="Beebotte"
         Global
@@ -353,7 +353,7 @@ namespace microIoT {
     */
 
     //% weight=100
-    //% group="IOT"
+    //% group="IoT"
     //% blockId=WiFi_IoT_I2C_WIFI_Setup block="Wi-Fi configure name: %SSID| password：%PASSWORD start connection"
     export function WIFISetup(SSID: string, PASSWORD: string): void {
         microIoT_setPara(SETWIFI_NAME, SSID)
@@ -374,9 +374,9 @@ namespace microIoT {
     */
 
     //% weight=90
-    //% group="IOT"
+    //% group="IoT"
     //% blockExternalInputs=1
-    //% blockId=WiFi_IoT_I2C_MQTT block="MQTT configure|IOT_ID(user):%IOT_ID|IOT_PWD(password):%IOT_PWD|Topic(default topic_0):%IOT_TOPIC|server:%SERVERS||IP:%IP"
+    //% blockId=WiFi_IoT_I2C_MQTT block="MQTT configure|IoT_ID(user):%IOT_ID|IoT_PWD(password):%IOT_PWD|Topic(default topic_0):%IOT_TOPIC|server:%SERVERS||IP:%IP"
     export function mqttSetup(
         IOT_ID: string, IOT_PWD: string,
         IOT_TOPIC: string,servers: SERVERS, IP?: string):
@@ -385,11 +385,7 @@ namespace microIoT {
             microIoT_setPara(SETMQTT_SERVER, OBLOQ_MQTT_EASY_IOT_SERVER_CHINA)
         } else if (servers == SERVERS.English) {
             microIoT_setPara(SETMQTT_SERVER, OBLOQ_MQTT_EASY_IOT_SERVER_EN)
-        } 
-        // else if(servers == SERVERS.Global){
-        //     microIoT_setPara(SETMQTT_SERVER, OBLOQ_MQTT_EASY_IOT_SERVER_GLOBAL)
-        // }
-        else{microIoT_setPara(SETMQTT_SERVER, IP)}
+        }else{microIoT_setPara(SETMQTT_SERVER, IP)}
         microIoT_setPara(SETMQTT_PORT, "1883")//1883
         microIoT_setPara(SETMQTT_ID, IOT_ID)
         microIoT_setPara(SETMQTT_PASSWORLD, IOT_PWD)
@@ -411,7 +407,7 @@ namespace microIoT {
      */
 
     //% weight=70
-    //% group="IOT"
+    //% group="IoT"
     //% blockId=WiFi_IoT_I2C_add_topic
     //% block="subscribe additional %top |: %IOT_TOPIC"
     //% top.fieldEditor="gridpicker" top.fieldOptions.columns=2
@@ -427,7 +423,7 @@ namespace microIoT {
      */
 
     //% weight=80
-    //% group="IOT"
+    //% group="IoT"
     //% blockId=WiFi_IoT_I2C_SendMessage block="send message %Mess| to |%TOPIC"
     export function mqttSendMessageMore(Mess: string, Topic: TOPIC): void {
         let topic = 0
@@ -483,7 +479,7 @@ namespace microIoT {
      */
 
     //% weight=60
-    //% group="IOT"
+    //% group="IoT"
     //% blockId=WiFi_IoT_I2C_MQTT_Event block="on received %top"
     //% top.fieldEditor="gridpicker" top.fieldOptions.columns=2
     export function mqttCallbackUserMore(top: TOPIC, cb: (message: string) => void) {
@@ -501,7 +497,7 @@ namespace microIoT {
     */
 
     //% weight=26
-    //% group="IOT"
+    //% group="IoT"
     //% receive.fieldEditor="gridpicker" receive.fieldOptions.columns=3
     //% send.fieldEditor="gridpicker" send.fieldOptions.columns=3
     //% blockId=WiFi_IoT_I2C_IFTTT_Configure
@@ -524,7 +520,7 @@ namespace microIoT {
      * @param data ,eg: "Send Message"
      */
     //% weight=1
-    //% group="IOT"
+    //% group="IoT"
     //% blockID=WiFi_IoT_I2C_BeeBotte_sendmessage block="BeeBotte Channel: %channel Resource: %resource send value %data "
     export function sendmessage(channel:string, resource:string, data:string){
         microIoT_setPara(SETHTTP_IP, OBLOQ_MQTT_EASY_IOT_SERVER_GLOBAL)
@@ -560,7 +556,7 @@ namespace microIoT {
      */
     
     //% weight=28
-    //% group="IOT"
+    //% group="IoT"
     //% receive.fieldEditor="gridpicker" receive.fieldOptions.columns=3
     //% send.fieldEditor="gridpicker" send.fieldOptions.columns=3
     //% blockId=WiFi_IoT_I2C_ThingSpeak_configura
@@ -575,7 +571,7 @@ namespace microIoT {
     */
 
     //% weight=27
-    //% group="IOT"
+    //% group="IoT"
     //% blockId=WiFi_IoT_I2C_ThingSpeak_Configure
     //% expandableArgumentMode="enabled"
     //% inlineInputMode=inline
@@ -596,7 +592,7 @@ namespace microIoT {
     */
 
     //% weight=25
-    //% group="IOT"
+    //% group="IoT"
     //% blockId=WiFi_IoT_I2C_IFTTT_Send
     //% block="IFTTT send value1:%value1|value2:%value2|value3:%value3"
     //% inlineInputMode=inline
@@ -615,7 +611,7 @@ namespace microIoT {
     */
 	
     //% weight=24
-    //% group="IOT"
+    //% group="IoT"
     //% receive.fieldEditor="gridpicker" receive.fieldOptions.columns=3
     //% send.fieldEditor="gridpicker" send.fieldOptions.columns=3
     //% blockId=WiFi_IoT_UART_http_setup
@@ -633,7 +629,7 @@ namespace microIoT {
     */
 	
     //% weight=23
-    //% group="IOT"
+    //% group="IoT"
     //% blockId=WiFi_IoT_I2C_http_get
     //% block="http(get) | url %url| timeout(ms) %time"
     export function httpGet(url: string, time: number): string {
@@ -648,7 +644,7 @@ namespace microIoT {
      * @param time set timeout, eg: 10000
     */
     //% weight=22
-    //% group="IOT"
+    //% group="IoT"
     //% blockId=WiFi_IoT_I2C_http_post
     //% block="http(post) | url %url| content %content| timeout(ms) %time"
     export function httpPost(url: string, content: string, time: number): string {
@@ -665,7 +661,7 @@ namespace microIoT {
     */
 	
     //% weight=21
-    //% group="IOT"
+    //% group="IoT"
     //% blockId=WiFi_IoT_I2C_http_put
     //% block="http(put) | url %url| content %content| timeout(ms) %time"
     export function httpPut(url: string, content: string, time: number): string {
@@ -681,7 +677,7 @@ namespace microIoT {
     */
 
     //% weight=20
-    //% group="IOT"
+    //% group="IoT"
     //% blockId=WiFi_IoT_I2C_get_version
     //% block="get version"
     export function getVersion(): string {
