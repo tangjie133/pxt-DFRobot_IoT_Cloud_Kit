@@ -51,8 +51,21 @@
     "microIoT.getTds|block":"读取引脚|%pin TDS传感器(ppm)",
     "microIoT.ss|block":"初始化CCS",
     "microIoT.ccsSensor|block":"读取CCS传感器|%deta",
-    "microIoT.getVersion|block":"获取版本号"
-   
+    "microIoT.getVersion|block":"获取版本号",
+    "microIoT.setTime|block":"设置 年 %year||月 %month|日 %day|时 %hour|分 %minute|秒 %second",
+    "microIoT.setYear|block":"设置年 %yeat",
+    "microIoT.setMonth|block":"设置月 %month",
+    "microIoT.setDay|block":"设置日 %day",
+    "microIoT.setHour|block":"设置时 %hour",
+    "microIoT.setMinute|block":"设置分 %minute",
+    "microIoT.setSecond|block":"设置秒 %second",
+    "Time.year|block":"年",
+    "Time.month|block":"月",
+    "Time.day|block":"日",
+    "Time.hour|block":"时",
+    "Time.minute|block":"分",
+    "Time.second|block":"秒",
+    "microIoT.readTime|block":"获取 %time"
     
 
 }

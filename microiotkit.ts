@@ -1729,6 +1729,7 @@ namespace microIoT {
     //% blockId=microIoT_setYear block="set year %year"
     //% year.defl=2020
     export function setYear(year:number):void{
+        pins.i2cWriteNumber(0x10, 0x20, NumberFormat.Int8LE)
         let buf = pins.i2cReadBuffer(0x10, 7);
         let buffer = pins.createBuffer(7);
         buf[0] = 0x16;
@@ -1749,6 +1750,7 @@ namespace microIoT {
     //% blockId=microIoT_setMonth block="set month %month"
     //% month.defl=1
     export function setMonth(month:number):void{
+        pins.i2cWriteNumber(0x10, 0x20, NumberFormat.Int8LE)
         let buf = pins.i2cReadBuffer(0x10, 7);
         let buffer = pins.createBuffer(7);
         buf[0] = 0x16;
@@ -1769,6 +1771,7 @@ namespace microIoT {
     //% blockId=microIoT_setDay block="set day %day"
     //% day.defl=1
     export function setDay(day:number):void{
+        pins.i2cWriteNumber(0x10, 0x20, NumberFormat.Int8LE)
         let buf = pins.i2cReadBuffer(0x10, 7);
         let buffer = pins.createBuffer(7);
         compare(buffer[0],buffer[1],day);
@@ -1789,6 +1792,7 @@ namespace microIoT {
     //% hour.min=0 hour.max=23
     //% blockId=microIoT_setHour block="set hour %hour"
     export function setHour(hour:number):void{
+        pins.i2cWriteNumber(0x10, 0x20, NumberFormat.Int8LE)
         let buf = pins.i2cReadBuffer(0x10, 7);
         let buffer = pins.createBuffer(7);
         buf[0] = 0x16;
@@ -1808,6 +1812,7 @@ namespace microIoT {
     //% minute.min=0 minute.max=59
     //% blockId=microIoT_setMinute block="set minute %minute"
     export function setMinute(minute:number):void{
+        pins.i2cWriteNumber(0x10, 0x20, NumberFormat.Int8LE)
         let buf = pins.i2cReadBuffer(0x10, 7);
         let buffer = pins.createBuffer(7);
         buf[0] = 0x16;
@@ -1827,6 +1832,7 @@ namespace microIoT {
     //% second.min=0 second.max=59
     //% blockId=microIoT_setSecond block="set second %second"
     export function setSecond(second:number):void{
+        pins.i2cWriteNumber(0x10, 0x20, NumberFormat.Int8LE)
         let buf = pins.i2cReadBuffer(0x10, 7);
         let buffer = pins.createBuffer(7);
         buf[0] = 0x16;
@@ -1845,6 +1851,7 @@ namespace microIoT {
     //% group="Time"
     //% blockId=microIoT_setWhole block="get %time"
     export function readTime(time:Time):number{
+        pins.i2cWriteNumber(0x10, 0x20, NumberFormat.Int8LE)
         let buffer = pins.i2cReadBuffer(0x10, 7)
         let data:number;
         switch(time){
