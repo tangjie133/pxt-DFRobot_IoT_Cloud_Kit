@@ -8,7 +8,7 @@
     "microIoT.microIoT_MotorRun|block": "电机|%index|方向|%Dir|速度|%speed",
     "microIoT.microIoT_ServoRun|block": "舵机|%index|角度|%angle",
     "microIoT.WIFISetup|block": "WI-FI 配置 名称:|%SSID 密码:|%PASSWORD 启动连接",
-    "microIoT.mqttSetup|block": "MQTT 配置|IoT_ID(用户): %IOT_ID| I0T_PWD(密码) :%IOT_PWD| Topic(默认topic_0): %IOT_TOPIC|服务器:%SERVERS||IP(SIOT):%IP",
+    "microIoT.mqttSetup|block": "MQTT 配置|IoT_ID(用户): %IOT_ID| IoT_PWD(密码) :%IOT_PWD| Topic(默认topic_0): %IOT_TOPIC|服务器:%SERVERS||IP(SIOT):%IP",
     "microIoT.mqttSendMessageMore|block": "发送消息 |%Mess 到|%TOPIC",
     "microIoT.mqttCallbackUserMore|block": "当收到|%top",
     "microIoT.mqttAddTopic|block": "新增订阅|%top |: %IOT_TOPIC",
