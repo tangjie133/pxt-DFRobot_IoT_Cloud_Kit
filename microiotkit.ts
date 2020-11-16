@@ -95,7 +95,7 @@ enum Time{
     second,
 }
 
-//% weight=10 color=#7f00ff icon="\uf1eb" block="micro:bit Iot Kit"
+//% weight=10 color=#7f00ff icon="\uf1eb" block="micro:bit IoT Kit"
 //% groups=['IoT', 'Sensor', 'OLED', 'Motor', 'RGB', 'Servo', 'others','Time']
 namespace microIoT {
     let IIC_ADDRESS = 0x16;
