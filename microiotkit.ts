@@ -80,9 +80,23 @@ enum CCS{
     //% block="TVOC"
     TVOC = 2
 }
+enum Time{
+    //% block="year"
+    year,
+    //% block="month"
+    month,
+    //% block="day"
+    day,
+    //% block="hour"
+    hour,
+    //% block="minute"
+    minute,
+    //% block="second"
+    second,
+}
 
-//% weight=10 color=#e7660b icon="\uf1eb" block="micro:bit Iot Kit"
-//% groups=['IoT', 'Sensor', 'OLED', 'Motor', 'RGB', 'Servo', 'others']
+//% weight=10 color=#7f00ff icon="\uf1eb" block="micro:bit Iot Kit"
+//% groups=['IoT', 'Sensor', 'OLED', 'Motor', 'RGB', 'Servo', 'others','Time']
 namespace microIoT {
     let IIC_ADDRESS = 0x16;
     let IIC_ADDRESS1 = 0x10;
@@ -204,9 +218,8 @@ namespace microIoT {
         //% blockId=SERVERS_China block="EasyIoT_CN"
         China,
         //% blockId=SERVERS_English block="EasyI0T_EN"
-        English,
-        //% blockId=SERVERS_Global block="Beebotte"
-        Global
+        English
+        
     }
 
     export enum TOPIC {
@@ -1683,4 +1696,211 @@ namespace microIoT {
         let Buffer = pins.createBufferFromArray(buffer);
         pins.i2cWriteBuffer(CCS811_I2C_ADDRESS1, Buffer)
     }
+
+    /**
+     * 初始化年月日时分秒
+     */
+    //% weight=100
+    //% group="Time"
+    //% blockId=microIoT_setTime block="set year %year||month %month|day %day|hour %hour|minute %minute|second %second"
+    //% year.min=2000 year.max=9999 month.min=1 month.max=12 day.min=1 day.max=31 hour.min=0 hour.max=23 minute.min=0 month.max=59 second.min=0 second.max=59
+    //% expandableArgumentMode="enabled"
+    //% inlineInputMode=inline
+    //% year.defl=2020 month.defl=1 day.defl=31 
+    export function setTime(year: number, month?: number, day?: number, hour?: number, minute?: number, second?: number): void {
+        let buf = pins.createBuffer(7);
+        let state;
+        compare(year, month, day);
+        buf[0] = 0x16;
+        buf[1] = year-2000;
+        buf[2] = month;
+        buf[3] = day;
+        buf[4] = hour;
+        buf[5] = minute;
+        buf[6] = second;
+        pins.i2cWriteBuffer(0x10, buf);
+    }
+    /**
+     * 设置年
+     */
+    //% weight=99
+    //% group="Time"
+    //% year.min=2000 year.max=9999
+    //% blockId=microIoT_setYear block="set year %year"
+    //% year.defl=2020
+    export function setYear(year:number):void{
+        let buf = pins.i2cReadBuffer(0x10, 7);
+        let buffer = pins.createBuffer(7);
+        buf[0] = 0x16;
+        buf[1] = year-2000;
+        buf[2] = buffer[1];
+        buf[3] = buffer[2];
+        buf[4] = buffer[3];
+        buf[5] = buffer[4];
+        buf[6] = buffer[5];
+        pins.i2cWriteBuffer(0x10, buf);
+    }
+    /**
+     * 设置月
+     */
+    //% weight=98
+    //% group="Time"
+    //% month.min=1 month.max=12
+    //% blockId=microIoT_setMonth block="set month %month"
+    //% month.defl=1
+    export function setMonth(month:number):void{
+        let buf = pins.i2cReadBuffer(0x10, 7);
+        let buffer = pins.createBuffer(7);
+        buf[0] = 0x16;
+        buf[1] = buffer[0];
+        buf[2] = month;
+        buf[3] = buffer[2];
+        buf[4] = buffer[3];
+        buf[5] = buffer[4];
+        buf[6] = buffer[5];
+        pins.i2cWriteBuffer(0x10, buf);
+    }
+    /**
+     * 设置日
+     */
+    //% weight=97
+    //% group="Time"
+    //% day.min=1 day.max=31
+    //% blockId=microIoT_setDay block="set day %day"
+    //% day.defl=1
+    export function setDay(day:number):void{
+        let buf = pins.i2cReadBuffer(0x10, 7);
+        let buffer = pins.createBuffer(7);
+        compare(buffer[0],buffer[1],day);
+        buf[0] = 0x16;
+        buf[1] = buffer[0];
+        buf[2] = buffer[1];
+        buf[3] = day;
+        buf[4] = buffer[3];
+        buf[5] = buffer[4];
+        buf[6] = buffer[5];
+        pins.i2cWriteBuffer(0x10, buf);
+    }
+    /**
+     * 设置小时
+     */
+    //% weight=96
+    //% group="Time"
+    //% hour.min=0 hour.max=23
+    //% blockId=microIoT_setHour block="set hour %hour"
+    export function setHour(hour:number):void{
+        let buf = pins.i2cReadBuffer(0x10, 7);
+        let buffer = pins.createBuffer(7);
+        buf[0] = 0x16;
+        buf[1] = buffer[0];
+        buf[2] = buffer[1];
+        buf[3] = buffer[2];
+        buf[4] = hour;
+        buf[5] = buffer[4];
+        buf[6] = buffer[5];
+        pins.i2cWriteBuffer(0x10, buf);
+    }
+    /**
+     * 设置分钟
+     */
+    //% weight=95
+    //% group="Time"
+    //% minute.min=0 minute.max=59
+    //% blockId=microIoT_setMinute block="set minute %minute"
+    export function setMinute(minute:number):void{
+        let buf = pins.i2cReadBuffer(0x10, 7);
+        let buffer = pins.createBuffer(7);
+        buf[0] = 0x16;
+        buf[1] = buffer[0];
+        buf[2] = buffer[1];
+        buf[3] = buffer[2];
+        buf[4] = buffer[3];
+        buf[5] = minute;
+        buf[6] = buffer[5];
+        pins.i2cWriteBuffer(0x10, buf);
+    }
+    /**
+     * 设置秒
+     */
+    //% weight=95
+    //% group="Time"
+    //% second.min=0 second.max=59
+    //% blockId=microIoT_setSecond block="set second %second"
+    export function setSecond(second:number):void{
+        let buf = pins.i2cReadBuffer(0x10, 7);
+        let buffer = pins.createBuffer(7);
+        buf[0] = 0x16;
+        buf[1] = buffer[0];
+        buf[2] = buffer[1];
+        buf[3] = buffer[2];
+        buf[4] = buffer[3];
+        buf[5] = buffer[4];
+        buf[6] = second;
+        pins.i2cWriteBuffer(0x10, buf);
+    }
+    /**
+     * 获取时间
+     */
+    //% weight=94
+    //% group="Time"
+    //% blockId=microIoT_setWhole block="get %time"
+    export function readTime(time:Time):number{
+        let buffer = pins.i2cReadBuffer(0x10, 7)
+        let data:number;
+        switch(time){
+            case Time.year: data = buffer[0]+2000;break;
+            case Time.month:data = buffer[1];break;
+            case Time.day:  data = buffer[2];break;
+            case Time.hour: data = buffer[3];break;
+            case Time.minute:data = buffer[4];break;
+            default: data = buffer[5];break;
+        }
+        return data;
+    }
+    /**
+     * 判断年月日是否对应
+     */
+    function compare(year:number, month:number, day:number):void{
+        if(month == 2){
+           let state = (((year%4==0)&&(year%100!=0))||(year%400==0))?1:0;
+            if(state ==1){
+                if(day>29){
+                    while(1){
+                        basic.showString("February has only 29 days!!!!!!")
+                    }
+                }
+            }else{
+                if(day>28){
+                    while(1){
+                        basic.showString("February has only 28 days!!!!!!")
+                    }
+                }
+            }
+        }else if(month == 4){
+            if(day > 30){
+                while(1){
+                        basic.showString("April has only 30 days!!!!!!")
+                }
+            }
+        }else if(month == 6){
+            if(day > 30){
+                while(1){
+                        basic.showString("June has only 30 days!!!!!!")
+                }
+            }
+        }else if(month == 9){
+            if(day > 30){
+                while(1){
+                        basic.showString("September has only 30 days!!!!!!")
+                }
+            }
+        }else if (month == 11){
+            if(day > 30){
+                while(1){
+                        basic.showString("November has only 30 days!!!!!!")
+                }
+            }
+        }
+    }
+
 }
