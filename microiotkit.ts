@@ -94,8 +94,8 @@ enum Time{
     //% block="second"
     second,
 }
-
-//% weight=10 color=#7f00ff icon="\uf1eb" block="micro:bit IoT Kit"
+//color=#6699CC
+//% weight=10 color=#378CE1 icon="\uf1eb" block="micro:bit IoT Kit"
 //% groups=['IoT', 'Sensor', 'OLED', 'Motor', 'RGB', 'Servo', 'others','Time']
 namespace microIoT {
     let IIC_ADDRESS = 0x16;
@@ -1702,12 +1702,12 @@ namespace microIoT {
      */
     //% weight=100
     //% group="Time"
-    //% blockId=microIoT_setTime block="set year %year||month %month|day %day|hour %hour|minute %minute|second %second"
+    //% blockId=microIoT_setTime block="set year %year|month %month|day %day||hour %hour|minute %minute|second %second"
     //% year.min=2000 year.max=9999 month.min=1 month.max=12 day.min=1 day.max=31 hour.min=0 hour.max=23 minute.min=0 month.max=59 second.min=0 second.max=59
-    //% expandableArgumentMode="enabled"
+    //% expandableArgumentMode="toggle"
     //% inlineInputMode=inline
     //% year.defl=2020 month.defl=1 day.defl=31 
-    export function setTime(year: number, month?: number, day?: number, hour?: number, minute?: number, second?: number): void {
+    export function setTime(year: number, month: number, day: number, hour?: number, minute?: number, second?: number): void {
         let buf = pins.createBuffer(7);
         let state;
         compare(year, month, day);
