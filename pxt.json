@@ -7,6 +7,7 @@
     "files": [
         ".vscode/settings.json",
         ".vscode/tasks.json",
+		"i2c.cpp",
         "README.md",
         "_locales/zh-cn/microbit_iot_kit-strings.json",
         "sendBuffer.asm",
