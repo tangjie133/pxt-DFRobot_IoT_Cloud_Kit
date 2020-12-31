@@ -7,17 +7,25 @@
     "files": [
         ".vscode/settings.json",
         ".vscode/tasks.json",
-		"i2c.cpp",
+        "i2c.cpp",
         "README.md",
+        "shims.d.ts",
+        "enums.d.ts",
         "_locales/zh-cn/microbit_iot_kit-strings.json",
         "sendBuffer.asm",
         "microiotkit.ts",
         "tsconfig.json",
-        "ws2812b.ts"
+        "ws2812b.ts",
+        "shims.d.ts",
+        "enums.d.ts"
     ],
     "testFiles": [
         "test.ts"
     ],
+    "targetVersions": {
+        "target": "3.1.46",
+        "targetId": "microbit"
+    },
     "supportedTargets": [
         "microbit"
     ],

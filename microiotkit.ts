@@ -358,6 +358,10 @@ namespace microIoT {
             basic.pause(50);
         }
     }
+     //% advanced=true shim=i2c::init
+    function init(): void {
+        return;
+    }
 
     /**
     * WiFi configuration
@@ -369,6 +373,7 @@ namespace microIoT {
     //% group="IoT"
     //% blockId=WiFi_IoT_I2C_WIFI_Setup block="Wi-Fi configure name: %SSID| password：%PASSWORD start connection"
     export function WIFISetup(SSID: string, PASSWORD: string): void {
+        init();
         microIoT_setPara(SETWIFI_NAME, SSID)
         microIoT_setPara(SETWIFI_PASSWORLD, PASSWORD)
         microIoT_runCommand(CONNECT_WIFI)
@@ -826,6 +831,7 @@ namespace microIoT {
     //% group="OLED"
     //% block="init display"
     export function microIoT_initDisplay(): void {
+        init();
         microIoT_cmd(0xAE);  // Set display OFF
         microIoT_cmd(0xD5);  // Set Display Clock Divide Ratio / OSC Frequency 0xD4
         microIoT_cmd(0x80);  // Display Clock Divide Ratio / OSC Frequency 
