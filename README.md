@@ -1,4 +1,4 @@
-# micro:bit_Iot_Kit
+# IoT Cloud Kit
 
 [micro:bit IoT Kit is a set of modules designed to incorporate IoT in education, supporting multiple popular IoT platforms like easyIoT, Thingspeak, and IFTTT. It includes 14 external sensors and 15 application tutorials. ](无)
 
