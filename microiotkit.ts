@@ -1326,6 +1326,10 @@ namespace microIoT {
         }
 
         let ultraSonic_d;
+        // pins.digitalWritePin(ultraSonic_T, 0);
+        // basic.pause(2)
+        pins.digitalWritePin(ultraSonic_T, 1);
+        basic.pause(1)
         pins.digitalWritePin(ultraSonic_T, 0);
         if (pins.digitalReadPin(ultraSonic_E) == 0) {
             pins.digitalWritePin(ultraSonic_T, 1);
@@ -1344,59 +1348,6 @@ namespace microIoT {
 
     }
     /**
-     * 设置光线传感器引脚获取光线强度
-     */
-    //% weight=40
-    //% group="Sensor"
-    //% block="read pin %pin ambient light"
-    export function intenskity(pin: PIN_1): number {
-        let intenskity_T;
-        switch (pin) {
-            case PIN_1.P0: intenskity_T = AnalogPin.P0; break;
-            case PIN_1.P1: intenskity_T = AnalogPin.P1; break;
-            case PIN_1.P2: intenskity_T = AnalogPin.P2; break;
-            default: intenskity_T = AnalogPin.P0; break;
-        }
-        return pins.analogReadPin(intenskity_T);
-    }
-
-    /**
-     * 设置运动传感器引脚获取运动传感器状态
-     */
-    //% weight=40
-    //% group="Sensor"
-    //% block="read pin|%pin digital infrared motion sensor"
-    export function motinSensor(pin: PIN_1): number {
-        let motinSensor_T;
-        switch (pin) {
-            case PIN_1.P0: motinSensor_T = AnalogPin.P0; break;
-            case PIN_1.P1: motinSensor_T = AnalogPin.P1; break;
-            case PIN_1.P2: motinSensor_T = AnalogPin.P2; break;
-            default: motinSensor_T = AnalogPin.P0; break;
-        }
-        let motinSensor_x = pins.analogReadPin(motinSensor_T);
-        if (motinSensor_x == 1) { return 0 }
-        else { return 1 }
-    }
-
-    /**
-     * 设置声音传感器引脚获取声音强度
-     */
-    //% weight=40
-    //% group="Sensor"
-    //% block="read pin|%pin loudness"
-    export function soundIntensity(pin: PIN_1): number {
-        let soundIntensity_T;
-        switch (pin) {
-            case PIN_1.P0: soundIntensity_T = AnalogPin.P0; break;
-            case PIN_1.P1: soundIntensity_T = AnalogPin.P1; break;
-            case PIN_1.P2: soundIntensity_T = AnalogPin.P2; break;
-            default: soundIntensity_T = AnalogPin.P0; break;
-        }
-        return pins.analogReadPin(soundIntensity_T);
-    }
-
-    /**
      * 设置火焰传感器引脚获取火焰传感器值
      */
     //% weight=40
@@ -1414,22 +1365,6 @@ namespace microIoT {
     }
 
     /**
-     * 设置水份传感器引脚获取水份值
-     */
-    //% weight=40
-    //% group="Sensor"
-    //% block="read pin|%pin steam sensor"
-    export function moisture(pin: PIN_1): number {
-        let moisture_T;
-        switch (pin) {
-            case PIN_1.P0: moisture_T = AnalogPin.P0; break;
-            case PIN_1.P1: moisture_T = AnalogPin.P1; break;
-            case PIN_1.P2: moisture_T = AnalogPin.P2; break;
-            default: moisture_T = AnalogPin.P0; break;
-        }
-        return Math.round(pins.analogReadPin(moisture_T));
-    }
-    /**
      * 设置土壤湿度传感器引脚获取土壤湿度
      */
     //% weight=40
@@ -1445,39 +1380,7 @@ namespace microIoT {
         }
         return Math.round(pins.analogReadPin(soilMoisture_T));
     }
-    /**
-     * 设置紫外线传感器引脚获取紫外线值
-     */
-    //% weight=40
-    //% group="Sensor"
-    //% block="read pin|%pin UV intensity"
-    export function readeUV(pin: PIN_1): number {
-        let readeUV_T;
-        let readeUV_x;
-        let readeUV_y;
-        switch (pin) {
-            case PIN_1.P0: readeUV_T = AnalogPin.P0; break;
-            case PIN_1.P1: readeUV_T = AnalogPin.P1; break;
-            case PIN_1.P2: readeUV_T = AnalogPin.P2; break;
-            default: readeUV_T = AnalogPin.P0;
-        }
-        readeUV_x = pins.analogReadPin(readeUV_T);
-        switch (readeUV_x) {
-            case 0: readeUV_y = 5; break;
-            case 1: readeUV_y = 46; break;
-            case 2: readeUV_y = 65; break;
-            case 3: readeUV_y = 83; break;
-            case 4: readeUV_y = 103; break;
-            case 5: readeUV_y = 124; break;
-            case 6: readeUV_y = 142; break;
-            case 7: readeUV_y = 162; break;
-            case 8: readeUV_y = 180; break;
-            case 9: readeUV_y = 200; break;
-            case 10: readeUV_y = 221; break;
-            default: readeUV_y = 240;
-        }
-        return readeUV_y;
-    }
+   
     /**
      * 设置温湿度传感器引脚获取温湿度值
      */
@@ -1589,118 +1492,6 @@ namespace microIoT {
             default: fan_T = DigitalPin.P0; break;
         }
         pins.digitalWritePin(fan_T, fan)
-    }
-
-    /**
-    *设置TDS引脚获取TDS值
-    */
-
-    //% weight=40
-    //% group="Sensor"
-    //% block="read pin|%pin TDS sensor(ppm)"
-    export function getTds(pin: PIN_1, t: number=25): number {
-        let getTds_T;
-        switch (pin) {
-            case PIN_1.P0: getTds_T = AnalogPin.P0; break;
-            case PIN_1.P1: getTds_T = AnalogPin.P1; break;
-            case PIN_1.P2: getTds_T = AnalogPin.P2; break;
-            default: getTds_T = AnalogPin.P0; break;
-        }
-
-        let coeff = 1 + 0.02 * (t - 25)
-        let analogValue: number[] = []
-        for (let k = 0; k < 30; k++) {
-            analogValue[k] = pins.analogReadPin(getTds_T)
-            basic.pause(40)
-        }
-        let voltage = getMedian(analogValue) * 5 / 1024
-        let compensationVolatge = voltage / coeff
-        let tdsValue = (133.42 * compensationVolatge * compensationVolatge * compensationVolatge - 255.86 * compensationVolatge * compensationVolatge + 857.39 * compensationVolatge) * 0.5
-        return Math.round(tdsValue / 2)
-    }
-
-    function getMedian(bArray: number[]): number {
-        let bTab: number[] = []
-        let iFilterLen = bArray.length
-        let bTemp = 0
-        for (let i = 0; i < iFilterLen; i++) {
-            bTab[i] = bArray[i]
-        }
-        for (let i = 0; i < iFilterLen - 1; i++) {
-            for (let j = 0; j < iFilterLen - i - 1; j++) {
-                if (bTab[j] > bTab[j + 1]) {
-                    bTemp = bTab[j]
-                    bTab[j] = bTab[j + 1]
-                    bTab[j + 1] = bTemp
-                }
-            }
-        }
-        if ((iFilterLen & 1) > 0)
-            bTemp = bTab[(iFilterLen - 1) / 2]
-        else
-            bTemp = (bTab[iFilterLen / 2] + bTab[iFilterLen / 2 - 1]) / 2
-        return bTemp
-    }
-
-    /**
-     * 获取CO2或TVOC值
-     */
-    //% weight=40
-    //% group="Sensor"
-    //% block="read air quality sensor|%deta"
-    export function ccsSensor(deta:CCS):number{
-        let make
-        if(checkDataReady() == true){ 
-            switch(deta){
-                case 1: make= getCO2PPM();break;
-                default:make = getTVOCPPB();
-            }
-        }
-        basic.pause(500)
-        return make;
-    }
-    /**
-     * 初始化空气质量传感器
-     */
-    //% weight=40
-    //% group="Sensor"
-    //% block="init air quality sensor "
-    export function ss():void{
-        softReset();
-        pins.i2cWriteNumber(CCS811_I2C_ADDRESS1, 0xF4, NumberFormat.Int8LE)
-        pins.i2cWriteNumber(CCS811_I2C_ADDRESS1, null, NumberFormat.Int8LE)
-        setMeasCycle();
-    }
-
-    function checkDataReady():boolean{
-        pins.i2cWriteNumber(CCS811_I2C_ADDRESS1, 0, NumberFormat.Int8LE)
-        pins.i2cWriteNumber(CCS811_I2C_ADDRESS1, 0, NumberFormat.Int8LE)
-        let status = pins.i2cReadBuffer(CCS811_I2C_ADDRESS1,1)
-        if(!((status[0] >> 3) & 0x01))
-            return false;
-        else 
-            return true;
-    }
-    function setMeasCycle():void{
-        let buffer:number[] = [0x01,0x40] 
-        let Buffer = pins.createBufferFromArray(buffer);
-        pins.i2cWriteBuffer(CCS811_I2C_ADDRESS1, Buffer)
-    }
-    function getCO2PPM():number{
-        pins.i2cWriteNumber(CCS811_I2C_ADDRESS1, 0x02, NumberFormat.Int8LE)
-        let BUF = pins.i2cReadBuffer(CCS811_I2C_ADDRESS1, 8)
-        return (BUF[0]<<8)|BUF[1];
-    }
-    function getTVOCPPB():number{
-        pins.i2cWriteNumber(CCS811_I2C_ADDRESS1, 0x02, NumberFormat.Int8LE)
-        let BUF = pins.i2cReadBuffer(CCS811_I2C_ADDRESS1, 8)
-        return (BUF[2]<<8)|BUF[3];
-    }
-    function softReset():void{
-        pins.i2cWriteNumber(CCS811_I2C_ADDRESS1, 0xFF, NumberFormat.Int8LE)
-        let buffer:number[] = [0x11, 0xE5, 0x72, 0x8A] 
-        let Buffer = pins.createBufferFromArray(buffer);
-        pins.i2cWriteBuffer(CCS811_I2C_ADDRESS1, Buffer)
     }
 
     /**
