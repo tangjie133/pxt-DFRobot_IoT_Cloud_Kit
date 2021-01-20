@@ -57,7 +57,8 @@
     "Time.hour|block":"时",
     "Time.minute|block":"分",
     "Time.second|block":"秒",
-    "microIoT.readTime|block":"获取 %time"
+    "microIoT.readTime|block":"获取 %time",
+    "microIoT.hall|block": "读取引脚 |%pin 霍尔传感器"
     
 
 }
