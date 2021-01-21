@@ -233,6 +233,13 @@ namespace microIoT {
     export class PacketMqtt {
         public message: string;
     }
+    /**
+     * init I2C
+     */
+    //% block=" I2C init"
+    export function i2cinit():void{
+        init();
+    }
 
     /**
      * Set the microIoT servos.
