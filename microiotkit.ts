@@ -1537,6 +1537,16 @@ namespace microIoT {
         buf[5] = minute;
         buf[6] = second;
         pins.i2cWriteBuffer(0x10, buf);
+        let data;
+        while(true){
+            pins.i2cWriteNumber(0x10, 0x20, NumberFormat.Int8LE)
+            let buffer = pins.i2cReadBuffer(0x10, 7)
+            data = buffer[0]+2000
+            basic.pause(50)
+            if(data == year){
+                return;
+            }
+        }
     }
     /**
      * 设置年
