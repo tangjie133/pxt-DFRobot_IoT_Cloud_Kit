@@ -531,28 +531,7 @@ namespace microIoT {
         microIoT_WEBHOOKS_EVENT = EVENT
         microIoT_WEBHOOKS_KEY = KEY
     }
-     /**Beebotte Configure 
-     * @param token ,eg: "Your Channel Token"
-     */
-    //% weight=2
-    //% blockID=WiFi_IoT_I2C_BeeBotte_Configura block="BeeBotte configura key: %token "
-    export function token(token:string):void{
-        microIoT_BEEBOTTE_Token = token;
-    }
-    /**BeeBotte send data
-     * @param channel ,eg: "Your Channel Name"
-     * @param resource ,eg: "Your Resource Name"
-     * @param data ,eg: "Send Message"
-     */
-    //% weight=1
-    //% group="IoT"
-    //% blockID=WiFi_IoT_I2C_BeeBotte_sendmessage block="BeeBotte Channel: %channel Resource: %resource send value %data "
-    export function sendmessage(channel:string, resource:string, data:string){
-        microIoT_setPara(SETHTTP_IP, OBLOQ_MQTT_EASY_IOT_SERVER_GLOBAL)
-        let tempStr = ""
-        tempStr = "v1/data/write/" + channel + "/" + resource + "?token=" + microIoT_BEEBOTTE_Token +",{\"data\":" + data + "}\r\n";
-        microIoT_ParaRunCommand(POST_URL, tempStr);
-    }
+    
     function microIoT_http_wait_request(time: number): string {
         if (time < 100) {
             time = 100
