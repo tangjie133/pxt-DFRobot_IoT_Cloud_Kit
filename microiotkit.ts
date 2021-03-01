@@ -268,7 +268,7 @@ namespace microIoT {
 
     //% weight=49
     //% group="Motor"
-    //% blockId=microIoT_MotorRun block="control motor dir|%Dir|speed|%speed"
+    //% blockId=microIoT_MotorRun block="motor dir|%Dir|speed|%speed"
     //% speed.min=0 speed.max=255
     //% index.fieldEditor="gridpicker" index.fieldOptions.columns=2
     //% direction.fieldEditor="gridpicker" direction.fieldOptions.columns=2
@@ -505,7 +505,7 @@ namespace microIoT {
 
     //% weight=60
     //% group="IoT"
-    //% blockId=WiFi_IoT_I2C_MQTT_Event block="on received %top"
+    //% blockId=WiFi_IoT_I2C_MQTT_Event block="on %top received"
     //% top.fieldEditor="gridpicker" top.fieldOptions.columns=2
     export function mqttCallbackUserMore(top: TOPIC, cb: (message: string) => void) {
         microIoT_callback(top, () => {
@@ -1089,7 +1089,7 @@ namespace microIoT {
     //% group="RGB"
     //% from.min=1 from.max=4
     //% to.min=1 to.max=4
-    //% block="range from |%from with|%to leds"
+    //% block="RGB LEDs |%from to |%to"
     export function microIoT_ledRange(from: number, to: number): number {
         return ((from-1) << 16) + (2 << 8) + (to);
     }
@@ -1103,7 +1103,7 @@ namespace microIoT {
     //% group="RGB"
     //% index.min=1 index.max=4
     //% rgb.shadow="colorNumberPicker"
-    //% block="RGB light |%index show color|%rgb"
+    //% block="RGB LED |%index show color|%rgb"
     export function microIoT_setIndexColor(index: number, rgb: number) {
         let f = index-1;
         let t = index-1;
@@ -1136,7 +1136,7 @@ namespace microIoT {
     //% weight=60
     //% group="RGB"
     //% rgb.shadow="colorNumberPicker"
-    //% block=" RGB show color |%rgb"
+    //% block="show color |%rgb"
     export function microIoT_showColor(rgb: number) {
         let r = (rgb >> 16) * (_brightness / 255);
         let g = ((rgb >> 8) & 0xFF) * (_brightness / 255);
@@ -1160,7 +1160,7 @@ namespace microIoT {
     //% weight=70
     //% group="RGB"
     //% brightness.min=0 brightness.max=255
-    //% block="set RGB brightness to |%brightness"
+    //% block="set brightness to |%brightness"
     export function microIoT_setBrightness(brightness: number) {
         _brightness = brightness;
     }
@@ -1171,7 +1171,7 @@ namespace microIoT {
 
     //% weight=40
     //% group="RGB"
-    //% block="clear all RGB"
+    //% block="Turn off all RGB"
     export function microIoT_ledBlank() {
         microIoT_showColor(0)
     }
@@ -1186,7 +1186,7 @@ namespace microIoT {
     //% endHue.defl=360
     //% startHue.min=0 startHue.max=360
     //% endHue.min=0 endHue.max=360
-    //% blockId=led_rainbow block="set RGB show rainbow color from|%startHue to|%endHue"
+    //% blockId=led_rainbow block="show rainbow color from|%startHue to|%endHue"
     export function ledRainbow(startHue: number, endHue: number) {
         startHue = startHue >> 0;
         endHue = endHue >> 0;
@@ -1295,11 +1295,11 @@ namespace microIoT {
     }
 
     /**
-     * 获取超声波返回的距离信息
+     * Get the distance information of ultrasonic return
      */
     //% weight=40
     //% group="Sensor"
-    //% block="reade ultrasonic sensor unit(cm), trig|%T echo|%E (cm)"
+    //% block="read ultrasonic sensor unit(cm), trig|%T echo|%E (cm)"
     export function ultraSonic(T: PIN, E: PIN, ): number {
         let maxCmDistance = 500;
         let ultraSonic_T;
@@ -1349,7 +1349,7 @@ namespace microIoT {
 
     }
     /**
-     * 设置火焰传感器引脚获取火焰传感器值
+     * Set the flame sensor pin to obtain the flame sensor value
      */
     //% weight=40
     //% group="Sensor"
@@ -1366,7 +1366,7 @@ namespace microIoT {
     }
 
     /**
-     * 设置土壤湿度传感器引脚获取土壤湿度
+     * Set the soil moisture sensor pin to get the soil moisture
      */
     //% weight=40
     //% group="Sensor"
@@ -1383,7 +1383,7 @@ namespace microIoT {
     }
    
     /**
-     * 设置温湿度传感器引脚获取温湿度值
+     * Set the temperature and humidity sensor pin to obtain the temperature and humidity value
      */
     //% weight=40
     //% group="Sensor"
@@ -1490,7 +1490,7 @@ namespace microIoT {
    
 
     /**
-     * 设置电扇控制引脚控制电扇
+     * Set the fan control pin to control the fan
      */
     //% weight=40
     //% group="Motor"
@@ -1512,7 +1512,7 @@ namespace microIoT {
     }
 
     /**
-     * 初始化年月日时分秒
+     * Initialize month, year, day, hour, minute and second
      */
     //% weight=100
     //% group="Time"
@@ -1545,7 +1545,7 @@ namespace microIoT {
         }
     }
     /**
-     * 设置年
+     * Set year
      */
     //% weight=99
     //% group="Time"
@@ -1566,7 +1566,7 @@ namespace microIoT {
         pins.i2cWriteBuffer(0x10, buf);
     }
     /**
-     * 设置月
+     * Set month
      */
     //% weight=98
     //% group="Time"
@@ -1587,7 +1587,7 @@ namespace microIoT {
         pins.i2cWriteBuffer(0x10, buf);
     }
     /**
-     * 设置日
+     * Set day
      */
     //% weight=97
     //% group="Time"
@@ -1609,7 +1609,7 @@ namespace microIoT {
         pins.i2cWriteBuffer(0x10, buf);
     }
     /**
-     * 设置小时
+     * Set hours
      */
     //% weight=96
     //% group="Time"
@@ -1629,7 +1629,7 @@ namespace microIoT {
         pins.i2cWriteBuffer(0x10, buf);
     }
     /**
-     * 设置分钟
+     * Set minutes
      */
     //% weight=95
     //% group="Time"
@@ -1649,7 +1649,7 @@ namespace microIoT {
         pins.i2cWriteBuffer(0x10, buf);
     }
     /**
-     * 设置秒
+     * Set seconds
      */
     //% weight=95
     //% group="Time"
@@ -1669,7 +1669,7 @@ namespace microIoT {
         pins.i2cWriteBuffer(0x10, buf);
     }
     /**
-     * 获取时间
+     * Git time
      */
     //% weight=94
     //% group="Time"
@@ -1688,9 +1688,7 @@ namespace microIoT {
         }
         return data;
     }
-    /**
-     * 判断年月日是否对应
-     */
+   
     function compare(year:number, month:number, day:number):void{
         if(month == 2){
            let state = (((year%4==0)&&(year%100!=0))||(year%400==0))?1:0;
@@ -1733,7 +1731,7 @@ namespace microIoT {
             }
         }
     }
-    /**霍尔传感器 */
+
     //% weight=40
     //% group="Sensor"
     //% block="read pin|%pin Hall sensor"
