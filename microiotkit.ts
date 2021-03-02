@@ -598,7 +598,7 @@ namespace microIoT {
             tempStr += "&field7=" + field7
         if(field8 != undefined)
             tempStr += "&field8=" + field8
-        tempStr += "\r"
+        //tempStr += "\r"
         microIoT_ParaRunCommand(GET_URL, tempStr);
     }
 
