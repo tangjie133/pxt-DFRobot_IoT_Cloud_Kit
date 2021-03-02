@@ -68,9 +68,9 @@ enum DT11 {
 }
 
 enum Switch {
-    //% block="turn ON"
+    //% block="on"
     ON = 1,
-    //% block="turn OFF"
+    //% block="off"
     OFF = 0
 }
 
@@ -1299,7 +1299,7 @@ namespace microIoT {
      */
     //% weight=40
     //% group="Sensor"
-    //% block="read ultrasonic sensor unit(cm), trig|%T echo|%E (cm)"
+    //% block="read ultrasonic sensor unit(cm), trig|%T echo|%E"
     export function ultraSonic(T: PIN, E: PIN, ): number {
         let maxCmDistance = 500;
         let ultraSonic_T;
@@ -1494,7 +1494,7 @@ namespace microIoT {
      */
     //% weight=40
     //% group="Motor"
-    //% block="small fanset %fan at %pin"
+    //% block="Turn %fan fan %pin"
     export function fan(pin: PIN, fan: Switch): void {
         let fan_T;
         switch (pin) {
